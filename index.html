@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>emms204 - Portfolio</title>
+    <title>Emmanuel - Portfolio</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -11,10 +11,11 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
-            <div class="nav-brand">emms204</div>
+            <div class="nav-brand">Emmanuel</div>
             <ul class="nav-menu">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
+                <li><a href="#portfolio-overview">Portfolio Overview</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#contact">Contact</a></li>
@@ -32,7 +33,7 @@
         <div class="container">
             <div class="hero-content">
                 <h1 class="hero-title">
-                    <span class="gradient-text">Hello, I'm emms204</span>
+                    <span class="gradient-text">Hello, I'm Emmanuel</span>
                 </h1>
                 <p class="hero-subtitle">Machine Learning Engineer & Software Developer</p>
                 <p class="hero-description">
@@ -80,6 +81,30 @@
                         I enjoy working on projects that combine cutting-edge AI research with practical applications,
                         from PyTorch-based computer vision models to reinforcement learning environments.
                     </p>
+                    <div class="overview-panel">
+                        <h3 class="overview-title"><i class="fas fa-compass"></i> Portfolio Overview</h3>
+                        <p class="overview-summary">
+                            ML Engineer building production AI systems and scalable MLOps, from data pipelines to deployment.
+                        </p>
+                        <div class="overview-columns">
+                            <div class="overview-block">
+                                <h4>Highlights</h4>
+                                <ul class="overview-list">
+                                    <li>90%+ model accuracy across 50+ ML projects</li>
+                                    <li>15-20% infrastructure downtime reduction via AWS optimization</li>
+                                    <li>95% document extraction accuracy for production chatbots</li>
+                                </ul>
+                            </div>
+                        <div class="overview-block">
+                            <h4>Featured Projects</h4>
+                            <ul class="overview-list">
+                                <li><span class="overview-project">ScreenplayWebApp</span> - Full-stack with AI integration and real-time collaboration</li>
+                                <li><span class="overview-project">Enza Chat</span> - Modern chat app with AWS Amplify and TypeScript</li>
+                                <li><span class="overview-project">Character2Body</span> - 3D character generation from images using computer vision</li>
+                            </ul>
+                        </div>
+                        </div>
+                    </div>
                     <div class="about-highlights">
                         <div class="highlight">
                             <i class="fas fa-brain"></i>
@@ -103,38 +128,172 @@
         </div>
     </section>
 
+    <!-- Portfolio Overview Section -->
+    <section id="portfolio-overview" class="portfolio-overview">
+        <div class="container">
+            <h2 class="section-title">Portfolio Overview</h2>
+            <p class="section-subtitle">Focus areas and the core toolchain behind my projects.</p>
+            <div class="portfolio-insights" id="portfolio-insights">
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <h3><i class="fas fa-layer-group"></i> Categories</h3>
+                    </div>
+                    <div class="category-list" id="category-list">
+                        <div class="category-pill">
+                            <span class="category-name">Data Science</span>
+                        </div>
+                        <div class="category-pill">
+                            <span class="category-name">Software Development</span>
+                        </div>
+                        <div class="category-pill">
+                            <span class="category-name">AI/ML</span>
+                        </div>
+                        <div class="category-pill">
+                            <span class="category-name">Reinforcement Learning</span>
+                        </div>
+                        <div class="category-pill">
+                            <span class="category-name">Deep Learning</span>
+                        </div>
+                        <div class="category-pill">
+                            <span class="category-name">Web Development</span>
+                        </div>
+                        <div class="category-pill">
+                            <span class="category-name">Computer Vision</span>
+                        </div>
+                        <div class="category-pill">
+                            <span class="category-name">NLP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Projects Section -->
     <section id="projects" class="projects">
         <div class="container">
             <h2 class="section-title">Featured Projects</h2>
             <div class="projects-grid" id="projects-grid">
-                <!-- Projects will be loaded dynamically -->
-                <div class="project-card">
-                    <div class="project-icon">
-                        <i class="fas fa-brain"></i>
+                <!-- AI-Verified Featured Projects -->
+                <div class="project-card" data-ai-score="7">
+                    <div class="project-header">
+                        <div class="project-icon">
+                            <i class="fas fa-film"></i>
+                        </div>
                     </div>
-                    <h3 class="project-title">PyTorch CV Models</h3>
+                    <h3 class="project-title">ScreenplayWebApp</h3>
                     <p class="project-description">
-                        Collection of computer vision models implemented in PyTorch for various tasks.
+                        Full-stack application for screenplay writing with FastAPI backend and Next.js frontend. Features real-time collaboration, AI-powered screenplay generation, and comprehensive production tools.
                     </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">PyTorch</span>
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">Jupyter</span>
+                    <div class="project-strengths">
+                        <span class="strength-tag">Full-Stack</span>
+                        <span class="strength-tag">AI Integration</span>
+                        <span class="strength-tag">Real-Time</span>
                     </div>
-                    <a href="https://github.com/emms204/Pytorch-CV-Models" target="_blank" class="project-link">
+                    <div class="project-tech">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">FastAPI</span>
+                        <span class="tech-tag">Next.js</span>
+                        <span class="tech-tag">TypeScript</span>
+                    </div>
+                    <a href="https://github.com/emms204/ScreenplayWebApp" target="_blank" class="project-link">
                         View on GitHub <i class="fas fa-external-link-alt"></i>
                     </a>
                 </div>
 
-                <div class="project-card">
-                    <div class="project-icon">
-                        <i class="fas fa-golf-ball"></i>
+                <div class="project-card" data-ai-score="7">
+                    <div class="project-header">
+                        <div class="project-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                    </div>
+                    <h3 class="project-title">Enza Chat</h3>
+                    <p class="project-description">
+                        Modern chat application built with Next.js and AWS Amplify, featuring TypeScript, AWS Cognito authentication, GraphQL API with real-time data handling via AWS AppSync, and responsive UI with Tailwind CSS.
+                    </p>
+                    <div class="project-strengths">
+                        <span class="strength-tag">AWS Integration</span>
+                        <span class="strength-tag">Modern Stack</span>
+                        <span class="strength-tag">Real-Time</span>
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-tag">TypeScript</span>
+                        <span class="tech-tag">Next.js</span>
+                        <span class="tech-tag">AWS Amplify</span>
+                        <span class="tech-tag">GraphQL</span>
+                    </div>
+                    <a href="https://github.com/emms204/enza-chat" target="_blank" class="project-link">
+                        View on GitHub <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+
+                <div class="project-card" data-ai-score="6">
+                    <div class="project-header">
+                        <div class="project-icon">
+                            <i class="fas fa-cube"></i>
+                        </div>
+                    </div>
+                    <h3 class="project-title">Character2Body</h3>
+                    <p class="project-description">
+                        Transforms full-body images into detailed 3D character models using SMPLX and computer vision. Features keypoint detection, anthropometric measurement extraction, and real-time 3D model visualization.
+                    </p>
+                    <div class="project-strengths">
+                        <span class="strength-tag">Computer Vision</span>
+                        <span class="strength-tag">3D Modeling</span>
+                        <span class="strength-tag">ML Pipeline</span>
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">FastAPI</span>
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">PyTorch</span>
+                    </div>
+                    <a href="https://github.com/emms204/Character2Body" target="_blank" class="project-link">
+                        View on GitHub <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+
+                <div class="project-card" data-ai-score="6">
+                    <div class="project-header">
+                        <div class="project-icon">
+                            <i class="fas fa-comment-dots"></i>
+                        </div>
+                    </div>
+                    <h3 class="project-title">Chatflow</h3>
+                    <p class="project-description">
+                        Full-stack real-time chat application with FastAPI backend and Next.js frontend. Features WebSocket messaging, PostgreSQL, Redis pub/sub, JWT authentication, typing indicators, and AI assistant integration.
+                    </p>
+                    <div class="project-strengths">
+                        <span class="strength-tag">WebSocket</span>
+                        <span class="strength-tag">Full-Stack</span>
+                        <span class="strength-tag">Real-Time</span>
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-tag">TypeScript</span>
+                        <span class="tech-tag">FastAPI</span>
+                        <span class="tech-tag">PostgreSQL</span>
+                        <span class="tech-tag">Redis</span>
+                    </div>
+                    <a href="https://github.com/emms204/Chatflow" target="_blank" class="project-link">
+                        View on GitHub <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+
+                <div class="project-card" data-ai-score="6">
+                    <div class="project-header">
+                        <div class="project-icon">
+                            <i class="fas fa-golf-ball"></i>
+                        </div>
                     </div>
                     <h3 class="project-title">Golf Ball Tracking</h3>
                     <p class="project-description">
-                        Real-time object detection using ONNX Runtime and OpenCV with YOLO-based models.
+                        Real-time object detection system using C++ with ONNX Runtime and OpenCV, specifically designed for detecting golf balls. Includes camera calibration tool to enhance detection accuracy by correcting lens distortion.
                     </p>
+                    <div class="project-strengths">
+                        <span class="strength-tag">Computer Vision</span>
+                        <span class="strength-tag">Real-Time</span>
+                        <span class="strength-tag">C++</span>
+                    </div>
                     <div class="project-tech">
                         <span class="tech-tag">C++</span>
                         <span class="tech-tag">ONNX</span>
@@ -146,74 +305,28 @@
                     </a>
                 </div>
 
-                <div class="project-card">
-                    <div class="project-icon">
-                        <i class="fas fa-video"></i>
-                    </div>
-                    <h3 class="project-title">JEPA</h3>
-                    <p class="project-description">
-                        PyTorch implementation of V-JEPA self-supervised learning from video.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">PyTorch</span>
-                        <span class="tech-tag">Self-Supervised</span>
-                        <span class="tech-tag">Video</span>
-                    </div>
-                    <a href="https://github.com/emms204/jepa" target="_blank" class="project-link">
-                        View on GitHub <i class="fas fa-external-link-alt"></i>
-                    </a>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-icon">
-                        <i class="fas fa-dumbbell"></i>
-                    </div>
-                    <h3 class="project-title">PPO-RL</h3>
-                    <p class="project-description">
-                        Digital Twin Environment for water flow control using Proximal Policy Optimization.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">RL</span>
-                        <span class="tech-tag">PPO</span>
-                    </div>
-                    <a href="https://github.com/emms204/PPO-RL" target="_blank" class="project-link">
-                        View on GitHub <i class="fas fa-external-link-alt"></i>
-                    </a>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-icon">
-                        <i class="fas fa-magic"></i>
+                <div class="project-card" data-ai-score="5">
+                    <div class="project-header">
+                        <div class="project-icon">
+                            <i class="fas fa-magic"></i>
+                        </div>
                     </div>
                     <h3 class="project-title">ScriptGen</h3>
                     <p class="project-description">
-                        Modular framework for automated script generation using Large Language Models.
+                        Modular framework for automated script generation using large language models (LLMs). Facilitates creation of script scenes from log lines and manages story development including character, plot, and setting management.
                     </p>
+                    <div class="project-strengths">
+                        <span class="strength-tag">LLM Integration</span>
+                        <span class="strength-tag">Modular Design</span>
+                        <span class="strength-tag">NLP</span>
+                    </div>
                     <div class="project-tech">
                         <span class="tech-tag">Python</span>
                         <span class="tech-tag">LLM</span>
+                        <span class="tech-tag">NLP</span>
                         <span class="tech-tag">Automation</span>
                     </div>
                     <a href="https://github.com/emms204/ScriptGen" target="_blank" class="project-link">
-                        View on GitHub <i class="fas fa-external-link-alt"></i>
-                    </a>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-icon">
-                        <i class="fas fa-x-ray"></i>
-                    </div>
-                    <h3 class="project-title">Mammo_GENAI</h3>
-                    <p class="project-description">
-                        Generative AI applications for mammography analysis and medical imaging.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">AI</span>
-                        <span class="tech-tag">Medical Imaging</span>
-                        <span class="tech-tag">Jupyter</span>
-                    </div>
-                    <a href="https://github.com/emms204/Mammo_GENAI" target="_blank" class="project-link">
                         View on GitHub <i class="fas fa-external-link-alt"></i>
                     </a>
                 </div>
@@ -224,51 +337,12 @@
     <!-- Skills Section -->
     <section id="skills" class="skills">
         <div class="container">
-            <h2 class="section-title">Skills & Technologies</h2>
-            <div class="skills-grid">
+            <h2 class="section-title">Skills & Frameworks</h2>
+            <div class="skills-grid" id="skills-grid">
                 <div class="skill-category">
                     <h3 class="skill-category-title">
-                        <i class="fas fa-code"></i> Languages
+                        <i class="fas fa-spinner"></i> Loading skills...
                     </h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Python</span>
-                        <span class="skill-tag">C++</span>
-                        <span class="skill-tag">JavaScript</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3 class="skill-category-title">
-                        <i class="fas fa-brain"></i> ML/AI
-                    </h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">PyTorch</span>
-                        <span class="skill-tag">TensorFlow</span>
-                        <span class="skill-tag">ONNX</span>
-                        <span class="skill-tag">YOLO</span>
-                        <span class="skill-tag">Reinforcement Learning</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3 class="skill-category-title">
-                        <i class="fas fa-eye"></i> Computer Vision
-                    </h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">OpenCV</span>
-                        <span class="skill-tag">Image Processing</span>
-                        <span class="skill-tag">Object Detection</span>
-                        <span class="skill-tag">Video Analysis</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3 class="skill-category-title">
-                        <i class="fas fa-tools"></i> Tools & Frameworks
-                    </h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Git</span>
-                        <span class="skill-tag">Jupyter</span>
-                        <span class="skill-tag">Docker</span>
-                        <span class="skill-tag">Linux</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -286,9 +360,17 @@
                     <i class="fab fa-github"></i>
                     <span>GitHub</span>
                 </a>
-                <a href="https://github.com/emms204?tab=repositories" target="_blank" class="contact-link">
-                    <i class="fas fa-code-branch"></i>
-                    <span>Repositories</span>
+                <a href="https://www.linkedin.com/in/emmanuel-osanebi-1a7042222/" target="_blank" class="contact-link">
+                    <i class="fab fa-linkedin"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://x.com/Emxyz1" target="_blank" class="contact-link">
+                    <i class="fab fa-x-twitter"></i>
+                    <span>Twitter</span>
+                </a>
+                <a href="https://drive.google.com/file/d/1KL01IozlSrhgO1fTv6DZmRhVbR12iokj/view?usp=sharing" target="_blank" class="contact-link">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>CV / Resume</span>
                 </a>
             </div>
         </div>
@@ -297,11 +379,10 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 emms204. Built with ❤️ for GitHub Pages.</p>
+            <p>&copy;  Built with ❤️ for GitHub Pages.</p>
         </div>
     </footer>
 
     <script src="script.js"></script>
 </body>
 </html>
-

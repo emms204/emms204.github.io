@@ -1,2 +1,61 @@
+# Development and Analysis Files
+*.py
+scripts/
+requirements.txt
+run_pipeline.py
+analyze_repos.py
+generate_portfolio.py
+repo_agent.py
+
+# Data and Analysis Output
+# Note: data/repos_ranked.json is needed for the Portfolio Overview section
+# Allow data/ directory and JSON files to be committed
+portfolio_snippets.html
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary Files
+*.tmp
+*.temp
+.cache/
+tmp/
+temp/
+
+# Build and Distribution
+dist/
+build/
+*.egg-info/
+
+# Other
 .cursorindexingignore
 .specstory

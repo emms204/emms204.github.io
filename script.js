@@ -76,6 +76,65 @@ async function fetchGitHubStats() {
     }
 }
 
+// Skills single source of truth (used in Portfolio Overview and Skills section)
+const SKILL_GROUPS = [
+    {
+        title: 'ML/AI Frameworks',
+        icon: 'fa-brain',
+        items: ['PyTorch', 'TensorFlow', 'Scikit-Learn', 'HuggingFace']
+    },
+    {
+        title: 'AI Orchestration',
+        icon: 'fa-network-wired',
+        items: ['LangGraph', 'CrewAI', 'SmolAgents', 'LangChain', 'LlamaIndex', 'FAISS', 'Pinecone']
+    },
+    {
+        title: 'Infrastructure & MLOps',
+        icon: 'fa-server',
+        items: [
+            'AWS (EC2, EKS, Lambda, S3)',
+            'Kubernetes',
+            'Airflow',
+            'Kubeflow',
+            'SageMaker',
+            'CI/CD (Jenkins, Ansible)'
+        ]
+    },
+    {
+        title: 'Languages',
+        icon: 'fa-code',
+        items: ['Python', 'SQL', 'TypeScript', 'Bash', 'React', 'JavaScript']
+    }
+];
+
+function renderSkills() {
+    const skillsGrid = document.getElementById('skills-grid');
+
+    if (skillsGrid) {
+        skillsGrid.innerHTML = '';
+        SKILL_GROUPS.forEach(group => {
+            const card = document.createElement('div');
+            card.className = 'skill-category';
+
+            const heading = document.createElement('h3');
+            heading.className = 'skill-category-title';
+            heading.innerHTML = `<i class="fas ${group.icon}"></i> ${group.title}`;
+
+            const tags = document.createElement('div');
+            tags.className = 'skill-tags';
+            group.items.forEach(item => {
+                const tag = document.createElement('span');
+                tag.className = 'skill-tag';
+                tag.textContent = item;
+                tags.appendChild(tag);
+            });
+
+            card.append(heading, tags);
+            skillsGrid.appendChild(card);
+        });
+    }
+}
+
 // Intersection Observer for fade-in animations
 const observerOptions = {
     threshold: 0.1,
@@ -91,9 +150,65 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
+// Category Filter Functionality
+function initCategoryFilter() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+    const categorySections = document.querySelectorAll('.category-section');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const filter = button.getAttribute('data-filter');
+
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Filter projects
+            if (filter === 'all') {
+                // Show all
+                categorySections.forEach(section => {
+                    section.style.display = 'block';
+                });
+                projectCards.forEach(card => {
+                    card.classList.remove('hidden');
+                });
+            } else {
+                // Hide all first
+                categorySections.forEach(section => {
+                    section.style.display = 'none';
+                });
+                projectCards.forEach(card => {
+                    card.classList.add('hidden');
+                });
+
+                // Show matching category
+                const targetSection = document.getElementById(`category-${filter}`);
+                if (targetSection) {
+                    targetSection.style.display = 'block';
+                    const cardsInSection = targetSection.querySelectorAll('.project-card');
+                    cardsInSection.forEach(card => {
+                        card.classList.remove('hidden');
+                    });
+                }
+            }
+
+            // Re-trigger animations for visible cards
+            setTimeout(() => {
+                document.querySelectorAll('.project-card:not(.hidden)').forEach(card => {
+                    observer.observe(card);
+                });
+            }, 100);
+        });
+    });
+}
+
 // Observe project cards and skill categories
 document.addEventListener('DOMContentLoaded', () => {
-    const animatedElements = document.querySelectorAll('.project-card, .skill-category');
+    // Render skills in both overview and skills section
+    renderSkills();
+
+    const animatedElements = document.querySelectorAll('.project-card, .skill-category, .insight-card');
     animatedElements.forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(20px)';
@@ -101,16 +216,28 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(el);
     });
 
+    // Initialize category filter
+    initCategoryFilter();
+
     // Try to fetch GitHub stats (optional)
     fetchGitHubStats();
 });
 
-// Add parallax effect to hero section
+// Add parallax effect to hero section (only when hero is in view)
 window.addEventListener('scroll', () => {
     const scrolled = window.pageYOffset;
     const hero = document.querySelector('.hero');
     if (hero) {
-        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+        const heroHeight = hero.offsetHeight;
+        const heroTop = hero.offsetTop;
+        
+        // Only apply parallax when hero is in viewport
+        if (scrolled < heroHeight + heroTop) {
+            hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+        } else {
+            // Reset transform when scrolled past hero to prevent overlap
+            hero.style.transform = 'translateY(0)';
+        }
     }
 });
 
@@ -133,4 +260,3 @@ function typeWriter(element, text, speed = 100) {
 // Console message
 console.log('%c👋 Hello! Thanks for checking out my portfolio!', 'color: #6366f1; font-size: 16px; font-weight: bold;');
 console.log('%c🔗 GitHub: https://github.com/emms204', 'color: #8b5cf6; font-size: 12px;');
-
