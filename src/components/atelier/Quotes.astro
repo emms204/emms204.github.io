@@ -1,0 +1,12 @@
+---
+// Hidden until real, permitted quotes exist. Off by config (SHOW_QUOTES=false):
+// Emmanuel via Grok Bot, 18 Nov 5:17 PM — there are no testimonials. Never write any for him.
+import { SHOW_QUOTES } from '../../config';
+interface Props { quotes?: { text: string; who: string; source: string }[] }
+const { quotes = [] } = Astro.props;
+---
+{SHOW_QUOTES && quotes.length > 0 && (
+  <section aria-label="Quotes" class="mt-12 grid gap-4">
+    {quotes.map((q) => <figure class="card p-5"><blockquote class="margin-note text-lg">{q.text}</blockquote><figcaption class="kicker mt-2">{q.who} · {q.source}</figcaption></figure>)}
+  </section>
+)}

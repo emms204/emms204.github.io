@@ -1,0 +1,21 @@
+---
+import type { CaseFile } from '../../content/profile';
+import Seal from './Seal.astro';
+interface Props { c: CaseFile; level?: 'h2' | 'h3' }
+const { c, level = 'h3' } = Astro.props;
+const H = level;
+---
+<article class="card relative flex h-full flex-col p-5">
+  <p class="kicker">{c.context}{c.period && ` · ${c.period}`}</p>
+  <H class="mt-2 text-xl"><a href={`/work/${c.slug}/`} class="after:absolute after:inset-0" style="text-decoration:none">{c.title}</a></H>
+  <p class="mt-2" style="color:var(--graphite)">{c.summary}</p>
+  {c.figures.length > 0 && (
+    <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+      {c.figures.map((f) => <li><span class="fig text-lg">{f.value}</span> <span class="text-sm" style="color:var(--graphite)">{f.label}</span></li>)}
+    </ul>
+  )}
+  <div class="mt-auto flex items-end justify-between gap-3 pt-4">
+    <p class="flex flex-wrap gap-1.5">{c.stack.slice(0, 4).map((s) => <span class="chip">{s}</span>)}</p>
+    {c.sealed && <Seal label={c.sealLabel} size={48} />}
+  </div>
+</article>

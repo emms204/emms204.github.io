@@ -1,0 +1,36 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Placeholder from '../components/atelier/Placeholder.astro';
+import RetakeStrip from '../components/atelier/RetakeStrip.astro';
+import Quotes from '../components/atelier/Quotes.astro';
+import { atelier } from '../content/profile';
+import { SHOW_ART, ART_PIECES } from '../config';
+const m = atelier.margins;
+const withRetakes = atelier.caseFiles.filter((c) => c.retake);
+---
+<Layout title={`${m.title} — notes and ideas — Emmanuel Osanebi`} description={m.intro}>
+  <section class="wrap pt-10" aria-labelledby="h">
+    <p class="kicker">The pencil layer</p>
+    <h1 id="h" class="mt-3 text-4xl sm:text-5xl">{m.title}</h1>
+    <p class="margin-note mt-4 max-w-2xl text-lg">{m.intro}</p>
+  </section>
+  <div class="wrap mt-10 grid gap-10 md:grid-cols-2">
+    <section id="season" aria-labelledby="hs"><h2 id="hs" class="text-2xl">{m.season.title}</h2><div class="mt-3"><Placeholder need={m.season.pending} /></div></section>
+    <section id="ideas" aria-labelledby="hi"><h2 id="hi" class="text-2xl">{m.ideas.title}</h2><div class="mt-3"><Placeholder need={m.ideas.pending} /></div></section>
+  </div>
+  <section id="retakes" class="wrap mt-14" aria-labelledby="hr">
+    <h2 id="hr" class="text-3xl">{m.retakes.title}</h2>
+    <p class="mt-2" style="color:var(--graphite)">{m.retakes.intro}</p>
+    {withRetakes.map((c) => (
+      <div class="mt-6"><h3 class="text-xl"><a href={`/work/${c.slug}/`}>{c.title}</a></h3><RetakeStrip retake={c.retake!} title={'Retake strip: ' + c.title} /></div>
+    ))}
+  </section>
+  <div class="wrap"><Quotes /></div>
+  {SHOW_ART && (
+    <section id="sketchbook" class="wrap mt-14" aria-labelledby="ha">
+      <h2 id="ha" class="text-3xl">Sketchbook</h2>
+      <ul class="mt-6 grid gap-4 sm:grid-cols-3">{ART_PIECES.map((p) => <li><img src={p.src} alt={p.alt} loading="lazy" /><p class="kicker mt-1">{p.title}</p></li>)}</ul>
+    </section>
+  )}
+  <section class="wrap mt-14"><a class="btn-seal" href={m.pitch.href}>{m.pitch.label}</a></section>
+</Layout>

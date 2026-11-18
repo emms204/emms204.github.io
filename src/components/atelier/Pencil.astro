@@ -1,0 +1,12 @@
+---
+// Pencil layer: a native checkbox + CSS :has() reveals the margin notes. No JS.
+import { atelier } from '../../content/profile';
+const d = atelier.diagram;
+---
+<div class="pencil-toggle mt-4 flex items-center gap-3">
+  <input type="checkbox" id="pencil" />
+  <label for="pencil" class="inline-flex min-h-11 items-center font-semibold">{d.pencilToggle}</label>
+</div>
+<aside class="pencil-notes mt-2 border-l-2 pl-4" style="border-color:var(--pencil)" aria-label="Margin notes">
+  {d.pencilNotes.map((n) => <p class="margin-note">{n}</p>)}
+</aside>

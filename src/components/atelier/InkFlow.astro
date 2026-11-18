@@ -1,0 +1,71 @@
+---
+import { atelier } from '../../content/profile';
+const d = atelier.diagram;
+const B = d.boxes;
+// Large (desktop) layout: 700 x 300
+const BW = 104, BH = 46, C = [16, 160, 304, 448, 584];
+const L = [
+  { x: C[0], cy: 90 }, { x: C[0], cy: 190 }, { x: C[1], cy: 140 }, { x: C[2], cy: 140 }, { x: C[3], cy: 140 }, { x: C[4], cy: 140 },
+];
+const LE: [number, number, number, number, boolean][] = [
+  [C[0] + BW, 90, C[1], 140, false], [C[0] + BW, 190, C[1], 140, false], [C[1] + BW, 140, C[2], 140, false],
+  [C[2] + BW, 140, C[3], 140, false], [C[3] + BW, 140, C[4], 140, true],
+];
+// Small (phone) layout: 340 x 580
+const SW = 140;
+const S = [
+  { x: 20, cy: 60 }, { x: 180, cy: 60 }, { x: 70, cy: 170 }, { x: 70, cy: 270 }, { x: 70, cy: 370 }, { x: 70, cy: 470 },
+];
+const SE: [number, number, number, number, boolean][] = [
+  [90, 83, 120, 147, false], [250, 83, 160, 147, false], [140, 193, 140, 247, false], [140, 293, 140, 347, false], [140, 393, 140, 447, true],
+];
+const signedBox = (i: number) => i >= 4;
+---
+<figure class="flow" aria-labelledby="flow-cap">
+  <svg class="v-lg" viewBox="0 0 700 300" role="img" aria-label={d.label}>
+    <text class="cap" x="16" y="26">{d.flowTitle}</text>
+    {LE.map((e) => <line class="sk" x1={e[0]} y1={e[1]} x2={e[2]} y2={e[3]} />)}
+    {L.map((b) => <rect class="sk" x={b.x} y={b.cy - BH / 2} width={BW} height={BH} rx="10" />)}
+    {LE.map((e) => <line class:list={['ink', e[4] && 'signed']} pathLength="1" x1={e[0]} y1={e[1]} x2={e[2] - 3} y2={e[3]} />)}
+    <path class="ink" pathLength="1" d="M 500 117 C 500 64, 356 64, 356 117" stroke-dasharray="3 4" />
+    <text class="tag inkfill" x="428" y="62" text-anchor="middle">{d.rerun}</text>
+    {L.map((b, i) => (
+      <g>
+        <rect class:list={['box ink', signedBox(i) && 'signed']} pathLength="1" x={b.x} y={b.cy - BH / 2} width={BW} height={BH} rx="6" />
+        <g class="inkfill">
+          <text class="t" x={b.x + BW / 2} y={b.cy - 3} text-anchor="middle">{B[i][0]}</text>
+          <text class="t" x={b.x + BW / 2} y={b.cy + 13} text-anchor="middle">{B[i][1]}</text>
+          {B[i][2] && <text class="tag" x={b.x + BW / 2} y={b.cy + BH / 2 + 16} text-anchor="middle">{B[i][2]}</text>}
+        </g>
+      </g>
+    ))}
+    <g class="seal"><g transform="rotate(-8 636 236)">
+      <circle cx="636" cy="236" r="30" stroke-width="2.2" /><circle cx="636" cy="236" r="24" stroke-width="0.8" />
+      <text x="636" y="238" text-anchor="middle" style="font-family:var(--font-serif);font-size:15px;font-weight:500">EO</text>
+      <text x="636" y="250" text-anchor="middle" style="font-family:var(--font-mono);font-size:8px;letter-spacing:1.2px">SIGNED</text>
+    </g></g>
+  </svg>
+  <svg class="v-sm" viewBox="0 0 340 580" role="img" aria-label={d.label}>
+    {SE.map((e) => <line class="sk" x1={e[0]} y1={e[1]} x2={e[2]} y2={e[3]} />)}
+    {S.map((b, i) => <rect class="sk" x={b.x} y={b.cy - BH / 2} width={i < 2 ? 140 : SW} height={BH} rx="10" />)}
+    {SE.map((e) => <line class:list={['ink', e[4] && 'signed']} pathLength="1" x1={e[0]} y1={e[1]} x2={e[2]} y2={e[3] - 3} />)}
+    <path class="ink" pathLength="1" d="M 70 370 C 34 370, 34 270, 70 270" stroke-dasharray="3 4" />
+    <text class="tag inkfill" x="14" y="324" transform="rotate(-90 14 324)" text-anchor="middle">{d.rerun}</text>
+    {S.map((b, i) => (
+      <g>
+        <rect class:list={['box ink', signedBox(i) && 'signed']} pathLength="1" x={b.x} y={b.cy - BH / 2} width={140} height={BH} rx="6" />
+        <g class="inkfill">
+          <text class="t" x={b.x + 70} y={b.cy - 3} text-anchor="middle">{B[i][0]}</text>
+          <text class="t" x={b.x + 70} y={b.cy + 13} text-anchor="middle">{B[i][1]}</text>
+          {B[i][2] && <text class="tag" x={b.x + 148} y={b.cy + 4}>{B[i][2]}</text>}
+        </g>
+      </g>
+    ))}
+    <g class="seal"><g transform="rotate(-8 170 540)">
+      <circle cx="170" cy="540" r="28" stroke-width="2.2" /><circle cx="170" cy="540" r="22" stroke-width="0.8" />
+      <text x="170" y="542" text-anchor="middle" style="font-family:var(--font-serif);font-size:14px;font-weight:500">EO</text>
+      <text x="170" y="553" text-anchor="middle" style="font-family:var(--font-mono);font-size:7px;letter-spacing:1.2px">SIGNED</text>
+    </g></g>
+  </svg>
+  <figcaption id="flow-cap" class="kicker px-2 pt-2 pb-1">{d.caption}</figcaption>
+</figure>

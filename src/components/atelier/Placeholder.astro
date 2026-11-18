@@ -1,0 +1,6 @@
+---
+import { SHOW_PLACEHOLDERS } from '../../config';
+interface Props { need: string }
+const { need } = Astro.props;
+---
+{SHOW_PLACEHOLDERS && <p class="placeholder" data-placeholder><strong>Placeholder · awaiting Emmanuel</strong>{need}</p>}

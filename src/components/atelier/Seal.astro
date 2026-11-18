@@ -1,0 +1,12 @@
+---
+interface Props { label?: string; size?: number }
+const { label = 'Signed', size = 72 } = Astro.props;
+---
+<svg class="seal-mark" width={size} height={size} viewBox="0 0 72 72" role="img" aria-label={'Seal: ' + label}>
+  <g transform="rotate(-8 36 36)" fill="none" stroke="currentColor">
+    <circle cx="36" cy="36" r="32" stroke-width="2.2" />
+    <circle cx="36" cy="36" r="26" stroke-width="0.8" />
+    <text x="36" y="37" text-anchor="middle" fill="currentColor" stroke="none" style="font-family:var(--font-serif);font-size:17px;font-weight:500">EO</text>
+    <text x="36" y="50" text-anchor="middle" fill="currentColor" stroke="none" style="font-family:var(--font-mono);font-size:7px;letter-spacing:1.2px">SIGNED</text>
+  </g>
+</svg>

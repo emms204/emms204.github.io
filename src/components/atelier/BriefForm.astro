@@ -1,0 +1,54 @@
+---
+// Contact / commission form. Posts natively to Formspree when FORMSPREE_ENDPOINT
+// is set; otherwise (or if the POST fails) falls back to mailto:. Works with JS off.
+import { atelier } from '../../content/profile';
+import { FORMSPREE_ENDPOINT, CONTACT_EMAIL, WHATSAPP_URL } from '../../config';
+interface Props { heading?: string; intro?: string; defaultTopic?: string }
+const s = atelier.sign;
+const { heading = s.formTitle, intro, defaultTopic = 'client' } = Astro.props;
+const action = FORMSPREE_ENDPOINT || `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Brief from emms204.github.io')}`;
+const waDefault = WHATSAPP_URL + '?text=' + encodeURIComponent('Hi Emmanuel, I would like to talk about a project.');
+---
+<form id="brief" class="card mt-6 grid gap-5 p-5 sm:p-7" action={action} method="post"
+  enctype={FORMSPREE_ENDPOINT ? undefined : 'text/plain'}
+  data-endpoint={FORMSPREE_ENDPOINT} data-mail={CONTACT_EMAIL} data-wa={WHATSAPP_URL}
+  data-sent={s.sent} data-failed={s.failed} aria-labelledby="brief-h">
+  <div>
+    <h2 id="brief-h" class="text-2xl">{heading}</h2>
+    {intro && <p class="hint mt-1">{intro}</p>}
+  </div>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div class="field"><label for="f-name">{s.fields.name}</label><input id="f-name" name="name" autocomplete="name" required /></div>
+    <div class="field"><label for="f-email">{s.fields.email}</label><input id="f-email" name="email" type="email" autocomplete="email" required /></div>
+  </div>
+  <div class="field">
+    <label for="f-topic">{s.fields.topic}</label>
+    <select id="f-topic" name="topic">
+      {s.topics.map((t) => <option value={t.value} selected={t.value === defaultTopic}>{t.label}</option>)}
+    </select>
+  </div>
+  <div class="field">
+    <label for="f-msg">{s.fields.message}</label>
+    <textarea id="f-msg" name="message" required aria-describedby="f-msg-hint"></textarea>
+    <p id="f-msg-hint" class="hint mt-1">{s.fields.messageHint}</p>
+  </div>
+  <input type="hidden" name="_subject" value="Brief from emms204.github.io" />
+  <div style="display:none" aria-hidden="true"><label>Leave empty <input name="_gotcha" tabindex="-1" autocomplete="off" /></label></div>
+  <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+    <button class="btn-seal" type="submit">{s.fields.submit}</button>
+    <a class="btn-line" data-wa-link href={waDefault} rel="noopener">{s.fields.whatsapp}</a>
+    <a class="btn-line" href={'mailto:' + CONTACT_EMAIL}>{s.fields.mail} {CONTACT_EMAIL}</a>
+  </div>
+  <p class="form-status" role="status" aria-live="polite"></p>
+</form>
+<script is:inline>
+(()=>{const f=document.getElementById('brief');if(!f)return;const E=f.elements,s=E.namedItem('topic'),st=f.querySelector('.form-status'),w=f.querySelector('[data-wa-link]'),D=f.dataset;
+const p=new URLSearchParams(location.search).get('path');if(p&&s.querySelector('option[value="'+p+'"]'))s.value=p;
+const t=()=>s.options[s.selectedIndex].text,v=n=>E.namedItem(n).value;
+const body=()=>'Topic: '+t()+'\nName: '+v('name')+'\nEmail: '+v('email')+'\n\n'+v('message');
+const mailto=()=>'mailto:'+D.mail+'?subject='+encodeURIComponent('Brief: '+t())+'&body='+encodeURIComponent(body());
+f.addEventListener('input',()=>{w.href=D.wa+'?text='+encodeURIComponent('Hi Emmanuel. '+body())});
+f.addEventListener('submit',async e=>{e.preventDefault();if(!f.reportValidity())return;E.namedItem('_subject').value='Brief: '+t();
+const fb=()=>{st.textContent=D.failed;location.href=mailto()};if(!D.endpoint){location.href=mailto();return}
+try{const r=await fetch(D.endpoint,{method:'POST',body:new FormData(f),headers:{Accept:'application/json'}});if(!r.ok)throw 0;f.reset();st.textContent=D.sent}catch(_){fb()}});})();
+</script>

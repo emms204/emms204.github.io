@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://emms204.github.io/sitemap.xml

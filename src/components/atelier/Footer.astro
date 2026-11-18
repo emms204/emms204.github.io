@@ -1,0 +1,18 @@
+---
+import { profile, atelier } from '../../content/profile';
+import { CONTACT_EMAIL } from '../../config';
+const year = new Date().getFullYear();
+---
+<footer class="wrap mt-24 pb-10">
+  <div class="rule pt-6 flex flex-wrap items-center justify-between gap-4 text-sm" style="color:var(--graphite)">
+    <p class="margin-note">{atelier.footer.note}</p>
+    <ul class="flex flex-wrap gap-x-4">
+      <li><a class="inline-flex min-h-11 items-center" href={'mailto:' + CONTACT_EMAIL}>Email</a></li>
+      {profile.contact.links.map((l) => <li><a class="inline-flex min-h-11 items-center" href={l.href} rel="me noopener">{l.label}</a></li>)}
+      <li><a class="inline-flex min-h-11 items-center" href="https://medium.com/@emmxyz12" rel="me noopener">Medium</a></li>
+      <li><a class="inline-flex min-h-11 items-center" href="/archive/">Archive</a></li>
+      <li><a class="inline-flex min-h-11 items-center" href="/cv.pdf">CV (PDF)</a></li>
+    </ul>
+  </div>
+  <p class="mt-4 text-sm" style="color:var(--graphite)">© {year} {profile.person.name}</p>
+</footer>

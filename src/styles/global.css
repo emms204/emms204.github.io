@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/* ---------- Self-hosted, subset fonts (SIL OFL; licences in /fonts) ---------- */
+@font-face { font-family: "Fraunces"; src: url("/fonts/fraunces-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Fraunces"; src: url("/fonts/fraunces-400-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Hanken Grotesk"; src: url("/fonts/hanken-grotesk-var.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("/fonts/jetbrains-mono-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+
+@theme {
+  --font-serif: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: "Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+
+:root {
+  --paper: #F3EEE4; --paper-2: #FBF8F2; --ink: #14171F; --graphite: #3A3A3F; --pencil: #5E5C57;
+  --seal: #B8361D; --on-seal: #FFFFFF; --ledger: #1B6250; --rule: #D9D1C2;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14171F; --paper-2: #1C2029; --ink: #EDE7DC; --graphite: #CFC8BC; --pencil: #A9A398;
+    --seal: #FF6B4E; --on-seal: #14171F; --ledger: #5FC2A4; --rule: #343946;
+  }
+}
+
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-padding-top: 1rem; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+  body { background: var(--paper); color: var(--ink); font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.6; }
+  h1, h2, h3 { font-family: var(--font-serif); font-weight: 500; line-height: 1.12; letter-spacing: -0.01em; text-wrap: balance; }
+  a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  a:hover { text-decoration-color: var(--seal); }
+  :focus-visible { outline: 3px solid var(--seal); outline-offset: 3px; border-radius: 3px; }
+  [id] { scroll-margin-top: 1rem; }
+  ::selection { background: var(--seal); color: var(--on-seal); }
+}
+
+/* Paper grain: a tiny SVG noise filter, never a photo */
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1; opacity: .05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+@utility wrap { margin-inline: auto; width: 100%; max-width: 72rem; padding-inline: 1.25rem; @media (width >= 40rem) { padding-inline: 2rem; } }
+@utility kicker { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--pencil); }
+@utility margin-note { font-family: var(--font-serif); font-style: italic; color: var(--pencil); }
+@utility rule { border-top: 1px solid var(--rule); }
+
+.btn-seal { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: .6rem 1.1rem; border-radius: 6px;
+  background: var(--seal); color: var(--on-seal); font-weight: 600; text-decoration: none; border: 0; cursor: pointer; font-size: 1rem; }
+.btn-seal:hover { filter: brightness(1.08); }
+.btn-line { display: inline-flex; align-items: center; min-height: 44px; padding: .6rem .25rem; font-weight: 600; }
+.chip { display: inline-flex; align-items: center; border: 1px solid var(--rule); border-radius: 999px; padding: .1rem .6rem; font-size: .8125rem; color: var(--graphite); font-family: var(--font-mono); }
+.fig { font-family: var(--font-mono); color: var(--ledger); font-variant-numeric: tabular-nums; }
+.card { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 10px; }
+.placeholder { border: 1.5px dashed var(--pencil); border-radius: 8px; padding: .75rem 1rem; color: var(--graphite); font-size: .9375rem; background: transparent; }
+.placeholder strong { font-family: var(--font-mono); font-weight: 400; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--seal); display: block; }
+
+/* ---------- Pathway chooser (works with CSS :has, no JS) ---------- */
+.chooser input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.chooser label { display: inline-flex; align-items: center; min-height: 44px; padding: .45rem 1rem; border: 1px solid var(--rule); border-radius: 999px; cursor: pointer; color: var(--graphite); background: var(--paper-2); font-size: .9375rem; }
+.chooser input:checked + label { border-color: var(--ink); color: var(--ink); box-shadow: inset 0 -2px 0 var(--seal); font-weight: 600; }
+.chooser input:focus-visible + label { outline: 3px solid var(--seal); outline-offset: 2px; }
+.path-panel { display: none; }
+.cover:has(#path-client:checked) .path-panel[data-path=client],
+.cover:has(#path-customer:checked) .path-panel[data-path=customer],
+.cover:has(#path-employer:checked) .path-panel[data-path=employer],
+.cover:has(#path-collaborator:checked) .path-panel[data-path=collaborator],
+.cover:has(#path-partner:checked) .path-panel[data-path=partner] { display: block; }
+/* Without :has support, show the default (client) panel */
+@supports not selector(:has(*)) { .path-panel[data-path=client] { display: block; } }
+
+/* ---------- Pencil layer toggle ---------- */
+.pencil-toggle input { width: 1.25rem; height: 1.25rem; accent-color: var(--seal); }
+.pencil-notes { display: none; }
+.atelier:has(#pencil:checked) .pencil-notes { display: block; }
+
+/* ---------- Ink-in diagram ---------- */
+.flow { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 12px; padding: .5rem; }
+.flow svg { width: 100%; height: auto; display: block; }
+.flow .sk { stroke: var(--pencil); fill: none; stroke-dasharray: 4 5; stroke-width: 1.1; opacity: .55; }
+.flow .ink { stroke: var(--ink); fill: none; stroke-width: 1.6; }
+.flow .box { fill: var(--paper); }
+.flow .t { fill: var(--ink); font-family: var(--font-sans); font-size: 12px; }
+.flow .tag { fill: var(--ledger); font-family: var(--font-mono); font-size: 10px; }
+.flow .cap { fill: var(--graphite); font-family: var(--font-mono); font-size: 11px; letter-spacing: 1.5px; }
+.flow .signed { stroke: var(--seal); }
+.flow .seal circle { fill: none; stroke: var(--seal); }
+.flow .seal text { fill: var(--seal); }
+.flow .v-sm { display: none; }
+@media (width < 40rem) { .flow .v-lg { display: none; } .flow .v-sm { display: block; } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .flow .ink { stroke-dasharray: 1; stroke-dashoffset: 1; animation: ink-in linear both; animation-timeline: view(); animation-range: entry 20% cover 45%; }
+    .flow .inkfill { animation: fade-in linear both; animation-timeline: view(); animation-range: entry 30% cover 45%; }
+    .flow .seal { animation: seal-in linear both; animation-timeline: view(); animation-range: cover 40% cover 55%; transform-box: fill-box; transform-origin: center; }
+  }
+}
+@keyframes ink-in { to { stroke-dashoffset: 0; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes seal-in { from { opacity: 0; transform: scale(1.6) rotate(-20deg); } to { opacity: 1; transform: scale(1) rotate(-8deg); } }
+
+/* Seal mark */
+.seal-mark { color: var(--seal); }
+
+/* Header nav: scrollable row on phones */
+.site-nav { flex-wrap: wrap; }
+.site-nav a { display: inline-flex; align-items: center; min-height: 44px; padding-inline: .55rem; text-decoration: none; color: var(--graphite); white-space: nowrap; }
+.site-nav a:hover, .site-nav a[aria-current=page] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--seal); }
+
+/* Form */
+.field label { display: block; font-weight: 600; margin-bottom: .25rem; }
+.field input, .field select, .field textarea { width: 100%; min-height: 44px; padding: .6rem .75rem; border: 1px solid var(--pencil); border-radius: 6px; background: var(--paper-2); color: var(--ink); font: inherit; }
+.field textarea { min-height: 9rem; }
+.hint { font-size: .875rem; color: var(--graphite); }
+.form-status:empty { display: none; }

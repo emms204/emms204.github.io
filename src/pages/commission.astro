@@ -1,0 +1,36 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BriefForm from '../components/atelier/BriefForm.astro';
+import { atelier } from '../content/profile';
+const c = atelier.commission;
+---
+<Layout title={`${c.title} — work with Emmanuel Osanebi`} description={c.intro}>
+  <section class="wrap pt-10" aria-labelledby="h">
+    <p class="kicker">Services</p>
+    <h1 id="h" class="mt-3 text-4xl sm:text-5xl">{c.title}</h1>
+    <p class="mt-4 max-w-2xl" style="color:var(--graphite)">{c.intro}</p>
+    <ol class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {c.offers.map((o, i) => (
+        <li class="card flex flex-col p-6" id={'offer-' + o.key}>
+          <p class="kicker">{String(i + 1).padStart(2, '0')} · {o.kind}</p>
+          <h2 class="mt-2 text-2xl">{o.name}</h2>
+          <p class="mt-2" style="color:var(--graphite)">{o.engagement}</p>
+          <dl class="mt-3 text-sm">
+            <dt class="kicker">Proof on the site</dt><dd class="mt-1">{o.proof}</dd>
+            <dt class="kicker mt-3">{c.priceLabel}</dt><dd class="mt-1 font-semibold">{c.price}</dd>
+          </dl>
+          <a class="btn-line mt-auto" href={`/sign/?path=${o.key === 'embedded' ? 'employer' : o.key === 'shelf' ? 'customer' : 'client'}#brief`}>{c.offerCta}<span class="sr-only">: {o.name}</span></a>
+        </li>
+      ))}
+    </ol>
+  </section>
+  <section class="wrap mt-14" aria-labelledby="hp">
+    <h2 id="hp" class="text-3xl">{c.processTitle}</h2>
+    <ol class="mt-6 grid gap-6 sm:grid-cols-3">
+      {c.process.map((p, i) => <li class="rule pt-4"><p class="kicker">Step {i + 1}</p><h3 class="mt-1 text-2xl">{p.name}</h3><p class="mt-2" style="color:var(--graphite)">{p.detail}</p></li>)}
+    </ol>
+  </section>
+  <section class="wrap mt-14" aria-label={c.builderTitle}>
+    <BriefForm heading={c.builderTitle} intro={c.builderIntro} />
+  </section>
+</Layout>
