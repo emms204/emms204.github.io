@@ -2,10 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 import IntentChooser from '../components/works/IntentChooser.astro';
 import ProofBench from '../components/works/ProofBench.astro';
+import PrivacyLens from '../components/works/PrivacyLens.astro';
+import StoryEngine from '../components/works/StoryEngine.astro';
 import WorkIndex from '../components/works/WorkIndex.astro';
 import { profile, atelier, works } from '../content/profile';
 import { CONTACT_EMAIL, WHATSAPP_URL } from '../config';
-const h = works.hero; const d = works.dimensions;
+const h = works.hero;
 const featured = atelier.caseFiles.slice(0, 5);
 ---
 <Layout personLd>
@@ -15,41 +17,34 @@ const featured = atelier.caseFiles.slice(0, 5);
     <div class="hero-grid">
       <div>
         <p class="hero-statement">{h.statement}</p>
-        <ul class="hero-lines">{h.lines.map((l, i) => <li><span class="fig">{String(i + 1).padStart(2, '0')}</span>{l}</li>)}</ul>
+        <p class="hero-offer">{h.offer}</p>
+        <p class="hero-ctas"><a class="btn-seal" href={h.cta.href}>{h.cta.label}</a><a class="btn-line" href={h.cta2.href}>{h.cta2.label}</a></p>
       </div>
-      <aside class="hero-note" aria-label="How the systems work">
-        <p class="kicker">Note · the rule</p>
+      <aside class="hero-note" aria-label="What I make">
+        <ul class="hero-lines">{h.lines.map((l, i) => <li><span class="fig">{String(i + 1).padStart(2, '0')}</span>{l}</li>)}</ul>
         <p class="hero-support">{h.support}</p>
-        <p class="margin-note">{h.supportNote}</p>
-        <p class="hero-role">{h.role}</p>
-        <p class="mt-4 flex flex-wrap gap-x-6"><a class="btn-seal" href={h.jump.href}>{h.jump.label}</a><a class="btn-line" href="/cv.pdf">CV (PDF)</a></p>
+        <p class="mt-3 flex flex-wrap gap-x-6"><a class="btn-line" href={h.jump.href}>{h.jump.label}</a><a class="btn-line" href="/cv.pdf">CV (PDF)</a></p>
       </aside>
     </div>
   </section>
 
   <IntentChooser />
 
-  <ProofBench />
-
-  <section class="wrap minds" aria-labelledby="minds-h">
-    <h2 id="minds-h" class="display-2">{d.title}</h2>
-    <ol class="minds-list">
-      {d.items.map((m, i) => (
-        <li class={'mind mind-' + m.key}>
-          <p class="kicker">{String(i + 1).padStart(2, '0')} · {m.name}</p>
-          <p class="mind-line">{m.line}</p>
-          <p class="mt-2">{m.body}</p>
-          <p class="mt-2 flex flex-wrap gap-x-5">{m.links.map((l) => <a class="btn-line" href={l.href}>{l.label}</a>)}</p>
-        </li>
-      ))}
-    </ol>
+  <section id="bench" class="pieces" aria-labelledby="pieces-h">
+    <div class="wrap"><h2 id="pieces-h" class="display-2">{works.pieces.title}</h2>
+      <ol class="pieces-index">{works.pieces.items.map((p, i) => <li><a href={p.href}><span class="fig">{String(i + 1).padStart(2, '0')}</span> {p.label}</a></li>)}</ol>
+    </div>
+    <div class="pieces-grid">
+      <ProofBench />
+      <PrivacyLens />
+      <StoryEngine />
+    </div>
   </section>
 
   <section id="work" class="wrap section" aria-labelledby="work-h">
     <span id="projects"></span><span id="portfolio-overview"></span>
     <div class="section-head">
       <h2 id="work-h" class="display-2">{works.selected.title}</h2>
-      <p class="margin-note max-w-md">{works.howItRan.note}</p>
     </div>
     <WorkIndex items={featured} />
     <p class="mt-6 flex flex-wrap gap-x-6"><a class="btn-line" href="/work/">{works.selected.all}</a><a class="btn-line" href="/products/">Products</a><a class="btn-line" href="/archive/">{works.selected.archive}</a></p>

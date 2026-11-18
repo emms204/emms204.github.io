@@ -1,6 +1,6 @@
 # Emmanuel Osanebi — portfolio (Astro + Tailwind)
 
-Static site for https://emms204.github.io (GitHub Pages user site, base `/`). Zero client JS, system fonts, no trackers.
+Static site for https://emms204.github.io (GitHub Pages user site, base `/`). Self-hosted fonts, no trackers, no third-party scripts. Small inline scripts progressively enhance the homepage demos (Proof Bench, Privacy Lens, Story Engine), the intent chooser and the contact form; every page works with JavaScript off. Pages without a demo or form ship no JS.
 
 ## Content
 All copy lives in **`src/content/profile.ts`**. Components never hard-code text.
@@ -14,6 +14,8 @@ npm ci
 npm run dev       # http://localhost:4321
 npm run build     # → dist/
 npm run preview
+npm run check     # astro check (types + templates)
+npm test          # after a build: routes, confidentiality grep, cv.pdf md5, no ?state= preview in prod
 ```
 
 ## Deploy (after Emmanuel approves the preview)
@@ -42,3 +44,11 @@ Option B: push the contents of `dist/` (including `.nojekyll`) to the branch Pag
   New values `build|products|hire|collaborate` work too. JS off: chooser links are `/?path=<key>#for-<key>` and CSS `:target` shows the panel; a bare `/?path=<old>` without JS shows the default (build) panel.
 - Inquiry form (`/contact/`): plain `POST` to `FORMSPREE_ENDPOINT` (works with JS off; Formspree shows its own thank-you page). With JS: `fetch` + JSON, inline success / failure / per-field errors, mailto fallback always visible. `/contact/?intent=<key>` preselects the intent. Screenshot preview: `/contact/?state=success` or `/contact/?state=failure` (shows the panel, sends nothing).
 - Preview: `npm run build && npx astro preview --host 127.0.0.1 --port 4322` → http://127.0.0.1:4322/
+
+## THE WORKS v2 (branch `works-v2`, IMPL-20261118-03, preview only)
+
+- Homepage first screen: offer line + "See what I can build for you" (→ `/solutions/`) and "Start an inquiry".
+- "Three pieces on the bench" (`#bench`): Proof Bench (`#proof-bench`, approval shows a clearly labelled SIMULATED audit-log entry, DOM only), Privacy Lens (`#privacy-lens`, rule-based masking illustration on synthetic text; rules in `src/lib/privacyLens.ts`, no network calls), Story Engine (`#story-engine`, fictional ScriptGen-style bible check, two branches).
+- Solutions: each offer has a typical example deliverable and typical prerequisites (sources in `works.solutions.offers[].basis`).
+- Contact form is intent-aware: one fieldset per intent (`build`, `products`, `hire`, `collaborate`). JS on: only the chosen group is shown/enabled/required. JS off: all groups visible under labelled fieldsets.
+- `?state=success|failure` form preview exists only in `astro dev` (`import.meta.env.DEV`); production builds do not contain it (checked by `npm test`).

@@ -1,0 +1,44 @@
+---
+// Story Engine: an illustration of the ScriptGen approach (bible-checked scenes).
+// Original fictional character; nothing is generated live. JS off: both branches show.
+import { works } from '../../content/profile';
+const S = works.story;
+const ruleText = Object.fromEntries(S.rules.map((r) => [r.id, r.text]));
+---
+<article id="story-engine" class="piece story" aria-labelledby="story-h" data-branch="keep">
+  <p class="kicker">{S.kicker}</p>
+  <h3 id="story-h" class="piece-title">{S.title}</h3>
+  <p class="piece-lede">{S.lede}</p>
+  <p class="bench-flag"><strong>Illustration</strong> {S.flag} {S.flagNote}</p>
+
+  <div class="story-bible">
+    <p class="kicker">{S.bibleTitle}</p>
+    <p class="story-char">{S.character}</p>
+    <ul>{S.rules.map((r) => <li><span class="fig">{r.id}</span> {r.text}</li>)}</ul>
+  </div>
+  <p class="story-scene"><span class="kicker">{S.sceneTitle}</span> {S.scene}</p>
+
+  <div class="bench-cases story-pick" role="group" aria-label={S.choose} data-js-only hidden>
+    {S.branches.map((b, i) => <button type="button" class="bench-case-btn" data-go-branch={b.key} aria-pressed={i === 0 ? 'true' : 'false'}>{b.label}<span class="bench-case-tag">{b.results.every((r) => r.ok) ? 'keeps the bible' : 'breaks the bible'}</span></button>)}
+  </div>
+  {S.branches.map((b) => {
+    const ok = b.results.every((r) => r.ok);
+    return (
+      <div role="group" class:list={['story-branch', ok ? 'is-ok' : 'is-bad']} data-branch={b.key} aria-label={b.label}>
+        <h4 class="bench-case-h">{b.label}</h4>
+        <p class="story-draft">{b.text}</p>
+        <ul class="story-checks">
+          {b.results.map((r) => <li class={r.ok ? 'is-ok' : 'is-bad'}><span class="mark" aria-hidden="true">{r.ok ? '✓' : '✗'}</span> <span class="fig">{r.id}</span> {r.ok ? 'Pass' : 'Fail'}: {r.why}<span class="sr-only"> (rule: {ruleText[r.id]})</span></li>)}
+        </ul>
+        <p class:list={['verdict', ok ? 'is-ok' : 'is-bad']}>{b.verdict}</p>
+      </div>
+    );
+  })}
+  <p class="sr-only" aria-live="polite" data-live></p>
+  <p class="piece-links"><a class="btn-line" href={S.repo.href} rel="noopener">{S.repo.label}</a><a class="btn-line" href={S.more.href}>{S.more.label}</a></p>
+</article>
+<script is:inline>
+(()=>{const A=document.getElementById('story-engine');if(!A)return;const L=A.querySelector('[data-live]');A.dataset.js='';A.querySelectorAll('[data-js-only]').forEach(e=>e.hidden=false);
+A.addEventListener('click',e=>{const b=e.target.closest('[data-go-branch]');if(!b)return;A.dataset.branch=b.dataset.goBranch;
+A.querySelectorAll('[data-go-branch]').forEach(x=>x.setAttribute('aria-pressed',x===b));const s=A.querySelector('.story-branch[data-branch="'+b.dataset.goBranch+'"]');L.textContent=s.querySelector('h4').textContent+': '+s.querySelector('.verdict').textContent})})();
+</script>

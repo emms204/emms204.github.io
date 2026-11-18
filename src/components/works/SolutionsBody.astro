@@ -21,10 +21,13 @@ const legacy: Record<string, string[]> = { strategy: ['offer-sketch'], systems: 
       <div class="offer-body">
         <h3 class="kicker">{s.getsLabel}</h3>
         <ul class="offer-gets">{o.gets.map((g) => <li>{g}</li>)}</ul>
+        <dl class="offer-example">
+          <dt>{s.exampleLabel}</dt><dd>{o.example}</dd>
+          <dt>{s.prereqLabel}</dt><dd>{o.prereqs}</dd>
+        </dl>
         <h3 class="kicker mt-6">{s.behindLabel}</h3>
         <ul class="offer-behind">{o.behind.map((b) => <li><a href={b.href}>{b.label}</a></li>)}</ul>
         <dl class="offer-terms">
-          <div><dt class="kicker">{s.howLabel}</dt><dd>{s.how}</dd></div>
           <div><dt class="kicker">{s.priceLabel}</dt><dd>{s.price}</dd></div>
         </dl>
         <p class="mt-5"><a class="btn-seal" href={o.cta.href}>{o.cta.label}<span class="sr-only">: {o.name}</span></a></p>

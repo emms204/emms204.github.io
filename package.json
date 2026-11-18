@@ -11,7 +11,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "prebuild": "node scripts/copy-cv.mjs",
-    "predev": "node scripts/copy-cv.mjs"
+    "predev": "node scripts/copy-cv.mjs",
+    "check": "astro check",
+    "test": "node scripts/test.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.5",
@@ -20,10 +22,12 @@
   },
   "private": true,
   "devDependencies": {
+    "@astrojs/check": "^0.9.12",
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/hanken-grotesk": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@fontsource/fraunces": "^5.3.0",
-    "@fontsource/jetbrains-mono": "^5.3.0"
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "typescript": "^6.0.3"
   }
 }

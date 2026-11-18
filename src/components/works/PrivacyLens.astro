@@ -1,0 +1,66 @@
+---
+// Privacy Lens: rule-based masking ILLUSTRATION on synthetic text (not the AnotiAI SDK).
+// Build time renders sample 1 as a static before/after (works with JS off).
+// JS adds sample picking and live editing. No network calls.
+import { works } from '../../content/profile';
+import { lens, TYPES } from '../../lib/privacyLens';
+const L = works.lens;
+const first = lens(L.samples[0].text);
+---
+<article id="privacy-lens" class="piece lens" aria-labelledby="lens-h" data-samples={JSON.stringify(L.samples.map((s) => s.text))} data-none={L.none}>
+  <p class="kicker">{L.kicker}</p>
+  <h3 id="lens-h" class="piece-title">{L.title}</h3>
+  <p class="piece-lede">{L.lede}</p>
+  <p class="bench-flag"><strong>Illustration</strong> {L.flag} {L.flagNote}</p>
+
+  <div class="lens-controls" data-js-only hidden>
+    <div class="lens-samples" role="group" aria-label={L.samplesLabel}>
+      {L.samples.map((s, i) => <button type="button" class="bench-case-btn" data-sample={i} aria-pressed={i === 0 ? 'true' : 'false'}>{s.label}</button>)}
+    </div>
+    <label class="lens-label" for="lens-text">{L.textLabel}</label>
+    <textarea id="lens-text" class="lens-input" rows="4" spellcheck="false" aria-describedby="lens-status">{L.samples[0].text}</textarea>
+  </div>
+
+  <div class="lens-out">
+    <figure class="lens-pane">
+      <figcaption class="kicker">{L.before}</figcaption>
+      <p class="lens-text" data-before>{first.segments.map((g) => g.type ? <mark class="ent" data-t={g.type}>{g.text}<span class="ent-t">{g.type}</span></mark> : g.text)}</p>
+    </figure>
+    <figure class="lens-pane">
+      <figcaption class="kicker">{L.after}</figcaption>
+      <p class="lens-text" data-after>{first.segments.map((g) => g.type ? <span class="tok" data-t={g.type}>{g.token}</span> : g.text)}</p>
+    </figure>
+  </div>
+  <table class="lens-map">
+    <caption class="kicker">{L.mapTitle}</caption>
+    <thead><tr><th scope="col">Token</th><th scope="col">Type</th><th scope="col">Original (synthetic)</th></tr></thead>
+    <tbody data-map>{first.map.map((m) => <tr><td class="fig">{m.token}</td><td>{m.type}</td><td>{m.value}</td></tr>)}</tbody>
+  </table>
+  <p id="lens-status" class="lens-status" aria-live="polite" data-status>{'Found ' + first.map.length + ': ' + TYPES.filter((t) => first.counts[t]).map((t) => first.counts[t] + ' ' + t).join(', ') + '.'}</p>
+  <p class="piece-links"><a class="btn-line" href={L.pypi.href} rel="noopener">{L.pypi.label}</a><a class="btn-line" href={L.more.href}>{L.more.label}</a></p>
+</article>
+<script>
+  import { lens, TYPES } from '../../lib/privacyLens';
+  const A = document.getElementById('privacy-lens');
+  if (A) {
+    const S: string[] = JSON.parse(A.dataset.samples || '[]');
+    const ta = A.querySelector<HTMLTextAreaElement>('#lens-text')!;
+    const before = A.querySelector('[data-before]')!, after = A.querySelector('[data-after]')!, map = A.querySelector('[data-map]')!, status = A.querySelector('[data-status]')!;
+    const el = (tag: string, cls: string, text: string, t?: string) => { const e = document.createElement(tag); if (cls) e.className = cls; e.textContent = text; if (t) e.dataset.t = t; return e; };
+    let timer = 0;
+    const render = () => {
+      const r = lens(ta.value);
+      before.replaceChildren(...r.segments.map((g) => { if (!g.type) return document.createTextNode(g.text); const m = el('mark', 'ent', g.text, g.type); m.append(el('span', 'ent-t', g.type)); return m; }));
+      after.replaceChildren(...r.segments.map((g) => g.type ? el('span', 'tok', g.token!, g.type) : document.createTextNode(g.text)));
+      map.replaceChildren(...r.map.map((m) => { const tr = document.createElement('tr'); tr.append(el('td', 'fig', m.token), el('td', '', m.type), el('td', '', m.value)); return tr; }));
+      status.textContent = r.map.length ? 'Found ' + r.map.length + ': ' + TYPES.filter((t) => r.counts[t]).map((t) => r.counts[t] + ' ' + t).join(', ') + '.' : (A.dataset.none || '');
+    };
+    A.querySelectorAll<HTMLElement>('[data-js-only]').forEach((e) => (e.hidden = false));
+    A.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-sample]'); if (!b) return;
+      A.querySelectorAll('[data-sample]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      ta.value = S[+b.dataset.sample!]; render();
+    });
+    ta.addEventListener('input', () => { A.querySelectorAll('[data-sample]').forEach((x) => x.setAttribute('aria-pressed', 'false')); clearTimeout(timer); timer = window.setTimeout(render, 200); });
+  }
+</script>
