@@ -290,6 +290,7 @@ export const profile: Profile = {
     archive: 'Earlier CV repos: profile.md §4.8. Chatflow: live emms204.github.io description, read 18 Nov 2026 (kept per concept Page "every working link")',
     works: 'THE WORKS slice (IMPL-20261118-02): hero, entry question, three dimensions and the accountable-AI supporting line from the external creative audit chosen by Emmanuel (via Grok Bot, Nov 18 8:56 PM). Offer names: the same audit (AI Strategy & Architecture, Custom AI Systems, Product Engineering, Engineering Collaboration); offer contents re-use only verified case-file facts above; engagement steps and pricing "On request" (no verified engagement process). Products: profile.md §4.2–4.4, §4.7. Outside work allowed by contract: Emmanuel via Grok Bot, Nov 18',
     proofBench: 'Proof Bench: SYNTHETIC data written for the illustration (bank line ACME SVCS / Invoice 1042 / $1,250.00 and ledger INV-1042 / ACME SERVICES / $1,250.00 from the brief; Globex example invented as synthetic test data, not a client). Pattern (model proposes, deterministic code checks, a person approves) per profile.md §3 product-level description; no product or company named in the demo',
+    heroLines: 'Hero lines "AI systems. Software products. Stories worth telling." ("Business ideas" dropped; collaborate intent sub-line softened from "Ventures"): Emmanuel via Grok Bot, Nov 18 9:42 PM. Share image og.png regenerated for THE WORKS at the same time',
     formspree: 'Formspree endpoint https://formspree.io/f/xjywrjrz: Emmanuel via Grok Bot, Nov 18 9:00 PM',
     caseFiles: 'Case files: CV (cv-source HTML) + profile.md §3/§4, product-level for MasteryHive. Withheld metrics (VoterIQ 40%, Enzagroup 95%/20+ types, etc.) stay withheld',
   },
@@ -707,14 +708,15 @@ const ask = (intent: IntentKey) => `/contact/?intent=${intent}#inquiry`;
 
 export const works = {
   meta: {
-    title: 'Emmanuel Osanebi — The Works: AI systems, software products, ideas and stories',
-    description: 'Emmanuel Osanebi, AI Engineer. I make difficult things useful: AI systems, software products, business ideas and stories worth telling. AI drafts, Python checks, a person signs.',
+    title: 'Emmanuel Osanebi — The Works: AI systems, software products and stories',
+    description: 'Emmanuel Osanebi, AI Engineer. I make difficult things useful: AI systems, software products and stories worth telling. AI drafts, Python checks, a person signs.',
+    ogAlt: 'Emmanuel Osanebi — THE WORKS. I make difficult things useful.',
   },
   hero: {
     name: 'Emmanuel Osanebi',
     title: 'The Works',
     statement: 'I make difficult things useful.',
-    lines: ['AI systems.', 'Software products.', 'Business ideas.', 'Stories worth telling.'],
+    lines: ['AI systems.', 'Software products.', 'Stories worth telling.'],
     support: 'AI drafts, Python checks, a person signs.',
     supportNote: 'The rule behind the systems: the model proposes, deterministic code checks the numbers, and a person approves anything that matters.',
     role: 'AI Engineer · MasteryHive AI · Python / FastAPI · LLM agents and automation',
@@ -764,7 +766,7 @@ export const works = {
         second: { label: 'Talk about a role or contract', href: ask('hire') },
       },
       {
-        key: 'collaborate', label: 'Explore an idea / collaborate', sub: 'Ventures, writing, stories',
+        key: 'collaborate', label: 'Explore an idea / collaborate', sub: 'Writing, stories, new projects',
         headline: 'I write, build and tell stories. If you have an idea worth making, bring it.',
         evidenceTitle: 'Where the creative work lives',
         evidence: [
