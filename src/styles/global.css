@@ -342,7 +342,7 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-i
 .inq-errors ul { list-style: disc; padding-left: 1.25rem; margin-top: .25rem; }
 .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 .inq-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.5rem; }
-.inq-actions .btn-line { min-width: 0; flex-wrap: wrap; }
+.inq-actions .btn-line { min-width: 0; flex-wrap: wrap; column-gap: .3em; }
 .inq-state { display: flex; gap: 1.25rem; align-items: center; padding: 1.25rem 1.25rem 1.25rem 1.5rem; outline: none; border-left: 4px solid var(--ledger); background: var(--paper-2); }
 .inq-failure { border-left-color: var(--seal); }
 @media (prefers-reduced-motion: no-preference) { .inq-success:not([hidden]) .stamp { animation: stamp-in .45s cubic-bezier(.2,1.4,.4,1) both; } .inq-state:not([hidden]) { animation: fade-up .3s ease-out both; } }
