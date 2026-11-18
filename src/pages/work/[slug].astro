@@ -19,16 +19,16 @@ const w = atelier.work;
     <div class="wrap grid gap-10 md:grid-cols-[7fr_3fr]">
       <div>
         <section class="rule mt-6 pt-4" aria-labelledby="s1">
-          <p class="kicker">Act I</p><h2 id="s1" class="mt-1 text-2xl">Sketch</h2>
+          <p class="kicker">How it ran · I</p><h2 id="s1" class="mt-1 text-2xl">Sketch</h2>
           <p class="margin-note mt-2 text-lg">{c.sketch}</p>
         </section>
         <section class="rule mt-8 pt-4" aria-labelledby="s2">
-          <p class="kicker">Act II</p><h2 id="s2" class="mt-1 text-2xl">Ink</h2>
+          <p class="kicker">How it ran · II</p><h2 id="s2" class="mt-1 text-2xl">Ink</h2>
           <ul class="mt-3 grid list-disc gap-2 pl-5">{c.ink.map((x) => <li>{x}</li>)}</ul>
           {c.diagram && <div class="mt-6"><InkFlow /><Pencil /></div>}
         </section>
         <section class="rule mt-8 pt-4" aria-labelledby="s3">
-          <p class="kicker">Act III</p><h2 id="s3" class="mt-1 text-2xl">Sign</h2>
+          <p class="kicker">How it ran · III</p><h2 id="s3" class="mt-1 text-2xl">Sign</h2>
           <div class="mt-3 flex flex-wrap items-start justify-between gap-6">
             <ul class="grid list-disc gap-2 pl-5">{c.sign.map((x) => <li>{x}</li>)}</ul>
             {c.sealed && <Seal label={c.sealLabel} size={84} />}
@@ -55,7 +55,7 @@ const w = atelier.work;
     <footer class="wrap mt-12">
       <div class="card flex flex-wrap items-center justify-between gap-4 p-6">
         <p class="text-2xl" style="font-family:var(--font-serif)">{w.cta}</p>
-        <a class="btn-seal" href={w.ctaLink.href}>{w.ctaLink.label}</a>
+        <a class="btn-seal" href={'/contact/?intent=build#inquiry'}>{w.ctaLink.label}</a>
       </div>
     </footer>
   </article>

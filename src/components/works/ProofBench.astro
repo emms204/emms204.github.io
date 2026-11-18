@@ -1,0 +1,131 @@
+---
+// Proof Bench: a 4-step reconciliation illustration on SYNTHETIC data.
+// The deterministic checks run here at build time, so the page shows the
+// same results with or without JavaScript. JS only adds step-by-step paging.
+import { works } from '../../content/profile';
+const b = works.bench;
+type Rec = { source: string; payee: string; ref: string; amount: number; date: string };
+const money = (c: number) => '$' + (c / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const day = (d: string) => new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const refNo = (r: string) => (r.match(/\d+/g) ?? []).join('');
+const days = (a: string, z: string) => Math.abs(Date.parse(a) - Date.parse(z)) / 864e5;
+const check = (x: Rec, y: Rec) => {
+  const dd = days(x.date, y.date);
+  const rows = [
+    { key: 'amount', rule: b.rules.amount, a: money(x.amount), z: money(y.amount), ok: x.amount === y.amount,
+      why: x.amount === y.amount ? 'Equal to the cent.' : `Differs by ${money(Math.abs(x.amount - y.amount))}.` },
+    { key: 'reference', rule: b.rules.reference, a: x.ref, z: y.ref, ok: refNo(x.ref) === refNo(y.ref),
+      why: refNo(x.ref) === refNo(y.ref) ? `Both normalise to ${refNo(x.ref)}.` : 'Invoice numbers differ.' },
+    { key: 'date', rule: b.rules.date, a: day(x.date), z: day(y.date), ok: dd <= 3,
+      why: dd === 0 ? 'Same day.' : `${dd} day${dd === 1 ? '' : 's'} apart, inside the window.` },
+  ];
+  return { rows, ok: rows.every((r) => r.ok), fail: rows.filter((r) => !r.ok).map((r) => r.why).join(' ') };
+};
+const cases = b.cases.map((c) => ({ ...c, v: check(c.bank as Rec, c.ledger as Rec) }));
+const other = (k: string) => cases.find((c) => c.key !== k)!;
+const say = (c: (typeof cases)[number], i: number) =>
+  `${c.label}, ${c.tag}. Step ${i + 1} of 4: ${b.steps[i]}. ${b.stepLines[i]}` +
+  (i === 2 ? (c.v.ok ? ' All three checks pass.' : ' Check failed: ' + c.v.fail) : '') +
+  (i === 3 ? ' ' + c.approve.pending : '');
+const announce = Object.fromEntries(cases.map((c) => [c.key, b.steps.map((_, i) => say(c, i))]));
+---
+<section id="proof-bench" class="bench wrap" aria-labelledby="bench-h" data-case="a" data-step="1"
+  data-say={JSON.stringify(announce)} data-next={b.next} data-restart={JSON.stringify(Object.fromEntries(cases.map((c) => [c.key, b.restart(other(c.key).label)])))}>
+  <div class="bench-head">
+    <p class="kicker">{b.kicker} · fig. 1</p>
+    <h2 id="bench-h" class="display-2">{b.title}</h2>
+    <p class="bench-lede">{b.lede}</p>
+    <p class="bench-flag"><strong>Illustration</strong> {b.disclaimer}</p>
+  </div>
+
+  <div class="bench-controls" hidden>
+    <div class="bench-cases" role="group" aria-label="Choose an example">
+      {cases.map((c) => <button type="button" class="bench-case-btn" data-go-case={c.key} aria-pressed={c.key === 'a' ? 'true' : 'false'}>{c.label}<span class="bench-case-tag">{c.tag}</span></button>)}
+    </div>
+    <ol class="bench-progress" aria-label="Steps">
+      {b.steps.map((s, i) => <li data-p={i + 1} aria-current={i === 0 ? 'step' : undefined}><span class="fig">{i + 1}</span> {s}</li>)}
+    </ol>
+  </div>
+
+  {cases.map((c) => (
+    <div class="bench-case" data-case={c.key}>
+      <h3 class="bench-case-h">{c.label}: <span>{c.tag}</span></h3>
+      <ol class="bench-steps">
+        <li class="bench-step" data-step="1">
+          <h4 class="bench-step-h"><span class="kicker">Step 1 of 4</span> {b.steps[0]}</h4>
+          <p class="bench-line">{b.stepLines[0]}</p>
+          <div class="slips">
+            {[c.bank, c.ledger].map((r) => (
+              <dl class="slip">
+                <dt class="kicker slip-src">{r.source}</dt><dd class="sr-only">synthetic</dd>
+                <dt class="sr-only">Payee</dt><dd class="slip-payee">{r.payee}</dd>
+                <dt class="sr-only">Reference</dt><dd>{r.ref}</dd>
+                <dt class="sr-only">Amount</dt><dd class="fig slip-amt">{money(r.amount)}</dd>
+                <dt class="sr-only">Date</dt><dd class="slip-date">{day(r.date)}</dd>
+              </dl>
+            ))}
+          </div>
+        </li>
+        <li class="bench-step" data-step="2">
+          <h4 class="bench-step-h"><span class="kicker">Step 2 of 4</span> {b.steps[1]}</h4>
+          <p class="bench-line">{b.stepLines[1]}</p>
+          <div class="propose">
+            <p class="propose-pair"><span>{c.bank.payee} · {c.bank.ref}</span><span class="connector" aria-hidden="true"></span><span>{c.ledger.ref} · {c.ledger.payee}</span></p>
+            <p class="annot">Model's proposal: <strong>match</strong>. Reasons it gives:</p>
+            <ul class="annot-list">{c.reasons.map((r) => <li>{r}</li>)}</ul>
+            <p class="margin-note">A proposal, not a decision. The model never posts anything.</p>
+          </div>
+        </li>
+        <li class="bench-step" data-step="3">
+          <h4 class="bench-step-h"><span class="kicker">Step 3 of 4</span> {b.steps[2]}</h4>
+          <p class="bench-line">{b.stepLines[2]}</p>
+          <table class="checks">
+            <caption class="sr-only">Deterministic checks for {c.label}</caption>
+            <thead><tr><th scope="col">Rule</th><th scope="col">Bank</th><th scope="col">Ledger</th><th scope="col">Result</th></tr></thead>
+            <tbody>
+              {c.v.rows.map((r, i) => (
+                <tr class:list={['check-row', r.ok ? 'is-ok' : 'is-bad']} style={`--i:${i}`}>
+                  <th scope="row">{r.rule}</th><td data-l="Bank">{r.a}</td><td data-l="Ledger">{r.z}</td>
+                  <td class="check-res"><span class="mark" aria-hidden="true">{r.ok ? '✓' : '✗'}</span> {r.ok ? 'Pass' : 'Fail'}<span class="check-why">{r.why}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p class:list={['verdict', c.v.ok ? 'is-ok' : 'is-bad']}>{c.v.ok ? 'Verified: all three checks pass.' : 'Caught: the model said match, the check says no. ' + c.v.fail}</p>
+        </li>
+        <li class="bench-step" data-step="4">
+          <h4 class="bench-step-h"><span class="kicker">Step 4 of 4</span> {b.steps[3]}</h4>
+          <p class="bench-line">{b.stepLines[3]}</p>
+          {c.v.ok ? (
+            <div class="approve" data-approve data-done-text={c.approve.done}>
+              <p class="approve-pending">{c.approve.pending}</p>
+              <button type="button" class="btn-seal approve-btn" data-approve-btn hidden>{c.approve.action}</button>
+              <p class="approve-done" role="status"><span class="stamp" aria-hidden="true">Approved</span><span class="approve-done-t"></span></p>
+            </div>
+          ) : (
+            <div class="approve is-blocked"><p class="verdict is-bad">{c.approve.pending}</p></div>
+          )}
+        </li>
+      </ol>
+    </div>
+  ))}
+
+  <div class="bench-nav" hidden>
+    <button type="button" class="btn-line bench-btn" data-dir="-1" aria-disabled="true">← {b.back}</button>
+    <button type="button" class="btn-seal bench-btn" data-dir="1">{b.next} →</button>
+  </div>
+  <p class="sr-only" aria-live="polite" data-live></p>
+</section>
+<script is:inline>
+(()=>{const B=document.getElementById('proof-bench');if(!B)return;const S=JSON.parse(B.dataset.say),R=JSON.parse(B.dataset.restart),L=B.querySelector('[data-live]'),
+P=B.querySelector('[data-dir="-1"]'),N=B.querySelector('[data-dir="1"]');B.dataset.js='';B.querySelectorAll('.bench-controls,.bench-nav,[data-approve-btn]').forEach(e=>e.hidden=false);
+let c='a',s=1;const set=(nc,ns,quiet)=>{c=nc;s=ns;B.dataset.case=c;B.dataset.step=s;
+B.querySelectorAll('[data-go-case]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.goCase===c));
+B.querySelectorAll('[data-p]').forEach(x=>{x.dataset.p==s?x.setAttribute('aria-current','step'):x.removeAttribute('aria-current')});
+P.setAttribute('aria-disabled',s===1);N.textContent=s===4?R[c]+' →':B.dataset.next+' →';if(!quiet)L.textContent=S[c][s-1]};
+B.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
+if(t.dataset.goCase){set(t.dataset.goCase,1);return}
+if(t.dataset.dir){const d=+t.dataset.dir;if(d<0&&s>1)set(c,s-1);else if(d>0)s<4?set(c,s+1):set(c==='a'?'b':'a',1);return}
+if('approveBtn' in t.dataset){const a=t.closest('[data-approve]');a.dataset.done='';t.hidden=true;const m=a.querySelector('.approve-done-t');m.textContent=' '+a.dataset.doneText;L.textContent=a.dataset.doneText;N.focus()}});
+set('a',1,true)})();
+</script>

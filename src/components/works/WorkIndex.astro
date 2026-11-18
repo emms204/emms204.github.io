@@ -1,0 +1,17 @@
+---
+import type { CaseFile } from '../../content/profile';
+interface Props { items: CaseFile[]; level?: 'h2' | 'h3' }
+const { items, level = 'h3' } = Astro.props; const H = level;
+---
+<ol class="work-index">
+  {items.map((c, i) => (
+    <li>
+      <span class="fig work-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+      <div>
+        <H class="work-t"><a href={`/work/${c.slug}/`}>{c.title}</a></H>
+        <p class="kicker mt-1">{c.context}{c.period && ` · ${c.period}`}</p>
+      </div>
+      <p class="work-s">{c.summary}{c.figures.length > 0 && <span class="work-f">{c.figures.map((f) => <span><span class="fig">{f.value}</span> {f.label}</span>)}</span>}</p>
+    </li>
+  ))}
+</ol>

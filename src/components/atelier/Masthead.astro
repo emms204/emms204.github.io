@@ -1,14 +1,17 @@
 ---
-import { profile, nav } from '../../content/profile';
+import { profile, worksNav } from '../../content/profile';
 const path = Astro.url.pathname;
-const cur = (href: string) => (href !== '/' && path.startsWith(href.replace(/\/$/, ''))) ? 'page' : undefined;
+const cur = (href: string) => {
+  if (href === '/') return path === '/' ? 'page' : undefined;
+  if (href.startsWith('/#') || href.endsWith('.pdf')) return undefined;
+  return path.startsWith(href.replace(/\/$/, '')) ? 'page' : undefined;
+};
 ---
-<header class="wrap flex flex-wrap items-center justify-between gap-x-6 gap-y-1 pt-4 pb-2">
-  <a href="/" class="inline-flex min-h-11 items-center no-underline" style="text-decoration:none">
+<header class="wrap masthead flex flex-wrap items-center justify-between gap-x-6 gap-y-1 pt-4 pb-2">
+  <a href="/" class="inline-flex min-h-11 items-center" style="text-decoration:none">
     <span style="font-family:var(--font-serif);font-size:1.25rem;font-weight:500">{profile.person.name}</span>
   </a>
   <nav aria-label="Main" class="site-nav -mx-2 flex">
-    {nav.map((n) => <a href={n.href} aria-current={cur(n.href)}>{n.label}</a>)}
-    <a href="/cv.pdf">CV</a>
+    {worksNav.map((n, i) => <a href={n.href} aria-current={cur(n.href)} class:list={[i === 5 && 'nav-split']}>{n.label}</a>)}
   </nav>
 </header>

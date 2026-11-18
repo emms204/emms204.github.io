@@ -1,0 +1,19 @@
+---
+import InquiryForm from './InquiryForm.astro';
+import { works, profile } from '../../content/profile';
+const f = works.inquiry;
+---
+<section id="inquiry" class="wrap pt-10" aria-labelledby="h">
+  <div class="contact-head">
+    <div>
+      <p class="kicker">Contact</p>
+      <h1 id="h" class="display-1">{f.title}</h1>
+      <p class="lede">{f.intro}</p>
+    </div>
+    <ul class="contact-links">
+      {profile.contact.links.map((l) => <li><a class="inline-flex min-h-11 items-center" href={l.href} rel="me noopener">{l.label}</a></li>)}
+      <li><a class="inline-flex min-h-11 items-center" href="/cv.pdf">CV (PDF)</a></li>
+    </ul>
+  </div>
+  <InquiryForm />
+</section>

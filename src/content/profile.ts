@@ -288,6 +288,9 @@ export const profile: Profile = {
     quotes: 'No client quotes or testimonials exist; section not rendered (config SHOW_QUOTES=false): Emmanuel via Grok Bot, Nov 18 5:17 PM',
     press: 'Medium series by @emmxyz12, read 18 Nov 2026 via WebFetch: Part 1 (title has no part number; Part 2 calls it "the first part"), Mar 27 2023; Part 2, Mar 30 2023; Part 3, Mar 31 2023. Topics per the pages (Part 1 LeNet5 + AlexNet, Part 2 VGGNet + GoogLeNet/Inception V1, Part 3 ResNet/ResNet50). Code repo github.com/emms204/Pytorch-CV-Models is linked from the articles',
     archive: 'Earlier CV repos: profile.md §4.8. Chatflow: live emms204.github.io description, read 18 Nov 2026 (kept per concept Page "every working link")',
+    works: 'THE WORKS slice (IMPL-20261118-02): hero, entry question, three dimensions and the accountable-AI supporting line from the external creative audit chosen by Emmanuel (via Grok Bot, Nov 18 8:56 PM). Offer names: the same audit (AI Strategy & Architecture, Custom AI Systems, Product Engineering, Engineering Collaboration); offer contents re-use only verified case-file facts above; engagement steps and pricing "On request" (no verified engagement process). Products: profile.md §4.2–4.4, §4.7. Outside work allowed by contract: Emmanuel via Grok Bot, Nov 18',
+    proofBench: 'Proof Bench: SYNTHETIC data written for the illustration (bank line ACME SVCS / Invoice 1042 / $1,250.00 and ledger INV-1042 / ACME SERVICES / $1,250.00 from the brief; Globex example invented as synthetic test data, not a client). Pattern (model proposes, deterministic code checks, a person approves) per profile.md §3 product-level description; no product or company named in the demo',
+    formspree: 'Formspree endpoint https://formspree.io/f/xjywrjrz: Emmanuel via Grok Bot, Nov 18 9:00 PM',
     caseFiles: 'Case files: CV (cv-source HTML) + profile.md §3/§4, product-level for MasteryHive. Withheld metrics (VoterIQ 40%, Enzagroup 95%/20+ types, etc.) stay withheld',
   },
 };
@@ -573,7 +576,7 @@ export const atelier = {
     title: 'Work',
     intro: 'Case files. Each one moves from sketch (the problem) to ink (the system) to sign (what was approved or shipped). MasteryHive work is shown at product level only.',
     cta: 'Have a process like this?',
-    ctaLink: { label: 'Start a brief', href: '/sign/?path=client#brief' },
+    ctaLink: { label: 'Start a brief', href: '/contact/?intent=build#inquiry' },
   },
   shelf: {
     title: 'Shelf',
@@ -639,7 +642,7 @@ export const atelier = {
     season: { title: 'This season', pending: 'What Emmanuel is reading, watching and playing now' },
     ideas: { title: 'Ideas drawer', pending: 'Three to five venture ideas Emmanuel is happy to share publicly' },
     retakes: { title: 'Retakes', intro: 'Every case file keeps a retake strip: first attempt, what changed, what held.' },
-    pitch: { label: 'Pitch me an idea', href: '/sign/?path=collaborator#brief' },
+    pitch: { label: 'Pitch me an idea', href: '/contact/?intent=collaborate#inquiry' },
   },
   sign: {
     title: 'Sign',
@@ -674,4 +677,249 @@ export const atelier = {
     body: 'This page did not make it past the sketch. Try again from the cover.',
   },
   footer: { note: 'Drafted with AI. Checked in code. Signed by a person. No trackers, no cookies.' },
+};
+
+/* =====================================================================
+ * THE WORKS (IMPL-20261118-02 vertical slice). Same fact rules; see
+ * sources.works / sources.proofBench / sources.formspree above.
+ * ===================================================================== */
+
+export type IntentKey = 'build' | 'products' | 'hire' | 'collaborate';
+
+/** Old ?path= values from the Sketch·Ink·Sign cover, mapped onto the new intents. */
+export const PATH_TO_INTENT: Record<string, IntentKey> = {
+  client: 'build', customer: 'products', employer: 'hire', collaborator: 'collaborate', partner: 'collaborate',
+  build: 'build', products: 'products', hire: 'hire', collaborate: 'collaborate',
+};
+
+export const worksNav: Link[] = [
+  { label: 'The Works', href: '/' },
+  { label: 'Solutions', href: '/solutions/' },
+  { label: 'Work', href: '/work/' },
+  { label: 'Products', href: '/products/' },
+  { label: 'Journal', href: '/journal/' },
+  { label: 'About', href: '/#about' },
+  { label: 'Contact', href: '/contact/' },
+  { label: 'CV', href: '/cv.pdf' },
+];
+
+const ask = (intent: IntentKey) => `/contact/?intent=${intent}#inquiry`;
+
+export const works = {
+  meta: {
+    title: 'Emmanuel Osanebi — The Works: AI systems, software products, ideas and stories',
+    description: 'Emmanuel Osanebi, AI Engineer. I make difficult things useful: AI systems, software products, business ideas and stories worth telling. AI drafts, Python checks, a person signs.',
+  },
+  hero: {
+    name: 'Emmanuel Osanebi',
+    title: 'The Works',
+    statement: 'I make difficult things useful.',
+    lines: ['AI systems.', 'Software products.', 'Business ideas.', 'Stories worth telling.'],
+    support: 'AI drafts, Python checks, a person signs.',
+    supportNote: 'The rule behind the systems: the model proposes, deterministic code checks the numbers, and a person approves anything that matters.',
+    role: 'AI Engineer · MasteryHive AI · Python / FastAPI · LLM agents and automation',
+    jump: { label: 'Try the Proof Bench', href: '#proof-bench' },
+  },
+  intents: {
+    question: 'What brings you here?',
+    hint: 'Pick one. The evidence and the next step below change with it. Share a choice with ?path=…',
+    items: [
+      {
+        key: 'build', label: 'Solve a problem', sub: 'I need something built',
+        headline: 'Bring the difficult process. I design the system and build it, with a person signing off where it matters.',
+        evidenceTitle: 'Evidence for builders',
+        evidence: [
+          { label: 'Merchant-onboarding AI', note: '60% less manual compliance review (CV; confirmed)', href: '/work/merchant-onboarding/' },
+          { label: 'Bank reconciliation, signed by a person', note: 'Model proposes, Python computes, a person approves', href: '/work/reconciliation/' },
+          { label: 'A pipeline that survives bad runs', note: 'Seven-state job lifecycle, verified in code', href: '/work/voteriq-pipeline/' },
+          { label: 'Watch the pattern on the Proof Bench', note: 'Synthetic illustration', href: '#proof-bench' },
+        ],
+        next: { label: 'Describe the problem', href: ask('build') },
+        second: { label: 'See the four ways to work together', href: '/solutions/' },
+      },
+      {
+        key: 'products', label: 'Explore products', sub: 'Software you can use or study',
+        headline: 'Products I built: a PII-masking SDK, a privacy-first code editor, and two open-source generators.',
+        evidenceTitle: 'Products on the bench',
+        evidence: [
+          { label: 'AnotiAI PII Masker', note: 'Live on PyPI as anotiai-pii-masker', href: '/products/#anotiai-pii-masker' },
+          { label: 'WhoseDEV', note: 'Live at whosedev.com', href: '/products/#whosedev' },
+          { label: 'DevGenie', note: 'Public repo: one prompt, frontend and backend in parallel', href: '/products/#devgenie' },
+          { label: 'ScriptGen', note: 'Public repo: loglines to scenes that keep their bibles', href: '/products/#scriptgen' },
+        ],
+        next: { label: 'Browse the products', href: '/products/' },
+        second: { label: 'Ask about using one', href: ask('products') },
+      },
+      {
+        key: 'hire', label: 'Hire / evaluate engineering', sub: 'Roles, contracts, due diligence',
+        headline: 'An AI engineer who ships production agents, compliance AI, and the plumbing that keeps them honest.',
+        evidenceTitle: 'Evidence for evaluators',
+        evidence: [
+          { label: 'The CV (PDF)', note: 'Roles, projects and education', href: '/cv.pdf' },
+          { label: 'The record', note: 'Five roles since 2021, current: MasteryHive AI', href: '/#experience' },
+          { label: 'All case files', note: 'Stack, verified figures and how each project ran', href: '/work/' },
+          { label: 'GitHub', note: 'Public repositories', href: 'https://github.com/emms204' },
+        ],
+        next: { label: 'Download the CV', href: '/cv.pdf' },
+        second: { label: 'Talk about a role or contract', href: ask('hire') },
+      },
+      {
+        key: 'collaborate', label: 'Explore an idea / collaborate', sub: 'Ventures, writing, stories',
+        headline: 'I write, build and tell stories. If you have an idea worth making, bring it.',
+        evidenceTitle: 'Where the creative work lives',
+        evidence: [
+          { label: 'Journal: From LeNet5 to ResNet50', note: 'Three-part series on Medium', href: '/journal/' },
+          { label: 'ScriptGen', note: 'An LLM pipeline for stories that stay consistent', href: '/work/scriptgen/' },
+          { label: 'DevGenie', note: 'An idea turned into a multi-agent generator', href: '/work/devgenie/' },
+        ],
+        next: { label: 'Pitch an idea', href: ask('collaborate') },
+        second: { label: 'Read the Journal', href: '/journal/' },
+      },
+    ] as { key: IntentKey; label: string; sub: string; headline: string; evidenceTitle: string; evidence: { label: string; note: string; href: string }[]; next: Link; second: Link }[],
+  },
+  bench: {
+    kicker: 'Proof Bench',
+    title: 'Watch a check catch a mistake.',
+    lede: 'A four-step reconciliation, the way I build them: the model proposes, deterministic code verifies, a person approves.',
+    disclaimer: 'Synthetic data. Not a live system, and not client data.',
+    steps: ['Input', 'Propose', 'Verify', 'Approve'],
+    stepLines: [
+      'Two records arrive: one line from a bank statement, one entry in the ledger.',
+      'The model reads both and proposes a match, with its reasons. It does not decide.',
+      'Deterministic code checks amount, reference and date. Same input, same answer, every time.',
+      'A person signs off. Nothing posts until they do, and a failed check never reaches them as a match.',
+    ],
+    rules: { amount: 'Amount: equal to the cent', reference: 'Reference: same invoice number after normalising', date: 'Date: within 3 days' },
+    cases: [
+      {
+        key: 'a', label: 'Example A', tag: 'clean match',
+        bank: { source: 'Bank statement line', payee: 'ACME SVCS', ref: 'Invoice 1042', amount: 125000, date: '2026-11-14' },
+        ledger: { source: 'Ledger entry', payee: 'ACME SERVICES', ref: 'INV-1042', amount: 125000, date: '2026-11-13' },
+        reasons: ['"ACME SVCS" reads as an abbreviation of "ACME SERVICES".', 'Both mention invoice 1042.', 'Amounts look the same.'],
+        approve: { action: 'Approve as a person', done: 'Approved by a person. Logged to the audit trail.', pending: 'Waiting for a person to approve.' },
+      },
+      {
+        key: 'b', label: 'Example B', tag: 'amount mismatch',
+        bank: { source: 'Bank statement line', payee: 'GLOBEX LTD', ref: 'Inv 2207', amount: 480000, date: '2026-11-12' },
+        ledger: { source: 'Ledger entry', payee: 'GLOBEX LIMITED', ref: 'INV-2207', amount: 408000, date: '2026-11-12' },
+        reasons: ['"GLOBEX LTD" and "GLOBEX LIMITED" look like the same company.', 'Both mention invoice 2207.', 'The amounts look close.'],
+        approve: { action: '', done: '', pending: 'Blocked: verification failed, so there is nothing to sign. The pair goes to the exception queue with the reason attached.' },
+      },
+    ],
+    back: 'Back', next: 'Next', restart: (other: string) => `Run ${other}`,
+  },
+  dimensions: {
+    title: 'Three minds, one bench',
+    items: [
+      { key: 'commercial', name: 'Commercial', line: 'Useful to someone who pays for it.', body: 'Offers built from shipped work, and products people can install today.', links: [{ label: 'Solutions', href: '/solutions/' }, { label: 'Products', href: '/products/' }] },
+      { key: 'engineering', name: 'Engineering', line: 'Correct when nobody is watching.', body: 'Durable queues, idempotency, deterministic maths and audit trails behind every model call.', links: [{ label: 'Work', href: '/work/' }, { label: 'Proof Bench', href: '#proof-bench' }] },
+      { key: 'creative', name: 'Creative', line: 'Worth reading, worth telling.', body: 'Technical writing, and tools for stories that keep their characters straight.', links: [{ label: 'Journal', href: '/journal/' }, { label: 'ScriptGen', href: '/work/scriptgen/' }] },
+    ],
+  },
+  howItRan: {
+    title: 'How a project ran',
+    note: 'Sketch, Ink, Sign is how each case file explains a project: the problem, the system, and what a person approved or shipped.',
+  },
+  selected: { title: 'Selected work', all: 'All case files', archive: 'Earlier work in the archive' },
+  record: { title: 'About', cv: 'Download the CV (PDF)' },
+  contact: { title: 'Start something', body: 'Tell me what you are trying to make useful. Email, WhatsApp or the short scoping form all reach me directly.', form: 'Open the scoping form', whatsapp: 'WhatsApp' },
+  solutions: {
+    title: 'Solutions',
+    intro: 'Four ways to work together, each built from work I have already shipped. Scope, engagement and price are set per project: all on request.',
+    getsLabel: 'What you get', behindLabel: 'The work behind it', howLabel: 'How an engagement works', how: 'On request', priceLabel: 'Pricing', price: 'On request',
+    offers: [
+      {
+        key: 'strategy', n: '01', name: 'AI Strategy & Architecture', for: 'For teams deciding where AI belongs and where it must not decide alone.',
+        gets: [
+          'A system design that splits the work: the model maps, explains and orchestrates tools; deterministic code does the maths; a person approves.',
+          'Execution design that survives failure: durable queues, idempotency and explicit job lifecycles.',
+        ],
+        behind: [{ label: 'Bank reconciliation, signed by a person', href: '/work/reconciliation/' }, { label: 'A pipeline that survives bad runs', href: '/work/voteriq-pipeline/' }],
+        cta: { label: 'Ask about an architecture review', href: ask('build') },
+      },
+      {
+        key: 'systems', n: '02', name: 'Custom AI Systems', for: 'For a process that is slow, manual or risky today.',
+        gets: [
+          'LLM agents and automation in Python and FastAPI, with structured outputs and guardrails.',
+          'Human approval built in: drafts wait for sign-off, sensitive cases escalate.',
+          'Production deployment with monitoring and retraining triggers.',
+        ],
+        behind: [{ label: 'Merchant-onboarding AI (60% less manual review)', href: '/work/merchant-onboarding/' }, { label: 'Voice-of-customer automation with a Slack signature', href: '/work/grunsco-automate/' }, { label: 'Fraud, AML/KYC/KYB and reinsurance data', href: '/work/fraud-compliance-reinsurance/' }],
+        cta: { label: 'Describe the process', href: ask('build') },
+      },
+      {
+        key: 'product', n: '03', name: 'Product Engineering', for: 'For an AI product that has to ship, not just demo.',
+        gets: [
+          'An SDK, an API and a web app around the model, the way the PII Masker shipped to PyPI.',
+          'Full-stack builds on FastAPI and Next.js, through to real-time apps on AWS Amplify.',
+        ],
+        behind: [{ label: 'Products: AnotiAI PII Masker, WhoseDEV, DevGenie, ScriptGen', href: '/products/' }, { label: 'Enza Chat: from a RASA bot to real-time chat', href: '/work/enza-chat/' }],
+        cta: { label: 'Talk about your product', href: ask('build') },
+      },
+      {
+        key: 'collab', n: '04', name: 'Engineering Collaboration', for: 'For a team that needs another AI engineer: contract or role.',
+        gets: [
+          'An engineer with five roles since 2021 across fraud, compliance, reconciliation, pipelines and computer vision.',
+          'Async collaboration and code review, in startup environments.',
+        ],
+        behind: [{ label: 'The CV (PDF)', href: '/cv.pdf' }, { label: 'All case files', href: '/work/' }],
+        cta: { label: 'Talk about a role or contract', href: ask('hire') },
+      },
+    ],
+    moved: { from: 'Commission', note: 'The Commission page is now Solutions.' },
+  },
+  products: {
+    title: 'Products',
+    intro: 'Software I built that you can install, try or read the source of. Each one is drawn as the path its data takes.',
+    cta: 'Want to integrate, license or extend one?', ctaLink: { label: 'Ask about a product', href: ask('products') },
+    items: [
+      { id: 'anotiai-pii-masker', name: 'AnotiAI PII Masker', status: 'Live on PyPI', period: 'AnotiAI · Nov 2025 – Mar 2026',
+        body: 'A hybrid transformer, QA and rules-based PII detector with reversible masking, shipped as a Python SDK with cloud mode and local fallback, plus an API and web platform.',
+        flow: [['Text in', ''], ['Detect', 'transformer + QA + rules'], ['Mask', 'keeps a PII map'], ['Unmask', 'when allowed']],
+        links: [{ label: 'PyPI: anotiai-pii-masker', href: 'https://pypi.org/project/anotiai-pii-masker/' }, { label: 'Platform', href: 'https://platform.anotiai.com/' }] },
+      { id: 'whosedev', name: 'WhoseDEV', status: 'Live', period: 'AnotiAI',
+        body: 'A privacy-first, local-first AI code editor and coding agent with sensitive-code masking, multi-model routing and bring-your-own API keys.',
+        flow: [['Your code', 'stays local'], ['Mask', 'sensitive code'], ['Route', 'multi-model'], ['Your keys', 'BYO']],
+        links: [{ label: 'whosedev.com', href: 'https://whosedev.com/' }] },
+      { id: 'devgenie', name: 'DevGenie', status: 'Public repo', period: 'Aug 2025 – Nov 2025',
+        body: 'Agents that generate React/Next.js frontends and FastAPI backends in parallel from a single prompt, using typed structured outputs.',
+        flow: [['One prompt', ''], ['Frontend agent', 'React / Next.js'], ['Backend agent', 'FastAPI, in parallel'], ['Typed outputs', 'structured']],
+        links: [{ label: 'Repo: emms204/DevGenie', href: 'https://github.com/emms204/DevGenie' }], caseFile: '/work/devgenie/' },
+      { id: 'scriptgen', name: 'ScriptGen', status: 'Public repo', period: '',
+        body: 'A modular LLM pipeline that turns loglines into scenes while maintaining character, plot and setting "bibles", with a FastAPI + Next.js web app.',
+        flow: [['Logline', ''], ['Bibles', 'character, plot, setting'], ['Scenes', 'checked against the bibles'], ['Web app', 'FastAPI + Next.js']],
+        links: [{ label: 'Repo: emms204/ScriptGen', href: 'https://github.com/emms204/ScriptGen' }, { label: 'Repo: ScreenplayWebApp', href: 'https://github.com/emms204/ScreenplayWebApp' }], caseFile: '/work/scriptgen/' },
+    ],
+    moved: { from: 'Shelf', note: 'The Shelf is now Products.' },
+  },
+  journal: {
+    title: 'Journal',
+    intro: 'Writing. External links open on Medium.',
+    moved: { from: 'Press', note: 'Press is now the Journal.' },
+  },
+  inquiry: {
+    title: 'Start something',
+    intro: 'A short scoping form: five quick parts. It goes straight to my inbox. Prefer email or WhatsApp? Both links stay below.',
+    steps: ['What brings you here?', 'The problem', 'Timeline', 'Budget range', 'How to reach you'],
+    intentOptions: [
+      { value: 'build', label: 'Solve a problem: I need something built' },
+      { value: 'products', label: 'Explore products' },
+      { value: 'hire', label: 'Hire / evaluate engineering' },
+      { value: 'collaborate', label: 'Explore an idea / collaborate' },
+    ],
+    problemLabel: 'What are you trying to make useful?',
+    problemHint: 'The process or idea, where it hurts today, and who has to sign off on the result.',
+    timelineLabel: 'When do you need it?',
+    timelineOptions: ['No fixed date', 'Within a month', 'In 1–3 months', 'Later this year or beyond'],
+    budgetLabel: 'Budget range (optional)',
+    budgetHint: 'Every engagement is priced on request. A rough range, in any currency, helps me scope.',
+    nameLabel: 'Your name', emailLabel: 'Your email', emailHint: 'I reply to this address.',
+    submit: 'Send the inquiry', sending: 'Sending…',
+    mailFallback: 'Or email', whatsapp: 'WhatsApp me instead',
+    success: { title: 'Sent. Thank you.', body: 'Your inquiry is in my inbox. I will reply by email.' },
+    failure: { title: 'The form could not send.', body: 'Nothing is lost: email the same inquiry instead, or message me on WhatsApp.', mail: 'Email this inquiry' },
+    errorsTitle: 'Please check the following:',
+    subjectPrefix: 'Portfolio inquiry: ',
+    moved: { from: 'Sign', note: 'The Sign page is now Contact.' },
+  },
 };

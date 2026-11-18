@@ -5,7 +5,8 @@
  * (e.g. 'https://formspree.io/f/abcdwxyz'). While it is empty, every form
  * falls back to a mailto: link to CONTACT_EMAIL, with and without JavaScript.
  */
-export const FORMSPREE_ENDPOINT = ''; // PLACEHOLDER: awaiting Emmanuel's Formspree account
+/** Formspree endpoint: Emmanuel via Grok Bot, Nov 18 9:00 PM (the-works-slice only). */
+export const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xjywrjrz';
 
 export const CONTACT_EMAIL = 'emmanuelosanebi1@gmail.com';
 /** WhatsApp link supplied by Emmanuel via Grok Bot, 18 Nov 2026. The number itself is never printed on the page. */

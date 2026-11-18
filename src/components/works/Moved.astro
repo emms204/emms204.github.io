@@ -1,0 +1,5 @@
+---
+interface Props { from: string; note: string; to: string; label: string }
+const { from, note, to, label } = Astro.props;
+---
+<p class="moved"><span class="kicker">Moved · {from}</span> {note} <a href={to}>Go to {label}</a></p>

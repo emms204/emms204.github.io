@@ -1,28 +1,12 @@
 ---
+// Alias kept so old links (and their #anchors / ?path= values) keep working. Canonical: /journal/
 import Layout from '../layouts/Layout.astro';
-import { atelier } from '../content/profile';
-import { CONTACT_EMAIL } from '../config';
-const p = atelier.press; const s = p.series;
+import Body from '../components/works/JournalBody.astro';
+import Moved from '../components/works/Moved.astro';
+import { works } from '../content/profile';
+const m = works.journal.moved;
 ---
-<Layout title={`${p.title} — writing — Emmanuel Osanebi`} description={`${s.title}: a three-part series on Medium.`}>
-  <section class="wrap pt-10" aria-labelledby="h">
-    <p class="kicker">Writing</p>
-    <h1 id="h" class="mt-3 text-4xl sm:text-5xl">{p.title}</h1>
-    <p class="mt-4 max-w-2xl" style="color:var(--graphite)">{p.intro}</p>
-    <article class="card mt-8 p-6 sm:p-8" aria-labelledby="series-h">
-      <p class="kicker">{s.where}</p>
-      <h2 id="series-h" class="mt-2 max-w-3xl text-2xl sm:text-3xl">{s.title}</h2>
-      <p class="mt-2" style="color:var(--graphite)">{s.note}</p>
-      <ol class="mt-6 grid gap-4 md:grid-cols-3">
-        {s.parts.map((x) => (
-          <li class="rule pt-4">
-            <p class="kicker">{x.part} · <time datetime={x.iso}>{x.date}</time></p>
-            <h3 class="mt-1 text-xl"><a href={x.href} rel="noopener">{x.topic}<span class="sr-only"> ({x.part}, on Medium)</span></a></h3>
-          </li>
-        ))}
-      </ol>
-      <p class="mt-6 flex flex-wrap gap-x-6"><a class="btn-line" href={s.code.href} rel="noopener">{s.code.label}</a><a class="btn-line" href={p.profile.href} rel="me noopener">{p.profile.label}</a></p>
-    </article>
-    <p class="mt-8"><a class="btn-line" href={'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent('Re: ' + s.title)}>{p.reply}</a></p>
-  </section>
+<Layout title="Journal — Emmanuel Osanebi" description={works.journal.intro} canonicalPath="/journal/">
+  <div class="wrap pt-6"><Moved from={m.from} note={m.note} to="/journal/" label="Journal" /></div>
+  <Body />
 </Layout>

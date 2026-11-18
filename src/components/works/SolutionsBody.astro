@@ -1,0 +1,38 @@
+---
+import { works } from '../../content/profile';
+const s = works.solutions;
+// Legacy #offer-* anchors from the old /commission/ page, mapped onto the new offers.
+const legacy: Record<string, string[]> = { strategy: ['offer-sketch'], systems: ['offer-ink'], collab: ['offer-embedded'] };
+---
+<section class="wrap pt-10" aria-labelledby="h">
+  <p class="kicker">Commercial · fig. 2</p>
+  <h1 id="h" class="display-1">{s.title}</h1>
+  <p class="lede">{s.intro}</p>
+</section>
+<ol class="wrap offers">
+  {s.offers.map((o) => (
+    <li class="offer" id={'offer-' + o.key}>
+      <div class="offer-title">
+        {(legacy[o.key] ?? []).map((id) => <span id={id}></span>)}
+        <p class="offer-n" aria-hidden="true">{o.n}</p>
+        <h2 class="display-3">{o.name}</h2>
+        <p class="margin-note">{o.for}</p>
+      </div>
+      <div class="offer-body">
+        <h3 class="kicker">{s.getsLabel}</h3>
+        <ul class="offer-gets">{o.gets.map((g) => <li>{g}</li>)}</ul>
+        <h3 class="kicker mt-6">{s.behindLabel}</h3>
+        <ul class="offer-behind">{o.behind.map((b) => <li><a href={b.href}>{b.label}</a></li>)}</ul>
+        <dl class="offer-terms">
+          <div><dt class="kicker">{s.howLabel}</dt><dd>{s.how}</dd></div>
+          <div><dt class="kicker">{s.priceLabel}</dt><dd>{s.price}</dd></div>
+        </dl>
+        <p class="mt-5"><a class="btn-seal" href={o.cta.href}>{o.cta.label}<span class="sr-only">: {o.name}</span></a></p>
+      </div>
+    </li>
+  ))}
+</ol>
+<section class="wrap mt-16 aside-grid" aria-label="Also on the bench">
+  <p class="display-3"><span id="offer-shelf"></span><span id="offer-press"></span>Products and writing live on their own pages.</p>
+  <p class="flex flex-wrap gap-x-6"><a class="btn-line" href="/products/">Products</a><a class="btn-line" href="/journal/">Journal</a><a class="btn-line" href="/#proof-bench">Proof Bench</a></p>
+</section>

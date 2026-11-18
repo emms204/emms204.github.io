@@ -1,0 +1,51 @@
+---
+// "What brings you here?" Links work with JS off (?path=<key>#for-<key> + CSS :target).
+// With JS, ?path= (old values included, via PATH_TO_INTENT) selects an intent in place.
+import { works, PATH_TO_INTENT } from '../../content/profile';
+const t = works.intents;
+---
+<section id="intent" class="intents wrap" aria-labelledby="intent-h" data-map={JSON.stringify(PATH_TO_INTENT)}>
+  <div class="intents-head">
+    <p class="kicker">Start here</p>
+    <h2 id="intent-h" class="display-2">{t.question}</h2>
+    <p class="hint">{t.hint}</p>
+  </div>
+  <ul class="intent-options" aria-label="Intents">
+    {t.items.map((it, i) => (
+      <li><a href={`/?path=${it.key}#for-${it.key}`} data-intent={it.key} aria-controls={`for-${it.key}`}>
+        <span class="fig">{String(i + 1).padStart(2, '0')}</span>
+        <span class="intent-label">{it.label}</span>
+        <span class="intent-sub">{it.sub}</span>
+      </a></li>
+    ))}
+  </ul>
+  <div class="intent-panels">
+    {t.items.map((it) => (
+      <div class="intent-panel" id={`for-${it.key}`} data-key={it.key} tabindex="-1" role="region" aria-label={it.label}>
+        <p class="intent-headline">{it.headline}</p>
+        <div class="intent-body">
+          <div>
+            <h3 class="kicker">{it.evidenceTitle}</h3>
+            <ol class="evidence">
+              {it.evidence.map((e) => <li><a href={e.href} rel={e.href.startsWith('http') ? 'noopener' : undefined}>{e.label}</a><span class="evidence-note">{e.note}</span></li>)}
+            </ol>
+          </div>
+          <div class="intent-next">
+            <h3 class="kicker">Next step</h3>
+            <p><a class="btn-seal" href={it.next.href}>{it.next.label}</a></p>
+            <p><a class="btn-line" href={it.second.href}>{it.second.label}</a></p>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+  <p class="sr-only" aria-live="polite" data-intent-live></p>
+</section>
+<script is:inline>
+(()=>{const S=document.getElementById('intent');if(!S)return;const M=JSON.parse(S.dataset.map),L=S.querySelector('[data-intent-live]'),
+set=(k,say)=>{S.dataset.intent=k;S.querySelectorAll('[data-intent]').forEach(a=>a.dataset.intent===k?a.setAttribute('aria-current','true'):a.removeAttribute('aria-current'));
+if(say){const p=S.querySelector('#for-'+k);L.textContent='Showing: '+p.getAttribute('aria-label')+'. '+p.querySelector('.intent-headline').textContent}};
+const q=new URLSearchParams(location.search).get('path'),h=(location.hash.match(/^#for-(\w+)/)||[])[1],k=M[q]||M[h];if(k)set(k);
+S.addEventListener('click',e=>{const a=e.target.closest('a[data-intent]');if(!a)return;e.preventDefault();set(a.dataset.intent,1);
+const u=new URL(location);u.searchParams.set('path',a.dataset.intent);u.hash='';history.replaceState(null,'',u)})})();
+</script>

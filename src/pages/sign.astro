@@ -1,28 +1,12 @@
 ---
+// Alias kept so old links (and their #anchors / ?path= values) keep working. Canonical: /contact/
 import Layout from '../layouts/Layout.astro';
-import BriefForm from '../components/atelier/BriefForm.astro';
-import Seal from '../components/atelier/Seal.astro';
-import { profile, atelier } from '../content/profile';
-import { CONTACT_EMAIL, WHATSAPP_URL } from '../config';
-const s = atelier.sign;
+import Body from '../components/works/ContactBody.astro';
+import Moved from '../components/works/Moved.astro';
+import { works } from '../content/profile';
+const m = works.inquiry.moved;
 ---
-<Layout title={`${s.title} — contact Emmanuel Osanebi`} description={s.intro}>
-  <section class="wrap pt-10" aria-labelledby="h">
-    <div class="flex flex-wrap items-start justify-between gap-6">
-      <div>
-        <p class="kicker">Contact</p>
-        <h1 id="h" class="mt-3 text-4xl sm:text-5xl">{s.title}</h1>
-        <p class="mt-4 max-w-2xl" style="color:var(--graphite)">{s.intro}</p>
-      </div>
-      <Seal label="Ready to sign" size={96} />
-    </div>
-    <ul class="mt-8 grid gap-4 sm:grid-cols-3">
-      <li class="card p-5"><h2 class="kicker">Email</h2><a class="mt-1 inline-flex min-h-11 items-center break-all text-lg" href={'mailto:' + CONTACT_EMAIL}>{CONTACT_EMAIL}</a></li>
-      <li class="card p-5"><h2 class="kicker">WhatsApp</h2><a class="mt-1 inline-flex min-h-11 items-center text-lg" href={WHATSAPP_URL} rel="noopener">Message on WhatsApp</a></li>
-      <li class="card p-5"><h2 class="kicker">Elsewhere</h2>
-        <ul class="mt-1 flex flex-wrap gap-x-4">{profile.contact.links.map((l) => <li><a class="inline-flex min-h-11 items-center" href={l.href} rel="me noopener">{l.label}</a></li>)}<li><a class="inline-flex min-h-11 items-center" href="/cv.pdf">CV (PDF)</a></li></ul>
-      </li>
-    </ul>
-    <BriefForm />
-  </section>
+<Layout title="Contact — Emmanuel Osanebi" description={works.inquiry.intro} canonicalPath="/contact/">
+  <div class="wrap pt-6"><Moved from={m.from} note={m.note} to="/contact/" label="Contact" /></div>
+  <Body />
 </Layout>

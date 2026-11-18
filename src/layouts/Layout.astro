@@ -1,12 +1,13 @@
 ---
 import '../styles/global.css';
-import { profile, atelier } from '../content/profile';
+import { profile, works } from '../content/profile';
 import Masthead from '../components/atelier/Masthead.astro';
 import Footer from '../components/atelier/Footer.astro';
 
-interface Props { title?: string; description?: string; noindex?: boolean; personLd?: boolean }
-const { title = atelier.meta.title, description = atelier.meta.description, noindex = false, personLd = false } = Astro.props;
-const canonical = new URL(Astro.url.pathname, profile.meta.siteUrl).href;
+interface Props { title?: string; description?: string; noindex?: boolean; personLd?: boolean; canonicalPath?: string }
+const { title = works.meta.title, description = works.meta.description, noindex = false, personLd = false, canonicalPath } = Astro.props;
+// Alias routes (/commission/, /shelf/, /press/, /sign/) pass canonicalPath so search engines index the new URL.
+const canonical = new URL(canonicalPath ?? Astro.url.pathname, profile.meta.siteUrl).href;
 const ogImage = new URL('/og.png', profile.meta.siteUrl).href;
 // Person JSON-LD: verified facts only (profile.md §1, §3, §5; CV).
 const person = {

@@ -1,0 +1,101 @@
+---
+// Guided scoping form. Plain HTML POST to Formspree (JS off: Formspree shows its own
+// thank-you page). With JS: fetch + JSON, inline success / failure / field errors.
+// Preview param for screenshots: ?state=success or ?state=failure (shows the panel, sends nothing).
+import { works } from '../../content/profile';
+import { FORMSPREE_ENDPOINT, CONTACT_EMAIL, WHATSAPP_URL } from '../../config';
+const f = works.inquiry;
+const labels = Object.fromEntries(works.intents.items.map((i) => [i.key, i.label]));
+const fallback = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Portfolio inquiry')}`;
+---
+<form id="brief" class="inquiry" action={FORMSPREE_ENDPOINT || fallback} method="POST"
+  enctype={FORMSPREE_ENDPOINT ? undefined : 'text/plain'} aria-labelledby="inq-h"
+  data-endpoint={FORMSPREE_ENDPOINT} data-mail={CONTACT_EMAIL} data-labels={JSON.stringify(labels)} data-prefix={f.subjectPrefix} data-sending={f.sending}>
+  <h2 id="inq-h" class="sr-only">Scoping form</h2>
+  <div class="inq-errors" role="alert" hidden tabindex="-1"><p class="font-semibold">{f.errorsTitle}</p><ul></ul></div>
+
+  <fieldset class="inq-step">
+    <legend><span class="fig">1</span> {f.steps[0]}</legend>
+    <div class="inq-intents">
+      {f.intentOptions.map((o) => <label class="inq-radio"><input type="radio" name="intent" value={o.value} required /> <span>{o.label}</span></label>)}
+    </div>
+    <p class="field-error" id="err-intent" hidden></p>
+  </fieldset>
+
+  <fieldset class="inq-step">
+    <legend><span class="fig">2</span> {f.steps[1]}</legend>
+    <div class="field">
+      <label for="f-message">{f.problemLabel}</label>
+      <textarea id="f-message" name="message" required aria-describedby="f-message-hint err-message"></textarea>
+      <p id="f-message-hint" class="hint mt-1">{f.problemHint}</p>
+      <p class="field-error" id="err-message" hidden></p>
+    </div>
+  </fieldset>
+
+  <div class="inq-pair">
+    <fieldset class="inq-step">
+      <legend><span class="fig">3</span> {f.steps[2]}</legend>
+      <div class="field">
+        <label for="f-timeline">{f.timelineLabel}</label>
+        <select id="f-timeline" name="timeline" aria-describedby="err-timeline">{f.timelineOptions.map((o) => <option>{o}</option>)}</select>
+        <p class="field-error" id="err-timeline" hidden></p>
+      </div>
+    </fieldset>
+    <fieldset class="inq-step">
+      <legend><span class="fig">4</span> {f.steps[3]}</legend>
+      <div class="field">
+        <label for="f-budget">{f.budgetLabel}</label>
+        <input id="f-budget" name="budget" autocomplete="off" aria-describedby="f-budget-hint err-budget" />
+        <p id="f-budget-hint" class="hint mt-1">{f.budgetHint}</p>
+        <p class="field-error" id="err-budget" hidden></p>
+      </div>
+    </fieldset>
+  </div>
+
+  <fieldset class="inq-step">
+    <legend><span class="fig">5</span> {f.steps[4]}</legend>
+    <div class="inq-pair">
+      <div class="field"><label for="f-name">{f.nameLabel}</label><input id="f-name" name="name" autocomplete="name" required aria-describedby="err-name" /><p class="field-error" id="err-name" hidden></p></div>
+      <div class="field"><label for="f-email">{f.emailLabel}</label><input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="f-email-hint err-email" /><p id="f-email-hint" class="hint mt-1">{f.emailHint}</p><p class="field-error" id="err-email" hidden></p></div>
+    </div>
+  </fieldset>
+
+  <input type="hidden" name="_subject" value={f.subjectPrefix.replace(/: $/, '')} />
+  <div class="hp" aria-hidden="true"><label for="f-gotcha">Leave this empty</label><input id="f-gotcha" name="_gotcha" tabindex="-1" autocomplete="off" /></div>
+
+  <div class="inq-actions">
+    <button class="btn-seal" type="submit">{f.submit}</button>
+    <a class="btn-line" href={'mailto:' + CONTACT_EMAIL}>{f.mailFallback} <span class="break-all">{CONTACT_EMAIL}</span></a>
+    <a class="btn-line" href={WHATSAPP_URL} rel="noopener">{f.whatsapp}</a>
+  </div>
+
+  <div class="inq-state inq-success" role="status" hidden tabindex="-1">
+    <p class="stamp" aria-hidden="true">Sent</p>
+    <div><h3 class="text-2xl">{f.success.title}</h3><p class="mt-1">{f.success.body}</p></div>
+  </div>
+  <div class="inq-state inq-failure" role="alert" hidden tabindex="-1">
+    <div><h3 class="text-2xl">{f.failure.title}</h3><p class="mt-1">{f.failure.body}</p>
+      <p class="mt-3 flex flex-wrap gap-x-6"><a class="btn-seal" data-mail-link href={'mailto:' + CONTACT_EMAIL}>{f.failure.mail}</a><a class="btn-line" href={WHATSAPP_URL} rel="noopener">{f.whatsapp}</a></p></div>
+  </div>
+</form>
+<script is:inline>
+(()=>{const F=document.getElementById('brief');if(!F||!F.classList.contains('inquiry'))return;const D=F.dataset,LB=JSON.parse(D.labels),E=F.elements,
+btn=F.querySelector('button[type=submit]'),ok=F.querySelector('.inq-success'),bad=F.querySelector('.inq-failure'),box=F.querySelector('.inq-errors'),ml=F.querySelector('[data-mail-link]'),
+M={client:'build',customer:'products',employer:'hire',collaborator:'collaborate',partner:'collaborate'},q=new URLSearchParams(location.search),
+v=n=>(E.namedItem(n)||{}).value||'',intent=()=>{const r=F.querySelector('input[name=intent]:checked');return r?r.value:''},
+subj=()=>{E.namedItem('_subject').value=D.prefix+(LB[intent()]||'general')},
+mailto=()=>'mailto:'+D.mail+'?subject='+encodeURIComponent(E.namedItem('_subject').value)+'&body='+encodeURIComponent('Intent: '+(LB[intent()]||'')+'\nTimeline: '+v('timeline')+'\nBudget range: '+v('budget')+'\nName: '+v('name')+'\nEmail: '+v('email')+'\n\n'+v('message')),
+show=(el)=>{[ok,bad].forEach(x=>x.hidden=x!==el);if(el)el.focus()},
+clear=()=>{box.hidden=true;box.querySelector('ul').textContent='';F.querySelectorAll('[aria-invalid]').forEach(x=>x.removeAttribute('aria-invalid'));F.querySelectorAll('.field-error').forEach(x=>{x.hidden=true;x.textContent=''})},
+fail=errs=>{ml.href=mailto();errs=errs||[];let lvl=false;const ul=box.querySelector('ul');
+errs.forEach(e=>{const p=e.field&&F.querySelector('#err-'+e.field);if(p){p.textContent=e.message;p.hidden=false;F.querySelectorAll('[name="'+e.field+'"]').forEach(x=>x.setAttribute('aria-invalid','true'))}else lvl=true;
+const li=document.createElement('li');li.textContent=(p?(F.querySelector('[name="'+e.field+'"]').closest('fieldset').querySelector('legend').textContent.replace(/^\s*\d\s*/,'')+': '):'')+e.message;ul.append(li)});
+if(errs.length){box.hidden=false}if(!errs.length||lvl)show(bad);else{show(null);box.focus()}};
+const k=M[q.get('intent')]||q.get('intent')||M[q.get('path')]||q.get('path'),r=k&&F.querySelector('input[name=intent][value="'+k+'"]');if(r)r.checked=true;subj();
+F.addEventListener('change',e=>{if(e.target.name==='intent')subj()});
+const st=q.get('state');if(st==='success')show(ok);if(st==='failure'){ml.href=mailto();show(bad)}
+F.addEventListener('submit',async e=>{e.preventDefault();clear();if(!F.reportValidity())return;subj();if(!D.endpoint){location.href=mailto();return}
+const t=btn.textContent;btn.disabled=true;btn.textContent=D.sending;F.setAttribute('aria-busy','true');
+try{const res=await fetch(D.endpoint,{method:'POST',body:new FormData(F),headers:{Accept:'application/json'}});let j={};try{j=await res.json()}catch(_){}
+if(res.ok){F.reset();subj();show(ok)}else fail(j.errors)}catch(_){fail()}finally{btn.disabled=false;btn.textContent=t;F.removeAttribute('aria-busy')}})})();
+</script>

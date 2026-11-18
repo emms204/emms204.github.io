@@ -1,0 +1,23 @@
+---
+import { works, atelier } from '../../content/profile';
+const j = works.journal; const s = atelier.press.series; const pr = atelier.press;
+---
+<section class="wrap pt-10" aria-labelledby="h">
+  <p class="kicker">Creative · fig. 4</p>
+  <h1 id="h" class="display-1">{j.title}</h1>
+  <p class="lede">{j.intro}</p>
+</section>
+<article class="wrap series" aria-labelledby="series-h">
+  <p class="kicker">{s.where}</p>
+  <h2 id="series-h" class="display-3 mt-2">{s.title}</h2>
+  <p class="mt-2">{s.note}</p>
+  <ol class="series-parts">
+    {s.parts.map((x) => (
+      <li>
+        <p class="kicker">{x.part} · <time datetime={x.iso}>{x.date}</time></p>
+        <h3 class="mt-1 text-2xl"><a href={x.href} rel="noopener">{x.topic}<span class="sr-only"> ({x.part}, on Medium)</span></a></h3>
+      </li>
+    ))}
+  </ol>
+  <p class="mt-6 flex flex-wrap gap-x-6"><a class="btn-line" href={s.code.href} rel="noopener">{s.code.label}</a><a class="btn-line" href={pr.profile.href} rel="me noopener">{pr.profile.label}</a></p>
+</article>
