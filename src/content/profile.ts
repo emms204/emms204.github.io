@@ -8,7 +8,7 @@
  *
  * Corrections confirmed by Emmanuel via Grok Bot, Nov 18 2026, override
  * profile.md: VoterIQ Mar–Jul 2026, Remote (India-based company); MasteryHive
- * products (fraud, AML/KYC/KYB, reconciliation incl. ReconPilot, reinsurance
+ * products (fraud, AML/KYC/KYB, reconciliation incl. an agentic copilot, reinsurance
  * data) built by him; Enzagroup 99.9% availability and 60% less manual
  * compliance review verified; AnotiAI Nov 2025 – Mar 2026; no certifications.
  *
@@ -106,7 +106,7 @@ export const profile: Profile = {
           'Fraud detection: built AI backend services for transaction fraud detection, including a streaming variant for real-time monitoring.',
           'AML / KYC / KYB: built the AI backend for identity, customer and business verification and compliance checks.',
           'Banking reconciliation: built FastAPI microservices on GCP that match bank statements to ledger transactions through fuzzy, rule-based and LLM-assisted stages, with Pub/Sub-fed parallel workers and dead-letter replay.',
-          'ReconPilot: built an agentic reconciliation copilot where the LLM proposes mappings and explains evidence, money maths stays deterministic in Python, and humans approve every resolution.',
+          'Reconciliation copilot: built an agentic copilot where the LLM proposes mappings and explains evidence, money maths stays deterministic in Python, and humans approve every resolution.',
           'Reinsurance data: built ingestion, cleaning and validation pipelines for reinsurance bordereaux and treaty data.',
         ],
         stack: ['Python', 'FastAPI', 'GCP', 'Pub/Sub', 'Gemini', 'React / TypeScript'],
@@ -167,8 +167,8 @@ export const profile: Profile = {
     intro: 'LLM agents, automation and AI products. Links go to public repos, packages or live sites.',
     items: [
       {
-        name: 'ReconPilot',
-        tagline: 'Agentic reconciliation copilot · MasteryHive product',
+        name: 'Agentic reconciliation copilot',
+        tagline: 'MasteryHive product',
         description:
           'An LLM copilot that proposes schema mappings, explains evidence and orchestrates approved tools, while deterministic Python does all the money maths and humans approve every mapping and resolution.',
         outcome: 'Audit trail, Server-Sent Events tool timeline, versioned reruns, and CSV/JSON/HTML reports.',
@@ -277,9 +277,9 @@ export const profile: Profile = {
   sources: {
     meta: '§2 Summary (draft) + brief framing (AI Engineer: LLM agents, automation, Python/FastAPI)',
     hero: '§2 Summary (draft); headline per §7.1 resolved to "AI Engineer" by the brief',
-    about: '§2 Summary; §3 MasteryHive/ReconPilot + VoterIQ (seven-state lifecycle, verified); §5 Skills; §5 Education',
+    about: '§2 Summary; §3 MasteryHive (reconciliation copilot) + VoterIQ (seven-state lifecycle, verified); §5 Skills; §5 Education',
     experience: '§3 Experience (all five roles) + Emmanuel via Grok Bot, Nov 18 (VoterIQ dates/Remote, MasteryHive ownership + reinsurance, Enzagroup 99.9%/60%, VoterIQ title + reinsurance wording aligned to CV); other §6 metrics and §7 location conflicts withheld',
-    projects: '§4 Portfolio projects 1–8 (links that returned 200); ReconPilot without link; AnotiAI dates per Emmanuel via Grok Bot, Nov 18',
+    projects: '§4 Portfolio projects 1–8 (links that returned 200); reconciliation copilot unnamed, without link; AnotiAI dates per Emmanuel via Grok Bot, Nov 18',
     skills: '§5 Skills (Languages, LLM and agents, Applied ML, LLM training/eval, Backend, Infra/MLOps)',
     cv: 'Brief: /cv.pdf (PDF supplied separately)',
     contact: '§1 Contact info (email, LinkedIn) and §1 note (GitHub); phone and X omitted. WhatsApp link https://wa.me/2349030612170 per Emmanuel via Grok Bot, Nov 18 (number not printed)',
@@ -439,12 +439,12 @@ export const atelier = {
     {
       slug: 'reconciliation', title: 'Bank reconciliation, signed by a person',
       context: 'MasteryHive AI · product level', period: 'Aug 2026 – present',
-      summary: 'Banking reconciliation microservices and ReconPilot, an agentic copilot where the model proposes and a person approves.',
+      summary: 'Banking reconciliation microservices and an agentic copilot where the model proposes and a person approves.',
       sketch: 'Match bank statements to general-ledger transactions, and resolve what does not match in a way someone can stand behind.',
       ink: [
         'FastAPI microservices on GCP that match statements to general-ledger transactions through fuzzy, two-stage rule-based and LLM-assisted matching.',
         'Pub/Sub-fed parallel workers with a dead-letter replay path.',
-        'ReconPilot: the LLM proposes schema mappings, explains evidence and orchestrates approved tools.',
+        'The copilot: the LLM proposes schema mappings, explains evidence and orchestrates approved tools.',
         'All financial calculations stay deterministic in Python.',
       ],
       sign: [

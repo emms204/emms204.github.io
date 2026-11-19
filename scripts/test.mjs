@@ -16,8 +16,8 @@ const ROUTES = [
 ];
 // Names that must never appear in the demos (homepage pieces + contact form).
 const DEMO_BANNED = /ReconPilot|MasteryHive|ContinentalRe|Continental Re|Opay/i;
-// Names that must never appear anywhere in the built site.
-const SITE_BANNED = /ContinentalRe|Continental Re|\bOpay\b/i;
+// Names that must never appear anywhere in the built site (ReconPilot: Emmanuel, Nov 19 2026).
+const SITE_BANNED = /ContinentalRe|Continental Re|\bOpay\b|Recon ?Pilot/i;
 
 let failed = 0;
 const ok = (name, cond, detail = '') => { console.log(`${cond ? 'PASS' : 'FAIL'}  ${name}${detail ? '  ' + detail : ''}`); if (!cond) failed++; };
