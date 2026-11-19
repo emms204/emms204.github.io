@@ -900,12 +900,14 @@ export const works = {
     audit: { title: 'Simulated audit-log entry', note: 'Demo only: shown on this page, never saved or sent.', when: 'Time', example: 'Pair', checks: 'Checks', decision: 'Decision', decided: 'approved', approver: 'Approver', who: 'you (demo)' },
   },
   pieces: {
-    title: 'Two more pieces to try',
+    title: 'A product and a story to try',
     items: [
       { key: 'product', label: 'Product', href: '#privacy-lens' },
       { key: 'creative', label: 'Creative', href: '#story-engine' },
     ],
-    names: ['Privacy Lens', 'Story Engine'],
+    names: ['Privacy Lens', 'Can a story break its own rules?'],
+    areas: ['Product', 'Creative · Story Engine'],
+    aside: [null, { label: 'Read what I write: Letters', href: '/letters/' }] as ({ label: string; href: string } | null)[],
   },
   lens: {
     kicker: 'Product · AnotiAI',

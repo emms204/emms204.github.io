@@ -1,6 +1,8 @@
 ---
 import InquiryForm from './InquiryForm.astro';
 import { works, profile } from '../../content/profile';
+import { CONTACT_EMAIL, WHATSAPP_URL } from '../../config';
+import { START } from '../../content/nav';
 const f = works.inquiry;
 ---
 <section id="inquiry" class="wrap pt-10" aria-labelledby="h">
@@ -9,6 +11,12 @@ const f = works.inquiry;
       <p class="kicker">Contact</p>
       <h1 id="h" class="display-1">{f.title}</h1>
       <p class="lede">{f.intro}</p>
+      <!-- review 2: the same direct options as the homepage contact section, before the form. -->
+      <p class="contact-direct">
+        <a class="btn-seal" href="#brief">{START.label}</a>
+        <a class="btn-line break-all" href={'mailto:' + CONTACT_EMAIL}>{CONTACT_EMAIL}</a>
+        <a class="btn-line" href={WHATSAPP_URL} rel="noopener">{works.contact.whatsapp}</a>
+      </p>
     </div>
     <ul class="contact-links">
       {profile.contact.links.map((l) => <li><a class="inline-flex min-h-11 items-center" href={l.href} rel="me noopener">{l.label}</a></li>)}

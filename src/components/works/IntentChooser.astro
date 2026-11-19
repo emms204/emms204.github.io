@@ -1,6 +1,7 @@
 ---
 // "What brings you here?" Links work with JS off (?path=<key>#for-<key> + CSS :target).
-// With JS, ?path= (old values included, via PATH_TO_INTENT) selects an intent in place.
+// With JS, ?path= (old values included, via PATH_TO_INTENT) selects an intent in place. A click pushes the link's
+// full URL (?path=<key>#for-<key>, fragment kept: review 2 P1) so it can be shared; Back restores the previous choice.
 import { works, PATH_TO_INTENT } from '../../content/profile';
 const t = works.intents;
 ---
@@ -45,7 +46,8 @@ const t = works.intents;
 (()=>{const S=document.getElementById('intent');if(!S)return;const M=JSON.parse(S.dataset.map),L=S.querySelector('[data-intent-live]'),
 set=(k,say)=>{S.dataset.intent=k;S.querySelectorAll('[data-intent]').forEach(a=>a.dataset.intent===k?a.setAttribute('aria-current','true'):a.removeAttribute('aria-current'));
 if(say){const p=S.querySelector('#for-'+k);L.textContent='Showing: '+p.getAttribute('aria-label')+'. '+p.querySelector('.intent-headline').textContent}};
-const q=new URLSearchParams(location.search).get('path'),h=(location.hash.match(/^#for-(\w+)/)||[])[1],k=M[q]||M[h];if(k)set(k);
+const pick=()=>{const q=new URLSearchParams(location.search).get('path'),h=(location.hash.match(/^#for-(\w+)/)||[])[1];return M[q]||M[h]},k=pick();if(k)set(k);
+addEventListener('popstate',()=>set(pick()||'build',1));
 S.addEventListener('click',e=>{const a=e.target.closest('a[data-intent]');if(!a)return;e.preventDefault();set(a.dataset.intent,1);
-const u=new URL(location);u.searchParams.set('path',a.dataset.intent);u.hash='';history.replaceState(null,'',u)})})();
+const u=new URL(a.href,location);u.href!==location.href&&history.pushState(null,'',u)})})();
 </script>

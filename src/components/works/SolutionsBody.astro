@@ -1,5 +1,6 @@
 ---
 import { works } from '../../content/profile';
+import { START } from '../../content/nav';
 const s = works.solutions;
 // Legacy #offer-* anchors from the old /commission/ page, mapped onto the new offers.
 const legacy: Record<string, string[]> = { strategy: ['offer-sketch'], systems: ['offer-ink'], collab: ['offer-embedded'] };
@@ -8,6 +9,7 @@ const legacy: Record<string, string[]> = { strategy: ['offer-sketch'], systems: 
   <p class="kicker">Commercial · fig. 2</p>
   <h1 id="h" class="display-1">{s.title}</h1>
   <p class="lede">{s.intro}</p>
+  <p class="sol-cta"><a class="btn-seal" href={START.href}>{START.label}</a></p>
 </section>
 <ol class="wrap offers">
   {s.offers.map((o) => (

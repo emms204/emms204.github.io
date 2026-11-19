@@ -34,12 +34,13 @@ const h = works.hero;
       <ol class="pieces-index">{works.pieces.items.map((p, i) => <li><a href={p.href}><span class="fig">{String(i + 1).padStart(2, '0')}</span> {p.label}</a></li>)}</ol>
     </div>
     <div class="pieces-stack" data-folds>
-      {[PrivacyLens, StoryEngine].map((Piece, i) => (
+      {[PrivacyLens, StoryEngine].map((Piece, i) => (<>
         <details class="fold" open={i === 0}>
-          <summary class="fold-sum"><span class="fig">{String(i + 1).padStart(2, '0')}</span><span class="fold-area">{works.pieces.items[i].label}</span><span class="fold-name">{works.pieces.names[i]}</span><span class="fold-hint" aria-hidden="true"></span></summary>
+          <summary class="fold-sum"><span class="fig">{String(i + 1).padStart(2, '0')}</span><span class="fold-area">{works.pieces.areas[i]}</span><span class="fold-name">{works.pieces.names[i]}</span><span class="fold-hint" aria-hidden="true"></span></summary>
           <Piece />
         </details>
-      ))}
+        {works.pieces.aside[i] && <p class="fold-aside"><a class="btn-line" href={works.pieces.aside[i]!.href}>{works.pieces.aside[i]!.label}</a></p>}
+      </>))}
     </div>
   </section>
 

@@ -1000,3 +1000,10 @@ html { scroll-padding-top: 72px; }
 .tb-theme .i-sun { display: none; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme=light]) .tb-theme .i-sun { display: block; } :root:not([data-theme=light]) .tb-theme .i-moon { display: none; } }
 :root[data-theme=dark] .tb-theme .i-sun { display: block; } :root[data-theme=dark] .tb-theme .i-moon { display: none; }
+
+/* ===== works-v13 (review 2) ===== */
+.contact-direct, .sol-cta { margin-top: var(--s-1); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-xs) var(--s-1); }
+.fold-aside { margin-top: calc(-1 * var(--s-xs)); }
+.bb { justify-content: space-around; }
+/* one link per row on phones, so a web-font swap can't change how many rows the contact row takes (CLS) */
+@media (max-width: 639px) { .contact-direct { flex-direction: column; align-items: flex-start; } }

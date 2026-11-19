@@ -165,8 +165,9 @@ ok('nav: five questions in order on /index/', [...ixNav.matchAll(/id="ix-([a-z]+
 const tb = (read('/work/reconciliation/').match(/<header class="tb">[\s\S]*?<\/header>/) || [''])[0];
 ok('top bar: no question indicator on the front door', /<header class="tb">/.test(home) && !/class="tb-q"/.test(home));
 const bb = (home.match(/<nav aria-label="Quick" class="bb">[\s\S]*?<\/nav>/) || [''])[0];
-ok('top bar: name, current question, Services, Contact, Index, CV, Start a project', /class="tb-name">Emmanuel Osanebi</.test(tb) && /class="tb-q"/.test(tb) && ['>Services<', '>Contact<', '>Index<', '>CV<', '>Start a project<'].every((t) => tb.includes(t)) && /href="\/cv\.pdf"/.test(tb));
-ok('bottom bar (mobile): Services, Contact, Index, Start a project', ['>Services<', '>Contact<', '>Index<', '>Start a project<'].every((t) => bb.includes(t)));
+const order = (html, labels) => { const at = labels.map((t) => html.indexOf(t)); return at.every((x, i) => x >= 0 && (i === 0 || x > at[i - 1])); };
+ok('top bar: name, current question, then Work, Services, Contact, Index, CV, theme toggle, Start a project (in order)', /class="tb-name">Emmanuel Osanebi</.test(tb) && /class="tb-q"/.test(tb) && order(tb, ['>Work<', '>Services<', '>Contact<', '>Index<', '>CV<', 'data-theme-toggle', '>Start a project<']) && /href="\/cv\.pdf"/.test(tb) && /<a class="tb-l tb-wide" href="\/work\/" aria-current="page">Work</.test(tb));
+ok('bottom bar (mobile): Work, Services, Index, Contact; no Start a project', order(bb, ['href="/work/"', '>Work<', '>Services<', '>Index<', '>Contact<']) && !bb.includes('Start a project') && !bb.includes('btn-seal'));
 ok('top bar: sticky, bottom bar respects safe-area insets, body padded', /\.tb\{[^}]*position:sticky;top:0/.test(home) && /env\(safe-area-inset-bottom\)/.test(home) && /viewport-fit=cover/.test(home));
 const dlg = (home.match(/<dialog id="ix-dialog"[\s\S]*?<\/dialog>/) || [''])[0];
 ok('index dialog: labelled, nav landmark, visible close, openers wired', /<dialog id="ix-dialog" class="ix-dialog" aria-labelledby="ixd-h">/.test(dlg) && /<h2 id="ixd-h"/.test(dlg) && /<nav aria-labelledby="ixd-h" class="ix wrap" data-ix-body><\/nav>/.test(dlg) && /fetch\('\/index\/'\)/.test(inline) && /location\.href=a\.href/.test(inline) && /<button type="button"[^>]*data-ix-close[^>]*>Close<\/button>/.test(dlg) && (home.match(/href="\/index\/" data-ix-open aria-haspopup="dialog" aria-controls="ix-dialog" aria-expanded="false"/g) || []).length === 2 && /showModal\(\)/.test(inline) && /addEventListener\('close'/.test(inline) && /\.focus\(\)/.test(inline));
@@ -246,6 +247,17 @@ ok('theme toggle: dark tokens via device setting (unless forced light) and via f
   /@media \(prefers-color-scheme:dark\)\{:root:not\(\[data-theme=light\]\)\{--paper:#0e1014/i.test(css) && /:root\[data-theme=dark\]\{--paper:#0e1014/i.test(css) && /:root\[data-theme=light\]\{color-scheme:light\}/.test(css)
   && !/@media \(prefers-color-scheme:dark\)\{(:root|\.cb-l|\[data-bg\])\{/.test(css));
 ok('theme toggle: hidden/inert without JS (visibility until the head script marks JS on)', decl('.tb-theme', 'visibility') === 'hidden' && /\[data-js\] \.tb-theme\{visibility:visible\}/.test(css));
+
+// ---- works-v13: review 2 ----
+ok('intents: a click pushes the link URL with its fragment (?path=<key>#for-<key>); no hash stripping; Back restores', /history\.pushState\(null,'',u\)/.test(home) && /new URL\(a\.href,location\)/.test(home) && !/u\.hash=''/.test(home) && /addEventListener\('popstate'/.test(home)
+  && ['build', 'products', 'hire', 'collaborate'].every((k) => home.includes(`href="/?path=${k}#for-${k}"`) && home.includes(`id="for-${k}"`)));
+const contactP = read('/contact/'), cdirect = (contactP.match(/<p class="contact-direct">[\s\S]*?<\/p>/) || [''])[0];
+ok('contact: Start a project, email and WhatsApp right under the intro, before the form (same addresses as the homepage)', /class="lede"[\s\S]*?<p class="contact-direct">/.test(contactP) && contactP.indexOf('contact-direct">') < contactP.indexOf('<form id="brief"')
+  && cdirect.includes('href="#brief">Start a project<') && cdirect.includes('href="mailto:emmanuelosanebi1@gmail.com"') && cdirect.includes('href="https://wa.me/2349030612170"') && home.includes('href="mailto:emmanuelosanebi1@gmail.com"') && home.includes('href="https://wa.me/2349030612170"'));
+ok('services: a Start a project CTA in the page intro', /<p class="sol-cta"><a class="btn-seal" href="\/contact\/#inquiry">Start a project<\/a><\/p>/.test(read('/solutions/')));
+ok('story engine: its own invitation ("Can a story break its own rules?"), a Letters link beside it, anchor kept; Privacy Lens stays open', /<h2 id="pieces-h" class="display-2">A product and a story to try<\/h2>/.test(home) && !/Two more pieces to try/.test(home)
+  && /<details class="fold"><summary class="fold-sum">[\s\S]*?Can a story break its own rules\?<\/span>[\s\S]*?<article id="story-engine"[\s\S]*?<\/details><p class="fold-aside"><a class="btn-line" href="\/letters\/">Read what I write: Letters<\/a><\/p>/.test(home)
+  && /<details class="fold" open><summary class="fold-sum">[\s\S]*?Privacy Lens<\/span>/.test(home) && home.includes('href="#story-engine"'));
 
 console.log(failed ? `\n${failed} check(s) failed` : '\nall checks passed');
 process.exit(failed ? 1 : 0);
