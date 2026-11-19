@@ -708,15 +708,16 @@ const ask = (intent: IntentKey) => `/contact/?intent=${intent}#inquiry`;
 
 export const works = {
   meta: {
-    title: 'Emmanuel Osanebi — The Works: AI systems, software products and stories',
-    description: 'Emmanuel Osanebi, AI Engineer. I make difficult things useful: AI systems, software products and stories worth telling. AI drafts, Python checks, a person signs.',
+    title: 'Emmanuel Osanebi — The Works: AI systems and software products',
+    description: 'Emmanuel Osanebi, AI Engineer. I make difficult things useful: AI systems, software products, and production agents and automation. AI drafts, Python checks, a person signs.',
     ogAlt: 'Emmanuel Osanebi — THE WORKS. I make difficult things useful.',
   },
   hero: {
     name: 'Emmanuel Osanebi',
     title: 'The Works',
     statement: 'I make difficult things useful.',
-    lines: ['AI systems.', 'Software products.', 'Stories worth telling.'],
+    // Hero wording pending Emmanuel's approval (works-v4 preview, Nov 19 2026): third line was 'Stories worth telling.'
+    lines: ['AI systems.', 'Software products.', 'Production agents and automation.'],
     support: 'AI drafts, Python checks, a person signs.',
     supportNote: 'The rule behind the systems: the model proposes, deterministic code checks the numbers, and a person approves anything that matters.',
     role: 'AI Engineer · MasteryHive AI · Python / FastAPI · LLM agents and automation',
@@ -724,6 +725,85 @@ export const works = {
     offer: 'AI engineer building production LLM agents, automation and compliance AI (Python, FastAPI).',
     cta: { label: 'See what I can build for you', href: '/solutions/' },
     cta2: { label: 'Start an inquiry', href: '/contact/#inquiry' },
+  },
+  // Living System (works-v4): a conceptual illustration that reuses the Proof Bench's
+  // synthetic Example A / Example B. Values are computed from works.bench at build time.
+  living: {
+    kicker: 'Conceptual illustration',
+    title: 'One decision, four steps.',
+    note: 'Synthetic data from the Proof Bench. Not a live system.',
+    steps: [
+      { key: 'input', name: 'Input', line: 'A bank line and a ledger entry arrive.' },
+      { key: 'interpret', name: 'Interpret', line: 'The model reads both and proposes a match, with reasons. It does not decide.' },
+      { key: 'verify', name: 'Verify', line: 'Python checks amount, reference and date. Same input, same answer.' },
+      { key: 'decide', name: 'Decide', line: 'Only a verified match reaches a person, who signs it off.' },
+    ],
+    pass: { label: 'Pass', verdict: 'All three checks pass. A person approves (simulated).' },
+    reject: { label: 'Rejected', verdict: 'Rejected at Verify. It never reaches the approver.' },
+    choose: 'Show a result',
+    more: { label: 'Step through it on the Proof Bench', href: '#proof-bench' },
+  },
+  // Visual engineering journey (works-v4). Every era, date and employer is taken from the CV
+  // (public/cv.pdf) and the experience items above; no metrics beyond those already shown on the site.
+  journey: {
+    kicker: 'The engineering journey',
+    title: 'From perception to accountability',
+    intro: 'Five roles since 2021, read by the kind of problem each one solved. Pick a theme to follow it across the years.',
+    note: 'A thematic reading of the CV, not a claim that each era replaced the last. Omdena and Cali overlapped in 2022.',
+    imageNote: 'Photos are reference images of the kind of material each era worked with, from Wikimedia Commons. They are not from my projects.',
+    all: 'All themes',
+    themes: [
+      { key: 'training', label: 'Model training' },
+      { key: 'agents', label: 'Agents' },
+      { key: 'documents', label: 'Documents' },
+      { key: 'pipelines', label: 'Data pipelines' },
+      { key: 'reliability', label: 'Reliability' },
+      { key: 'compliance', label: 'Verification and compliance' },
+    ],
+    eras: [
+      {
+        key: 'perception', name: 'Perception', years: '2021–22', period: 'Jul 2021 – Dec 2022', org: 'Omdena', role: 'Machine Learning Engineer',
+        question: 'Can a model see what an inspector sees?',
+        facts: ['Weld-defect detection and classification model, plus APIs for training and retraining.', 'Dataset collection and annotation for multi-label, attention-based classification of GESI content.'],
+        themes: ['training', 'pipelines'], links: [{ label: 'Earlier computer-vision work', href: '/archive/' }],
+        image: 'perception', alt: 'Macro photo of an aluminium TIG weld bead, labelled weld bead, etched zone and prior metal finish.',
+      },
+      {
+        key: 'language', name: 'Language', years: '2022–23', period: 'Jul 2022 – Dec 2023', org: 'Cali', role: 'AI Engineer',
+        question: 'Can a model answer from the documents, not from memory?',
+        facts: ['LLM backends and multi-agent workflows for large-scale text analysis.', 'RAG pipeline with LlamaIndex and OpenAI for document analysis.', 'Python and Node.js backend services for AI inference.'],
+        themes: ['agents', 'documents'], links: [],
+        image: 'language', alt: 'A printed page of text from an early edition of Euclid\'s Elements, with geometric diagrams in the margin.',
+      },
+      {
+        key: 'application', name: 'Application', years: '2024–25', period: 'Jan 2024 – Dec 2025', org: 'Enzagroup Global', role: 'AI Software Engineer',
+        question: 'Can AI sit inside a real onboarding workflow?',
+        facts: ['Merchant-onboarding AI: structured document extraction that reduced manual compliance review by 60%.', 'Agentic document and decision workflows with CrewAI and LangGraph.', 'Identity verification, CRM and microservice integrations; AWS deployment with monitoring and retraining triggers.'],
+        themes: ['documents', 'agents', 'compliance', 'reliability', 'training'], links: [{ label: 'Merchant-onboarding case file', href: '/work/merchant-onboarding/' }],
+        image: 'application', alt: 'A blank government application form with boxes for personal details.',
+      },
+      {
+        key: 'orchestration', name: 'Orchestration', years: '2026', period: 'Mar 2026 – Jul 2026', org: 'VoterIQ', role: 'AI Engineer',
+        question: 'What happens to a run when a source fails?',
+        facts: ['End-to-end pipeline: article, enrichment, social probe, ranking, database write-back.', 'Tiered fallback and cooldown logic for run reliability.', 'Durable queueing, idempotency and a seven-state job lifecycle.'],
+        themes: ['pipelines', 'reliability', 'agents'], links: [{ label: 'VoterIQ pipeline case file', href: '/work/voteriq-pipeline/' }],
+        image: 'orchestration', alt: 'Stacks of old printed newspapers piled in a storeroom.',
+      },
+      {
+        key: 'accountability', name: 'Accountability', years: '2026–now', period: 'Aug 2026 – Present', org: 'MasteryHive AI', role: 'AI Engineer',
+        question: 'Who signs off when money is involved?',
+        facts: ['AI backends for fraud detection and AML / KYC / KYB checks.', 'Banking reconciliation: fuzzy, rule-based and LLM-assisted matching; money maths stays in deterministic Python and a person approves every resolution.', 'Ingestion, cleaning and validation pipelines for reinsurance data.'],
+        themes: ['compliance', 'reliability', 'pipelines', 'agents'], links: [{ label: 'Reconciliation case file', href: '/work/reconciliation/' }, { label: 'Fraud and compliance case file', href: '/work/fraud-compliance-reinsurance/' }],
+        image: 'accountability', alt: 'A handwritten page from an old general-store account ledger, with columns of amounts.',
+      },
+    ],
+    credits: [
+      { image: 'perception', title: 'TIG Weld low magnification', author: 'Dr. Crash (Wikimedia Commons)', license: 'Public domain', href: 'https://commons.wikimedia.org/wiki/File:TIG_Weld_low_magnification.jpg' },
+      { image: 'language', title: 'Geometric diagrams in margins of text of first printed edition of Euclid\'s Elements', author: 'Library of Congress', license: 'Public domain', href: 'https://commons.wikimedia.org/wiki/File:Geometric_diagrams_in_margins_of_text_of_first_printed_edition_of_Euclid%27s_%22Elements,%22_which_they_illus.-_2_diagrams_of_text_(page_headed_%22II%22)_LCCN2005683646.jpg' },
+      { image: 'application', title: 'Passport application form blank Russia', author: 'Rakoon', license: 'CC0', href: 'https://commons.wikimedia.org/wiki/File:Passport_application_form_blank_Russia.jpg' },
+      { image: 'orchestration', title: '(Stack of Newspapers)', author: 'William Hicks, University of North Texas Libraries', license: 'CC BY 4.0', licenseHref: 'https://creativecommons.org/licenses/by/4.0/', href: 'https://commons.wikimedia.org/wiki/File:(Stack_of_Newspapers)_-_DPLA_-_0b25c96090a717cc43076ab977d3be51.jpg' },
+      { image: 'accountability', title: 'Patterson\'s General Store Ledger (page 406)', author: 'Patterson\'s General Store, Chapel Hill Historical Society', license: 'Public domain', href: 'https://commons.wikimedia.org/wiki/File:Patterson%27s_General_Store_Ledger_-_DPLA_-_0079e562a497df98da2b2bf6a5740d22_(page_406).jpg' },
+    ] as { image: string; title: string; author: string; license: string; licenseHref?: string; href: string }[],
   },
   intents: {
     question: 'What brings you here?',
@@ -821,6 +901,7 @@ export const works = {
       { key: 'product', label: 'Product', href: '#privacy-lens' },
       { key: 'creative', label: 'Creative', href: '#story-engine' },
     ],
+    names: ['Proof Bench', 'Privacy Lens', 'Story Engine'],
   },
   lens: {
     kicker: 'Product · AnotiAI',

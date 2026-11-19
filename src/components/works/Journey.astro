@@ -1,0 +1,79 @@
+---
+// Visual engineering journey (works-v4). Facts come from works.journey, checked against the CV.
+// JS off / mobile: a chronological list of eras with <details>. Desktop: an SVG map of the same eras
+// with links to each era's card. JS adds theme filters that draw a thread through the matching eras.
+// Photos are licensed reference images (credits below and in IMAGE-CREDITS.md), not project output.
+import { Picture } from 'astro:assets';
+import { works } from '../../content/profile';
+const J = works.journey;
+const imgs = import.meta.glob<{ default: ImageMetadata }>('../../assets/journey/*.jpg', { eager: true });
+const img = (k: string) => imgs[`../../assets/journey/${k}.jpg`].default;
+const P = [[80, 140], [290, 80], [500, 140], [710, 80], [920, 140]];
+const pos = Object.fromEntries(J.eras.map((e, i) => [e.key, P[i]]));
+const line = (keys: string[]) => keys.map((k) => pos[k].join(',')).join(' ');
+const len = (keys: string[]) => Math.ceil(keys.slice(1).reduce((a, k, i) => a + Math.hypot(pos[k][0] - pos[keys[i]][0], pos[k][1] - pos[keys[i]][1]), 0));
+const member = (t: string) => J.eras.filter((e) => e.themes.includes(t)).map((e) => e.key);
+const label = (k: string) => J.themes.find((t) => t.key === k)?.label ?? k;
+const credit = (k: string) => J.credits.find((c) => c.image === k)!;
+const say = Object.fromEntries(J.themes.map((t) => {
+  const m = J.eras.filter((e) => e.themes.includes(t.key));
+  return [t.key, `${t.label}: ${m.length} of ${J.eras.length} eras, ${m.map((e) => e.name).join(', ')}.`];
+}));
+say[''] = `${J.all}: ${J.eras.length} eras.`;
+---
+<section id="journey" class="wrap section journey" aria-labelledby="journey-h" data-say={JSON.stringify(say)}>
+  <p class="kicker">{J.kicker}</p>
+  <h2 id="journey-h" class="display-2">{J.title}</h2>
+  <p class="lede journey-intro">{J.intro}</p>
+
+  <div class="bench-cases journey-filters" role="group" aria-label="Follow a theme" data-jy-filters hidden>
+    <button type="button" class="bench-case-btn" data-jy="" aria-pressed="true">{J.all}</button>
+    {J.themes.map((t) => <button type="button" class="bench-case-btn" data-jy={t.key} aria-pressed="false">{t.label}</button>)}
+  </div>
+  <p class="sr-only" aria-live="polite" data-jy-live></p>
+
+  <svg class="journey-map" viewBox="0 0 1000 220" role="group" aria-label="Map of the five eras; each links to its details below">
+    <polyline class="jm-path" points={line(J.eras.map((e) => e.key))} />
+    {J.themes.map((t) => <polyline class="jm-thread" data-thread={t.key} style={`--len:${len(member(t.key))}`} points={line(member(t.key))} />)}
+    {J.eras.map((e) => (
+      <a href={`#era-${e.key}`} class="jm-star" data-themes={e.themes.join(' ')}>
+        <circle class="jm-ring" cx={pos[e.key][0]} cy={pos[e.key][1]} r="18" />
+        <circle class="jm-dot" cx={pos[e.key][0]} cy={pos[e.key][1]} r="7" />
+        <text class="jm-name" x={pos[e.key][0]} y={pos[e.key][1] + (pos[e.key][1] < 100 ? -48 : 44)} text-anchor="middle">{e.name}</text>
+        <text class="jm-yr" x={pos[e.key][0]} y={pos[e.key][1] + (pos[e.key][1] < 100 ? -30 : 62)} text-anchor="middle">{e.years} · {e.org}</text>
+      </a>
+    ))}
+  </svg>
+
+  <ol class="journey-eras">
+    {J.eras.map((e, i) => {
+      const c = credit(e.image);
+      return (
+        <li id={`era-${e.key}`} class="era" data-themes={e.themes.join(' ')}>
+          <details>
+            <summary>
+              <Picture src={img(e.image)} formats={['avif', 'webp']} width={320} height={200} fit="cover" alt={e.alt} loading="lazy" decoding="async" class="era-img" />
+              <span class="era-h"><span class="fig">{String(i + 1).padStart(2, '0')}</span> {e.name}</span>
+              <span class="era-meta">{e.years} · {e.org}</span>
+            </summary>
+            <div class="era-body">
+              <p class="era-q">{e.question}</p>
+              <p class="kicker">{e.role} · {e.org} · {e.period}</p>
+              <ul class="era-facts">{e.facts.map((f) => <li>{f}</li>)}</ul>
+              <p class="era-themes">{e.themes.map((t) => <span>{label(t)}</span>)}</p>
+              {e.links.length > 0 && <p class="era-links">{e.links.map((l) => <a class="btn-line" href={l.href}>{l.label}</a>)}</p>}
+              <p class="era-credit">Reference image: <a href={c.href} rel="noopener">{c.title}</a>, {c.author}, {c.licenseHref ? <a href={c.licenseHref} rel="noopener">{c.license}</a> : c.license}; cropped and resized.</p>
+            </div>
+          </details>
+        </li>
+      );
+    })}
+  </ol>
+  <p class="journey-note">{J.note} {J.imageNote}</p>
+</section>
+<script is:inline>
+(()=>{const S=document.getElementById('journey');if(!S)return;const F=S.querySelector('[data-jy-filters]'),L=S.querySelector('[data-jy-live]'),V=JSON.parse(S.dataset.say);F.hidden=false;
+F.addEventListener('click',e=>{const b=e.target.closest('[data-jy]');if(!b)return;const k=b.dataset.jy;F.querySelectorAll('[data-jy]').forEach(x=>x.setAttribute('aria-pressed',x===b));
+S.querySelectorAll('[data-themes]').forEach(n=>n.classList.toggle('dim',!!k&&!n.dataset.themes.split(' ').includes(k)));
+S.querySelectorAll('[data-thread]').forEach(t=>t.classList.toggle('on',t.dataset.thread===k));L.textContent=V[k]})})();
+</script>

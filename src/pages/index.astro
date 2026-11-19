@@ -4,6 +4,8 @@ import IntentChooser from '../components/works/IntentChooser.astro';
 import ProofBench from '../components/works/ProofBench.astro';
 import PrivacyLens from '../components/works/PrivacyLens.astro';
 import StoryEngine from '../components/works/StoryEngine.astro';
+import LivingSystem from '../components/works/LivingSystem.astro';
+import Journey from '../components/works/Journey.astro';
 import WorkIndex from '../components/works/WorkIndex.astro';
 import { profile, atelier, works } from '../content/profile';
 import { CONTACT_EMAIL, WHATSAPP_URL } from '../config';
@@ -28,16 +30,21 @@ const featured = atelier.caseFiles.slice(0, 5);
     </div>
   </section>
 
+  <LivingSystem />
+
   <IntentChooser />
 
   <section id="bench" class="pieces" aria-labelledby="pieces-h">
     <div class="wrap"><h2 id="pieces-h" class="display-2">{works.pieces.title}</h2>
       <ol class="pieces-index">{works.pieces.items.map((p, i) => <li><a href={p.href}><span class="fig">{String(i + 1).padStart(2, '0')}</span> {p.label}</a></li>)}</ol>
     </div>
-    <div class="pieces-grid">
-      <ProofBench />
-      <PrivacyLens />
-      <StoryEngine />
+    <div class="pieces-stack" data-folds>
+      {[ProofBench, PrivacyLens, StoryEngine].map((Piece, i) => (
+        <details class="fold" open={i === 0}>
+          <summary class="fold-sum"><span class="fig">{String(i + 1).padStart(2, '0')}</span><span class="fold-area">{works.pieces.items[i].label}</span><span class="fold-name">{works.pieces.names[i]}</span><span class="fold-hint" aria-hidden="true"></span></summary>
+          <Piece />
+        </details>
+      ))}
     </div>
   </section>
 
@@ -49,6 +56,8 @@ const featured = atelier.caseFiles.slice(0, 5);
     <WorkIndex items={featured} />
     <p class="mt-6 flex flex-wrap gap-x-6"><a class="btn-line" href="/work/">{works.selected.all}</a><a class="btn-line" href="/products/">Products</a><a class="btn-line" href="/archive/">{works.selected.archive}</a></p>
   </section>
+
+  <Journey />
 
   <section id="about" class="wrap section" aria-labelledby="about-h">
     <span id="experience"></span>
@@ -83,3 +92,6 @@ const featured = atelier.caseFiles.slice(0, 5);
     </div>
   </section>
 </Layout>
+<script is:inline>
+(()=>{const o=()=>{const t=location.hash&&document.getElementById(location.hash.slice(1));const d=t&&t.closest('details');if(d&&!d.open){d.open=true;t.scrollIntoView()}};addEventListener('hashchange',o);o()})();
+</script>
