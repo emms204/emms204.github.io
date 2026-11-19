@@ -1,0 +1,12 @@
+---
+import { Q, START, type QKey } from '../../content/nav';
+interface Props { q: QKey }
+const q = Q[Astro.props.q];
+---
+<section class="wrap next-q" aria-labelledby="next-q-h">
+  <h2 id="next-q-h" class="next-q-h">Next question</h2>
+  <ul class="next-q-list" role="list">
+    {q.next.map((k) => <li><a class="next-q-card" href={Q[k].lead}><span class="next-q-q">{Q[k].question}</span><span class="next-q-a">{Q[k].hint}</span></a></li>)}
+  </ul>
+  <p class="next-q-cta"><a class="btn-seal" href={START.href}>{START.label}</a></p>
+</section>

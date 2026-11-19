@@ -1,0 +1,50 @@
+---
+import { profile } from '../../content/profile';
+import { Q, START, type QKey } from '../../content/nav';
+interface Props { q: QKey | null; path: string }
+const { q, path } = Astro.props;
+const onIndex = path === '/index/';
+const cur = (href: string) => (path.startsWith(href) ? 'page' : undefined);
+const ixAttrs: Record<string, string> = onIndex ? { 'aria-current': 'page' } : { 'data-ix-open': '', 'aria-haspopup': 'dialog', 'aria-controls': 'ix-dialog', 'aria-expanded': 'false' };
+---
+<header class="tb">
+  <div class="wrap tb-in">
+    <p class="tb-id">
+      <a href="/" class="tb-name">{profile.person.name}</a>
+      {q && <span class="tb-q"><span class="sr-only">Current question: </span><span aria-hidden="true" class="tb-dot"></span>{Q[q].short}</span>}
+    </p>
+    <nav aria-label="Site" class="tb-nav">
+      <a class="tb-l tb-wide" href="/solutions/" aria-current={cur('/solutions/')}>Services</a>
+      <a class="tb-l tb-wide" href="/contact/" aria-current={cur('/contact/')}>Contact</a>
+      <a class="tb-l tb-wide tb-index" href="/index/" {...ixAttrs}>Index</a>
+      <a class="tb-l" href="/cv.pdf">CV</a>
+      <a class="btn-seal tb-cta tb-wide" href={START.href}>{START.label}</a>
+    </nav>
+  </div>
+</header>
+<nav aria-label="Quick" class="bb">
+  <a class="bb-l" href="/solutions/" aria-current={cur('/solutions/')}>Services</a>
+  <a class="bb-l" href="/contact/" aria-current={cur('/contact/')}>Contact</a>
+  <a class="bb-l tb-index" href="/index/" {...ixAttrs}>Index</a>
+  <a class="btn-seal bb-cta" href={START.href}>{START.label}</a>
+</nav>
+{!onIndex && (
+  <dialog id="ix-dialog" class="ix-dialog" aria-labelledby="ixd-h">
+    <div class="ix-sheet">
+      <div class="ix-top wrap">
+        <h2 id="ixd-h" class="ix-title">Index</h2>
+        <p class="ix-sub">Five questions. Each page answers one.</p>
+        <button type="button" class="btn-line ix-close" data-ix-close autofocus>Close</button>
+      </div>
+      <nav aria-labelledby="ixd-h" class="ix wrap" data-ix-body></nav>
+    </div>
+  </dialog>
+)}
+<script is:inline>
+(()=>{const d=document.getElementById('ix-dialog');if(!d||!d.showModal||!window.fetch)return;const N=d.querySelector('[data-ix-body]'),Q=document.body.dataset.q,P=location.pathname,sm=()=>matchMedia('(width < 48rem)').matches;let o,L;
+const load=()=>L||(L=fetch('/index/').then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{const g=new DOMParser().parseFromString(t,'text/html').querySelector('.ix-grid');g.querySelectorAll('[id]').forEach(x=>x.id=x.id.replace(/^ix-/,'ixd-'));g.querySelectorAll('h2').forEach(h=>{const n=document.createElement('h3');n.className=h.className;n.innerHTML=h.innerHTML;h.replaceWith(n)});g.querySelectorAll('[data-ix-card]').forEach(a=>{a.removeAttribute('aria-current');a.pathname===P&&!a.hash&&a.setAttribute('aria-current','page')});const c=Q&&g.querySelector('.ix-q[data-q="'+Q+'"]');if(c){c.classList.add('is-current');c.querySelector('.ix-qt').insertAdjacentHTML('beforeend','<span class="sr-only"> (you are here)</span>')}N.replaceChildren(g)}).catch(e=>{L=0;throw e}));
+document.querySelectorAll('[data-ix-open]').forEach(a=>{['pointerenter','focus','touchstart'].forEach(v=>a.addEventListener(v,()=>load().catch(()=>{}),{passive:true}));a.addEventListener('click',e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button)return;e.preventDefault();o=a;load().then(()=>{const m=sm();d.querySelectorAll('.ix-q').forEach(x=>x.open=!m||x.classList.contains('is-current'));d.showModal();a.setAttribute('aria-expanded','true')},()=>{location.href=a.href})})});
+d.addEventListener('close',()=>{if(o){o.setAttribute('aria-expanded','false');o.focus()}});
+d.addEventListener('click',e=>{if(e.target.closest('[data-ix-close]'))return d.close();const s=e.target.closest('summary');if(s&&!sm())return e.preventDefault();const c=e.target.closest('a[data-ix-card]');if(!c)return;if(c.pathname===P&&c.hash)return d.close();if(!c.hash&&/\/$/.test(c.pathname)){c.style.viewTransitionName='ix-head';try{sessionStorage.ixvt='1'}catch(_){}}});
+addEventListener('pageshow',()=>{d.querySelectorAll('[data-ix-card]').forEach(c=>c.style.viewTransitionName='');d.open&&d.close()})})();
+</script>

@@ -1,7 +1,7 @@
 ---
 /** Static SVG chess board from a board FEN (piece placement only). Server-rendered; works without JS. */
-interface Props { fen: string; from?: string; to?: string; line?: [string, string]; label: string; size?: 'lg' | 'sm'; id?: string }
-const { fen, from, to, line, label, size = 'lg', id } = Astro.props;
+interface Props { fen: string; from?: string; to?: string; line?: [string, string]; label: string; size?: 'lg' | 'sm' | 'xs'; id?: string; decorative?: boolean }
+const { fen, from, to, line, label, size = 'lg', id, decorative = false } = Astro.props;
 const G: Record<string, string> = { k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' };
 const pieces: { x: number; y: number; c: string; w: boolean }[] = [];
 fen.split('/').forEach((row, y) => { let x = 0; for (const ch of row) { if (/\d/.test(ch)) x += +ch; else { pieces.push({ x, y, c: G[ch.toLowerCase()] + '\uFE0E', w: ch === ch.toUpperCase() }); x++; } } });
@@ -9,7 +9,7 @@ const sq = (s?: string) => (s ? { x: s.charCodeAt(0) - 97, y: 8 - +s[1] } : null
 const f = sq(from), t = sq(to);
 const ln = line ? [sq(line[0])!, sq(line[1])!] : null;
 ---
-<svg class:list={['cb', `cb-${size}`]} viewBox="0 0 8 8" role="img" aria-label={label} id={id} data-cb>
+<svg class:list={['cb', `cb-${size}`]} viewBox="0 0 8 8" role={decorative ? undefined : 'img'} aria-label={decorative ? undefined : label} aria-hidden={decorative ? 'true' : undefined} focusable={decorative ? 'false' : undefined} id={id} data-cb={decorative ? undefined : ''}>
   {Array.from({ length: 64 }, (_, i) => <rect x={i % 8} y={Math.floor(i / 8)} width="1" height="1" class={(i % 8 + Math.floor(i / 8)) % 2 ? 'cb-d' : 'cb-l'} />)}
   <g data-cb-hl>{[f, t].filter(Boolean).map((s) => <rect x={s!.x} y={s!.y} width="1" height="1" class="cb-hl" />)}</g>
   {size === 'lg' && <g class="cb-co" aria-hidden="true">{'abcdefgh'.split('').map((c, i) => <text x={i + .94} y="7.93" text-anchor="end">{c}</text>)}{[8, 7, 6, 5, 4, 3, 2, 1].map((n, i) => <text x=".05" y={i + .24}>{n}</text>)}</g>}

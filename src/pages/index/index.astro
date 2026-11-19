@@ -1,0 +1,15 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import IndexContents from '../../components/nav/IndexContents.astro';
+import { START } from '../../content/nav';
+---
+<Layout title="Index — Emmanuel Osanebi" description="Every page on the site, sorted by the five questions visitors ask: what I can build for you, what I have built, how I think, who I am, and how to start.">
+  <section class="wrap pt-8 ix-page" aria-labelledby="ix-h">
+    <h1 id="ix-h" class="display-2">Index</h1>
+    <p class="lede">Five questions. Each page answers one.</p>
+    <nav aria-labelledby="ix-h" class="ix mt-8">
+      <IndexContents current={null} path="/index/" prefix="ix" />
+    </nav>
+    <p class="mt-10"><a class="btn-seal" href={START.href}>{START.label}</a></p>
+  </section>
+</Layout>

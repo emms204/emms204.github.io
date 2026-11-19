@@ -1,0 +1,6 @@
+---
+import { Q, type QKey } from '../../content/nav';
+interface Props { q: QKey }
+const q = Q[Astro.props.q];
+---
+<div class="wrap q-wrap"><p class="q-line"><span class="q-n">{q.n}</span><a href={`/index/#ix-${q.key}`}>{q.question}</a></p></div>

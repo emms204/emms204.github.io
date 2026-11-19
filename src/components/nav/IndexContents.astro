@@ -1,0 +1,45 @@
+---
+/**
+ * The Index: five visitor questions, each with its pages and a small real preview.
+ * Used by /index/ (works without JS) and by the Index <dialog> on every page.
+ * Native <details> per question: open by default (a contents spread); on phones the dialog
+ * script collapses all but the current question, and tapping a question expands it.
+ */
+import { QUESTIONS, ENTRIES, type QKey, type Entry } from '../../content/nav';
+import { getLetters } from '../../lib/letters';
+import Board from '../chess/Board.astro';
+import game from '../../data/chess-MGXNlk6v.json';
+interface Props { current: QKey | null; path: string; prefix: string; headingLevel?: 2 | 3 }
+const { current, path, prefix, headingLevel = 2 } = Astro.props;
+const letters = await getLetters();
+const opening = (md: string) => {
+  const p = md.replace(/<!--[\s\S]*?-->/g, '').trim().split(/\n\s*\n/)[0].replace(/[*_\\]/g, '').replace(/\s+/g, ' ').trim();
+  return (p.match(/^.*?[.?!](?=\s|$)/) || [p])[0];
+};
+const letterEntries: Entry[] = letters.map((l) => ({ href: `/letters/${l.id}/`, title: l.data.title, preview: `“${opening(l.body ?? '')}”`, group: 'letter' }));
+const entries = (k: QKey) => (k === 'think' ? [ENTRIES.think[0], ...letterEntries, ...ENTRIES.think.slice(1)] : ENTRIES[k]);
+const here = (href: string) => (href === path ? 'page' : undefined);
+const key = game.plies[34];
+const H = `h${headingLevel}` as 'h2' | 'h3';
+---
+<div class="ix-grid">
+  {QUESTIONS.map((q) => (
+    <details class:list={['ix-q', { 'is-current': q.key === current }]} id={`${prefix}-${q.key}`} data-q={q.key} open>
+      <summary class="ix-qh">
+        <H class="ix-qt"><span class="ix-n">{q.n}</span> {q.question}{q.key === current && <span class="sr-only"> (you are here)</span>}</H>
+        <span class="ix-hint">{q.hint}</span>
+      </summary>
+      <ul class="ix-pages" role="list">
+        {entries(q.key).map((e) => (
+          <li class:list={['ix-li', e.group && `ix-${e.group}`]}>
+            <a class="ix-card" href={e.href} aria-current={here(e.href)} data-ix-card>
+              <span class="ix-pt">{e.title}</span>
+              {e.board && <Board fen={key.fen} line={['h2', 'c7']} label="" size="xs" decorative />}
+              <span class="ix-pv">{e.preview}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details>
+  ))}
+</div>
