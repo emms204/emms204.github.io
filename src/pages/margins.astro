@@ -1,12 +1,12 @@
 ---
-// Alias kept so old links keep working. Margins was folded into Letters (works-v8): its only published
-// section, Retakes, now lives at /letters/#retakes; "This season" and "Ideas drawer" were empty placeholders.
+// Alias kept so old links keep working. Margins was folded into Letters (works-v8): its sections were
+// empty placeholders or repeated case-file lines (Retakes), so the alias points to /letters/.
 import Layout from '../layouts/Layout.astro';
 import Moved from '../components/works/Moved.astro';
 ---
 <Layout title="Margins — moved to Letters — Emmanuel Osanebi" description="Margins is now part of Letters." canonicalPath="/letters/">
   <section class="wrap pt-6" aria-labelledby="h">
     <h1 id="h" class="sr-only">Margins has moved</h1>
-    <Moved from="Margins" note="Margins is now part of Letters. Retakes are at the end of the Letters page." to="/letters/#retakes" label="Retakes in Letters" />
+    <Moved from="Margins" note="Margins is now part of Letters." to="/letters/" label="Letters" />
   </section>
 </Layout>

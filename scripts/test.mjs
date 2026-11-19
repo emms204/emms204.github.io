@@ -142,14 +142,15 @@ ok('homepage lists: no project listed twice', proj.length >= 8 && dupes.length =
 ok('no project lost: every case file has a page and is on the work index', atelier.caseFiles.every((c) => existsSync(file(`/work/${c.slug}/`)) && readFileSync(file('/work/'), 'utf8').includes(`/work/${c.slug}/`)));
 ok('living system: rejection branch hidden in Pass (CSS), Pass is the default', /\.living \.ls-edge\.ls-reject\{display:none\}/.test(home) && /<section id="living"[^>]*data-case="a"/.test(home));
 ok('living system: vertical mobile diagram with a loop-back branch', /class="living-svg living-svg-v"/.test(living) && /ls-edge ls-reject" d="M270 288 H332 V76 H276"/.test(living));
-ok('first screen: small wordmark, Living System directly after the hero', !/class="hero-title"/.test(home) &&  /<p class="q-line">[\s\S]*?Who are you\?<\/a><\/p><\/div>\s*<div class="first-screen">/.test(home) && /<\/section>\s*<section id="living"/.test(home));
+ok('first screen: front door (no question line), small "The Works" label, DOM order name -> diagram -> offer/CTAs', !/class="hero-title"/.test(home) && !/class="q-line"/.test(home) && /<main id="main" tabindex="-1">\s*(<!--[\s\S]*?-->\s*)?<div class="first-screen hero-v7 wrap">\s*<section id="home" class="hero-main"[^>]*>\s*<p class="hero-brand">The Works<\/p>/.test(home) && /<\/section>\s*<section id="living"[\s\S]*?<\/section>\s*(<script[\s\S]*?<\/script>\s*)*<div class="hero-side">/.test(home) && !/tabindex="[1-9]/.test(home));
+ok('hero: one primary CTA plus CV (no duplicate "Start an inquiry")', /<p class="hero-ctas"><a class="btn-seal" href="\/solutions\/">See what I can build for you<\/a><a class="btn-line" href="\/cv\.pdf">CV \(PDF\)<\/a><\/p>/.test(home) && !/Start an inquiry/.test(home));
 ok('journey: one navigation device (no zigzag map), caption names Commons and the institutions', !/class="journey-map"/.test(journey) && /taken from Wikimedia Commons/.test(journey) && /Library of Congress/.test(journey) && (journey.match(/via Wikimedia Commons/g) || []).length === 5);
 
 // works-v8: question-based navigation (Emmanuel, t55u/t56u, 19 Nov 2026).
 const htmlPages = walk(DIST).filter((p) => p.endsWith('.html')).map((p) => '/' + p.slice(DIST.length + 1).replace(/index\.html$/, ''));
 const read = (r) => readFileSync(file(r), 'utf8');
 const KEYS = ['build', 'built', 'think', 'about', 'contact'];
-const utility = new Set(['/404.html', '/index/']);
+const utility = new Set(['/404.html', '/index/', '/']); // '/' is the front door: no question line, still ends with Next question
 const qOf = (r) => (read(r).match(/<body data-q="([a-z]+)"/) || [])[1];
 const noQ = htmlPages.filter((r) => !utility.has(r) && !KEYS.includes(qOf(r)));
 ok(`nav: every page belongs to exactly one question (${htmlPages.length - utility.size} pages)`, noQ.length === 0, noQ.join(' '));
@@ -157,10 +158,12 @@ const ix = read('/index/');
 const ixNav = (ix.match(/<nav aria-labelledby="ix-h"[\s\S]*?<\/nav>/) || [''])[0];
 const ixCards = [...ixNav.matchAll(/<details class="ix-q[^"]*" id="ix-([a-z]+)"[\s\S]*?<\/details>/g)].flatMap((m) => [...m[0].matchAll(/<a class="ix-card" href="([^"]+)"/g)].map((a) => [a[1], m[1]]));
 const smap = [...read('/sitemap.xml').matchAll(/<loc>https:\/\/emms204\.github\.io([^<]+)<\/loc>/g)].map((m) => m[1]).filter((r) => r !== '/index/');
-const ixWrong = smap.filter((r) => { const hits = ixCards.filter(([h]) => h === r); return hits.length !== 1 || hits[0][1] !== qOf(r); });
+const ixQ = (r) => (r === '/' ? 'about' : qOf(r)); // the front door is filed under "Who are you?" in the Index
+const ixWrong = smap.filter((r) => { const hits = ixCards.filter(([h]) => h === r); return hits.length !== 1 || hits[0][1] !== ixQ(r); });
 ok(`nav: /index/ links every page once, under its own question (${smap.length})`, ixWrong.length === 0 && ixCards.some(([h]) => h === '/cv.pdf'), ixWrong.join(' '));
 ok('nav: five questions in order on /index/', [...ixNav.matchAll(/id="ix-([a-z]+)"/g)].map((m) => m[1]).join() === KEYS.join());
-const tb = (home.match(/<header class="tb">[\s\S]*?<\/header>/) || [''])[0];
+const tb = (read('/work/reconciliation/').match(/<header class="tb">[\s\S]*?<\/header>/) || [''])[0];
+ok('top bar: no question indicator on the front door', /<header class="tb">/.test(home) && !/class="tb-q"/.test(home));
 const bb = (home.match(/<nav aria-label="Quick" class="bb">[\s\S]*?<\/nav>/) || [''])[0];
 ok('top bar: name, current question, Services, Contact, Index, CV, Start a project', /class="tb-name">Emmanuel Osanebi</.test(tb) && /class="tb-q"/.test(tb) && ['>Services<', '>Contact<', '>Index<', '>CV<', '>Start a project<'].every((t) => tb.includes(t)) && /href="\/cv\.pdf"/.test(tb));
 ok('bottom bar (mobile): Services, Contact, Index, Start a project', ['>Services<', '>Contact<', '>Index<', '>Start a project<'].every((t) => bb.includes(t)));
@@ -169,10 +172,12 @@ const dlg = (home.match(/<dialog id="ix-dialog"[\s\S]*?<\/dialog>/) || [''])[0];
 ok('index dialog: labelled, nav landmark, visible close, openers wired', /<dialog id="ix-dialog" class="ix-dialog" aria-labelledby="ixd-h">/.test(dlg) && /<h2 id="ixd-h"/.test(dlg) && /<nav aria-labelledby="ixd-h" class="ix wrap" data-ix-body><\/nav>/.test(dlg) && /fetch\('\/index\/'\)/.test(inline) && /location\.href=a\.href/.test(inline) && /<button type="button"[^>]*data-ix-close[^>]*>Close<\/button>/.test(dlg) && (home.match(/href="\/index\/" data-ix-open aria-haspopup="dialog" aria-controls="ix-dialog" aria-expanded="false"/g) || []).length === 2 && /showModal\(\)/.test(inline) && /addEventListener\('close'/.test(inline) && /\.focus\(\)/.test(inline));
 ok('index dialog: no search box and no "/" shortcut', !/type="search"/.test(dlg) && !/key===?['"]\/['"]/.test(inline));
 ok('index: no-JS fallback is a real page (Index links to /index/, which has no dialog)', /href="\/index\/"/.test(tb) && !/<dialog/.test(ix) && /<h1 id="ix-h"/.test(ix) && /href="\/index\/" aria-current="page"/.test(ix));
-ok('index: current question highlighted (body data-q drives .is-current in the dialog)', /<body data-q="about"/.test(home) && /classList\.add\('is-current'\)/.test(inline) && /\.ix-q\.is-current \.ix-qt\{color:var\(--seal-ink\)\}/.test(home));
-const noNext = htmlPages.filter((r) => !utility.has(r) && !/<section class="wrap next-q" aria-labelledby="next-q-h">[\s\S]*?Start a project/.test(read(r)));
+ok('index: current question highlighted (body data-q drives .is-current in the dialog)', /<body data-q="built"/.test(read('/work/reconciliation/')) && /<body data-front=""|<body[^>]* data-front/.test(home) && !/<body data-q=/.test(home) && /classList\.add\('is-current'\)/.test(inline) && /\.ix-q\.is-current \.ix-qt\{color:var\(--seal-ink\)\}/.test(home));
+const noNext = htmlPages.filter((r) => r !== '/404.html' && r !== '/index/' && !/<section class="wrap next-q" aria-labelledby="next-q-h">[\s\S]*?Start a project/.test(read(r)));
 ok('every content page: question line at the top and a Next question block', noNext.length === 0 && htmlPages.filter((r) => !utility.has(r)).every((r) => /<main id="main" tabindex="-1">\s*<div class="wrap q-wrap"><p class="q-line">/.test(read(r))), noNext.join(' '));
-ok('margins: folded into Letters (alias with canonical, Retakes on /letters/, not in smap)', /rel="canonical" href="https:\/\/emms204\.github\.io\/letters\/"/.test(read('/margins/')) && /href="\/letters\/#retakes"/.test(read('/margins/')) && /<section id="retakes"/.test(read('/letters/')) && !smap.includes('/margins/'));
+ok('margins: folded into Letters (alias with canonical to /letters/, not in sitemap); Retakes removed', /rel="canonical" href="https:\/\/emms204\.github\.io\/letters\/"/.test(read('/margins/')) && /href="\/letters\/"/.test(read('/margins/')) && !/retakes/i.test(read('/letters/')) && !/retakes/i.test(ix) && !smap.includes('/margins/'));
+ok('chess board: neutral squares, red only for the move highlight and line', /\.cb-l\{fill:#ecebe5\}/i.test(read('/chess/')) && /\.cb-hl\{fill:#c8102e;opacity:\.24\}/i.test(read('/chess/')));
+{ const og = readFileSync(file('/og.png')); ok('og.png: 1200x630, small', og.readUInt32BE(16) === 1200 && og.readUInt32BE(20) === 630 && og.length < 40000, `${og.length} B`); }
 const ids = new Map();
 const idsOf = (r) => { if (!ids.has(r)) ids.set(r, new Set([...read(r).matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]))); return ids.get(r); };
 const broken = [];

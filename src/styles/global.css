@@ -628,12 +628,14 @@ html:has(#living.run[data-case="b"]) .ga-hot { opacity: calc(var(--bg-a) * .85);
 @media (min-width: 900px) { .chess { grid-template-columns: minmax(0, 30rem) minmax(0, 1fr); align-items: start; } .chess-stage { position: sticky; top: 1rem; } }
 .cb { display: block; width: 100%; height: auto; aspect-ratio: 1; border: 1px solid var(--ink); font-family: "DejaVu Sans", "Segoe UI Symbol", "Noto Sans Symbols 2", "Apple Symbols", sans-serif; }
 .cb-sm { max-width: 13rem; margin-top: .75rem; }
-.cb-l { fill: #EFE3C8; } .cb-d { fill: #B48C5A; }
-.cb-hl { fill: #F4D35E; opacity: .6; }
+/* works-v9: quiet neutral squares; red only for the move highlight and the attack line. */
+.cb-l { fill: #ECEBE5; } .cb-d { fill: #B5B3AB; }
+.cb-hl { fill: #C8102E; opacity: .24; }
+@media (prefers-color-scheme: dark) { .cb-l { fill: #CFCDC6; } .cb-d { fill: #9A978F; } .cb-hl { fill: #FF5A6E; opacity: .32; } }
 .cb-w, .cb-b { font-size: .82px; }
-.cb-w { fill: #FFFFFF; stroke: #14171F; stroke-width: .035px; paint-order: stroke; }
-.cb-b { fill: #14171F; stroke: #FFFFFF; stroke-width: .012px; }
-.cb-co text { font-size: .2px; font-weight: 700; fill: #2A2418; font-family: var(--font-mono); }
+.cb-w { fill: #FFFFFF; stroke: #121212; stroke-width: .035px; paint-order: stroke; }
+.cb-b { fill: #121212; stroke: #FFFFFF; stroke-width: .012px; }
+.cb-co text { font-size: .2px; font-weight: 700; fill: #2B2B2B; font-family: var(--font-mono); }
 .cb-line { stroke: #C8102E; stroke-width: .09px; stroke-linecap: round; opacity: .85; }
 .chess-now { margin-top: .6rem; font-family: var(--font-mono); font-size: .9375rem; }
 .chess-ctl { margin-top: .5rem; display: flex; gap: .5rem; }
@@ -684,8 +686,16 @@ html:has(#living.run[data-case="b"]) .ga-hot { opacity: calc(var(--bg-a) * .85);
 @media (width >= 48rem) { .ls-step-h { font-family: var(--font-serif); font-size: 1.05rem; letter-spacing: 0; text-transform: none; color: var(--ink); } }
 
 /* First screen: name, statement, CTAs and the Living System diagram together. */
-.hero-v7 { padding-top: 1.5rem; padding-bottom: 0; display: grid; gap: 1rem 3rem; align-items: end; }
-@media (width >= 56rem) { .hero-v7 { grid-template-columns: 6fr 5fr; } }
+.hero-v7 { padding-top: 1.5rem; }
+/* tidy-up d: one DOM order (name, diagram, offer) for both; desktop places the offer beside the name with grid. */
+.first-screen > .living { max-width: none; padding-inline: 0; }
+.first-screen > .hero-side { margin: .5rem 0 1rem; }
+@media (width >= 56rem) {
+  .first-screen { display: grid; grid-template-columns: 6fr 5fr; column-gap: 3rem; align-items: end; }
+  .first-screen > .hero-main { grid-column: 1; grid-row: 1; }
+  .first-screen > .hero-side { grid-column: 2; grid-row: 1; margin: 0; }
+  .first-screen > .living { grid-column: 1 / -1; grid-row: 2; }
+}
 .hero-brand { font-family: var(--font-serif); font-size: 1rem; font-weight: 500; color: var(--graphite); }
 .hero-h1 { font-family: var(--font-serif); font-weight: 500; font-size: clamp(2.4rem, 5.2vw, 4rem); line-height: 1; letter-spacing: -.02em; margin-top: .25rem; }
 .hero-v7 .hero-statement { margin-top: .5rem; font-size: clamp(1.5rem, 3vw, 2.25rem); }
@@ -733,15 +743,6 @@ html:has(#living.run[data-case="b"]) .ga-hot { opacity: calc(var(--bg-a) * .85);
 .skills-compact dt { font-weight: 600; color: var(--ink); }
 .skills-compact dd { color: var(--graphite); }
 
-/* v7 mobile first screen: the Living System sits right after the headline; offer + CTAs follow it.
-   DOM order stays hero -> living (screen readers hear who/what/CTA first). */
-@media (width < 40rem) {
-  .first-screen { display: flex; flex-direction: column; }
-  .first-screen > .hero-v7 { display: contents; }
-  .hero-v7 .hero-main { order: 1; margin-inline: auto; width: 100%; padding: 1.25rem 1.25rem 0; }
-  .first-screen > .living { order: 2; }
-  .hero-v7 .hero-side { order: 3; margin: 0 1.25rem 1rem; }
-}
 @media (width < 40rem) {
   .living-controls { display: grid; grid-template-columns: 1fr 1fr; }
   .living-controls[hidden] { display: none; }
@@ -782,7 +783,6 @@ html { scroll-padding-top: 4.5rem; }
 .q-line a { color: var(--ink); text-decoration-color: var(--seal); text-underline-offset: .2em; }
 .q-n { font-family: var(--font-mono); font-size: .8125rem; font-weight: 400; color: var(--seal-ink); }
 main > .q-wrap + section.pt-10, main > .q-wrap + section.pt-8, main > .q-wrap + div.pt-6 { padding-top: 1rem; }
-main > .q-wrap + .first-screen .hero-v7 { padding-top: .75rem; }
 .next-q { margin-top: 5rem; padding-top: 1.5rem; border-top: 2px solid var(--ink); }
 .next-q-h { font-family: var(--font-sans); font-size: .9375rem; font-weight: 600; color: var(--graphite); }
 .next-q-list { margin-top: .75rem; display: grid; gap: .75rem; }

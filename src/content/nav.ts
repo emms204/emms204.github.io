@@ -49,7 +49,6 @@ export const ENTRIES: Record<QKey, Entry[]> = {
     { href: '/letters/', title: 'Letters', preview: 'Letters to a friend: a question I can’t put down, argued from both sides.' },
     // letters inserted here
     { href: '/letters/#shelf', title: 'Stays with me', preview: SHELF_INTRO },
-    { href: '/letters/#retakes', title: 'Retakes', preview: atelier.margins.retakes.intro },
     { href: '/chess/', title: 'One bullet game, annotated', preview: 'London System, 18 moves, won with a discovered attack on the queen.', board: true },
     { href: '/journal/', title: 'Journal', preview: `${atelier.press.series.title.split(':')[0]}: a three-part series on Medium.` },
     { href: '/#bench', title: 'Demos to try', preview: 'Privacy Lens and Story Engine, two small demos with synthetic data.' },

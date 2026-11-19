@@ -11,20 +11,19 @@ import { CONTACT_EMAIL, WHATSAPP_URL } from '../config';
 const h = works.hero;
 ---
 <Layout personLd>
-  <div class="first-screen">
-  <section id="home" class="hero hero-v7 wrap" aria-labelledby="hero-h">
-    <div class="hero-main">
+  <!-- DOM order = mobile reading order: name, diagram, offer + CTAs. On desktop, CSS grid puts the offer beside the name. -->
+  <div class="first-screen hero-v7 wrap">
+    <section id="home" class="hero-main" aria-labelledby="hero-h">
+      <p class="hero-brand">{h.title}</p>
       <h1 id="hero-h" class="hero-h1">{h.name}</h1>
       <p class="hero-statement">{h.statement}</p>
-    </div>
+    </section>
+    <LivingSystem />
     <div class="hero-side">
       <p class="hero-offer">{h.offer}</p>
       <ul class="hero-lines" aria-label="What I make">{h.lines.map((l) => <li>{l}</li>)}</ul>
-      <p class="hero-ctas"><a class="btn-seal" href={h.cta.href}>{h.cta.label}</a><a class="btn-line" href={h.cta2.href}>{h.cta2.label}</a><a class="btn-line" href="/cv.pdf">CV (PDF)</a></p>
+      <p class="hero-ctas"><a class="btn-seal" href={h.cta.href}>{h.cta.label}</a><a class="btn-line" href="/cv.pdf">CV (PDF)</a></p>
     </div>
-  </section>
-
-  <LivingSystem />
   </div>
 
   <IntentChooser />
