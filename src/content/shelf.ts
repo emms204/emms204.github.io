@@ -45,7 +45,7 @@ export const shelf: ShelfRow[] = [
     also: [{ title: 'The Originals' }],
   },
   {
-    question: 'Who gets to say what God is?',
+    question: 'Who gets to say what god is?',
     lead: { title: 'Lord of the Mysteries', medium: 'Novel' },
     line: 'DRAFT: Divinity is something people climb toward, so what a god is gets examined, not accepted.',
     also: [{ title: 'Orb: On the Movements of the Earth', note: 'also under “What if everyone else is wrong?”' }],
