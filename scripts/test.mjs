@@ -80,6 +80,7 @@ ok('homepage JS <= 4 KB gzipped (inline, no external bundles)', gz <= 4096 && !/
 const pick = (home.match(/<html[^>]*data-bg="([abc])"/) || [])[1] || '';
 ok('backdrop: no ?bg= preview switch in production build', !text.some((p) => readFileSync(p, 'utf8').includes("get('bg')")));
 ok('backdrop: markup matches the build pick', pick ? (home.includes(`class="bg-${pick}"`) && ['a', 'b', 'c'].filter((k) => k !== pick).every((k) => !home.includes(`class="bg-${k}"`))) : !home.includes('class="bgfx"'), pick || 'none');
+ok('backdrop: production default is option A (Emmanuel, 19 Nov 2026)', process.env.DIST ? true : pick === 'a', pick || 'none');
 ok('backdrop: decorative only (aria-hidden), no canvas/WebGL', (!pick || /<div class="bgfx" aria-hidden="true"/.test(home)) && !/getContext\(|three(\.module)?\.js|WebGL/i.test(home));
 
 const md5 = createHash('md5').update(readFileSync('public/cv.pdf')).digest('hex');

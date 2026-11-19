@@ -9,7 +9,8 @@
 import { getImage } from 'astro:assets';
 import light from '../assets/bg/neurons-light.png';
 import dark from '../assets/bg/neurons-dark.png';
-const PICK = (import.meta.env.PUBLIC_BG ?? '') as string;
+// Option A chosen by Emmanuel (19 Nov 2026): baked in as the production default.
+const PICK = (import.meta.env.PUBLIC_BG || 'a') as string;
 const PREVIEW = import.meta.env.PUBLIC_BG_PREVIEW === '1';
 const has = (k: string) => PREVIEW || PICK === k;
 const set = async (src: ImageMetadata) => {

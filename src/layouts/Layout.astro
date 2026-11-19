@@ -4,7 +4,7 @@ import { profile, works } from '../content/profile';
 import Masthead from '../components/atelier/Masthead.astro';
 import Footer from '../components/atelier/Footer.astro';
 import Backdrop from '../components/Backdrop.astro';
-const BG_PICK = (import.meta.env.PUBLIC_BG ?? '') as string;
+const BG_PICK = (import.meta.env.PUBLIC_BG || 'a') as string; // default: option A (Emmanuel, 19 Nov 2026)
 
 interface Props { title?: string; description?: string; noindex?: boolean; personLd?: boolean; canonicalPath?: string }
 const { title = works.meta.title, description = works.meta.description, noindex = false, personLd = false, canonicalPath } = Astro.props;
