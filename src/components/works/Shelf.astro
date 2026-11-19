@@ -1,0 +1,24 @@
+---
+import { shelf, SHELF_INTRO } from '../../content/shelf';
+// Native <details>/<summary>: works without JS, adds no JS, keyboard accessible.
+// Lines rendered here are DRAFT copy (see src/content/shelf.ts); the "DRAFT: " prefix is stripped for display.
+const show = (l: string) => l.replace(/^DRAFT:\s*/, '');
+---
+<section id="shelf" class="wrap shelf" aria-labelledby="shelf-h">
+  <h2 id="shelf-h" class="display-3">Stays with me</h2>
+  <p class="lede">{SHELF_INTRO}</p>
+  <div class="shelf-rows">
+    {shelf.map((r, i) => (
+      <details class="shelf-row" open={i === 0}>
+        <summary class="shelf-q"><span class="fig">{String(i + 1).padStart(2, '0')}</span><span class="shelf-q-t">{r.question}</span><span class="shelf-lead-peek">{r.lead.title}</span></summary>
+        <div class="shelf-body">
+          <p class="shelf-spine shelf-spine-lead"><cite>{r.lead.title}</cite><span class="kicker">{r.lead.medium}</span></p>
+          <p class="shelf-line" data-draft="true">{show(r.line)}</p>
+          <p class="kicker mt-4">Also on this shelf</p>
+          <ul class="shelf-also">{r.also.map((a) => <li class="shelf-spine"><cite>{a.title}</cite>{a.note && <span class="shelf-note"> ({a.note})</span>}</li>)}</ul>
+          {r.letter && <p class="mt-4"><a class="btn-line" href={`/letters/${r.letter.slug}/`}>Read the letter: {r.letter.title}</a></p>}
+        </div>
+      </details>
+    ))}
+  </div>
+</section>

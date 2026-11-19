@@ -116,6 +116,18 @@ ok('letters: approved edits applied (no tipsy, no swear, softened line, typos fi
 ok('letters: Re:Zero trimmed and credited; Habakkuk and salary comparisons kept', /Re:Zero − Starting Life in Another World/.test(worth) && !/if your fingers still move/.test(worth) && /Habakkuk 2:1/.test(worth) && /Habakkuk 2:3/.test(worth) && /₦150k and a ₦1\.5m job/.test(doas));
 ok('letters: voice and sign-offs kept', /Mannnn, breathe/.test(worth) && /Na so your papa do you\?/.test(worth) && /Yours, in waiting/.test(worth) && /Yours in contradiction,/.test(doas) && /Have a great new week, my friend\./.test(doas) && /Have a great week, my friend\./.test(worth));
 
+// works-v6 round 3: Liverpool red accent, shelf, 404 copy, letter fixes (Emmanuel, t53u, 19 Nov 2026).
+const shelfHtml = (lettersIdx.match(/<section id="shelf"[\s\S]*?<\/section>/) || [''])[0];
+ok('shelf: on /letters/, five question rows as native <details>, not on the homepage', (shelfHtml.match(/<details class="shelf-row"/g) || []).length === 5 && !/id="shelf"/.test(home));
+ok('shelf: text only, no <img>, <picture>, <svg> or background images', shelfHtml.length > 0 && !/<img|<picture|<svg|url\(/i.test(shelfHtml));
+ok('shelf: links to its three letters, adds no script', ['worth-the-wait', 'do-as-i-say-not-as-i-do', 'sorrow-sorrow-prayers'].every((l) => shelfHtml.includes(`href="/letters/${l}/"`)) && !/<script/.test(shelfHtml));
+ok('shelf: lines marked DRAFT in source', (readFileSync('src/content/shelf.ts', 'utf8').match(/line: 'DRAFT: /g) || []).length === 5);
+ok('accent: Liverpool red tokens, old brick red gone', /--seal: ?#C8102E/i.test(home) && /--seal: ?#FF5A6E/i.test(home) && !/#B8361D|#A02D17|#FF6B4E|#FF8065/i.test(home));
+ok('accent: no crest, Liver bird, LFC text or lyrics', !text.some((p) => /Liver ?bird|\bLFC\b|walk on,? walk on|at the end of a storm/i.test(readFileSync(p, 'utf8'))));
+const nf = readFileSync(file('/404.html'), 'utf8');
+ok('404: title phrase only', /You’ll never walk alone\./.test(nf) && /Here’s the way back\./.test(nf));
+ok('letters: signature dish, secondary-school fix', /signature dish/.test(worth) && !/signatory/.test(worth) && /secondary school also couldn’t be longer than 6 years/.test(worth) && !/longer than secondary school/.test(worth));
+
 const md5 = createHash('md5').update(readFileSync('public/cv.pdf')).digest('hex');
 const md5d = createHash('md5').update(readFileSync(join(DIST, 'cv.pdf'))).digest('hex');
 ok('cv.pdf md5 (public + dist)', md5 === CV_MD5 && md5d === CV_MD5, md5);

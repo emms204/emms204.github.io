@@ -674,8 +674,8 @@ export const atelier = {
     ],
   },
   notFound: {
-    title: 'Take two',
-    body: 'This page did not make it past the sketch. Try again from the cover.',
+    title: 'You’ll never walk alone.', // title phrase only, no lyrics (Emmanuel, 19 Nov 2026)
+    body: 'Here’s the way back.',
   },
   footer: { note: 'Drafted with AI. Checked in code. Signed by a person. No trackers, no cookies.' },
 };

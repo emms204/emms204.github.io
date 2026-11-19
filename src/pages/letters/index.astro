@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getLetters, readingMinutes } from '../../lib/letters';
+import Shelf from '../../components/works/Shelf.astro';
 const letters = await getLetters();
 ---
 <Layout title="Letters — Emmanuel Osanebi" description="Letters to a friend about wanting more, waiting, and what makes a person. Essays by Emmanuel Osanebi.">
@@ -18,5 +19,6 @@ const letters = await getLetters();
       </li>
     ))}
   </ol>
+  <Shelf />
   <p class="wrap mt-10"><a class="btn-line" href="/journal/">Technical writing in the Journal</a></p>
 </Layout>
