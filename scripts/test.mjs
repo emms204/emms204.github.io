@@ -5,6 +5,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
+const atelier = { caseFiles: ['reconciliation', 'merchant-onboarding', 'voteriq-pipeline', 'fraud-compliance-reinsurance', 'grunsco-automate', 'devgenie', 'scriptgen', 'enza-chat'].map((slug) => ({ slug })) };
 
 const DIST = process.env.DIST || 'dist';
 const CV_MD5 = '54995be92e7ef1c98f45591cbd303f68';
@@ -58,9 +59,10 @@ ok('living system: present and labelled conceptual + synthetic', /Conceptual ill
 const steps = [...living.matchAll(/<p class="ls-step-h"><span class="fig">\d+<\/span> (\w+)<\/p>/g)].map((m) => m[1]);
 ok('living system: four steps in order (static list)', steps.join() === 'Input,Interpret,Verify,Decide', steps.join());
 ok('living system: both outcomes in no-JS HTML', /ls-out is-ok/.test(living) && /ls-out is-bad/.test(living) && /\$720\.00/.test(living));
-ok('living system: controls hidden without JS, links to #proof-bench', /data-ls-controls hidden/.test(living) && /href="#proof-bench"/.test(living));
+ok('living system: controls hidden without JS; Proof Bench is its step-through <details>', /data-ls-controls hidden/.test(living) && /<details class="living-step fold">[\s\S]*<article id="proof-bench"/.test(living));
 ok('living system: no client/internal names', !DEMO_BANNED.test(living));
-ok('pieces: progressive discovery, Proof Bench open by default', (home.match(/<details class="fold"/g) || []).length === 3 && /<details class="fold" open/.test(home) && !/pieces-grid/.test(home));
+const piecesSec = sec('bench');
+ok('pieces: two folds (Privacy Lens, Story Engine), no second Proof Bench', (piecesSec.match(/<details class="fold"/g) || []).length === 2 && !/proof-bench/.test(piecesSec) && !/pieces-grid/.test(home));
 const journey = sec('journey');
 const eras = journey.match(/<li id="era-[a-z]+"/g) || [];
 ok('journey: five eras, chronological, with details', eras.length === 5 && eras[0].includes('perception') && eras[4].includes('accountability') && (journey.match(/<details>/g) || []).length === 5);
@@ -69,7 +71,7 @@ ok('journey: periods match the CV record', CV_PERIODS.every((p) => journey.inclu
 ok('journey: every image credited and labelled reference', (journey.match(/Reference image: <a href="https:\/\/commons\.wikimedia\.org/g) || []).length === 5 && /not from my projects/.test(journey));
 ok('journey: images are AVIF/WebP with fixed dimensions', /type="image\/avif"/.test(journey) && /type="image\/webp"/.test(journey) && (journey.match(/<img[^>]*width="320"[^>]*height="200"|<img[^>]*height="200"[^>]*width="320"/g) || []).length === 5);
 ok('journey: filters hidden without JS', /data-jy-filters hidden/.test(journey));
-ok('record list kept', /<ol class="record">/.test(home));
+ok('about: no duplicate role timeline (the journey is the single career narrative)', !/<ol class="record">/.test(home) && /class="skills-compact"/.test(sec('about')) && /href="\/cv\.pdf"/.test(sec('about')));
 const credits = existsSync('IMAGE-CREDITS.md') ? readFileSync('IMAGE-CREDITS.md', 'utf8') : '';
 ok('IMAGE-CREDITS.md lists all five images', ['perception', 'language', 'application', 'orchestration', 'accountability'].every((k) => credits.includes(`${k}.jpg`)));
 ok('hero: old third line removed', !/Stories worth telling/.test(sec('home')));
@@ -127,6 +129,21 @@ ok('accent: no crest, Liver bird, LFC text or lyrics', !text.some((p) => /Liver 
 const nf = readFileSync(file('/404.html'), 'utf8');
 ok('404: title phrase only', /You’ll never walk alone\./.test(nf) && /Here’s the way back\./.test(nf));
 ok('letters: signature dish, secondary-school fix', /signature dish/.test(worth) && !/signatory/.test(worth) && /secondary school also couldn’t be longer than 6 years/.test(worth) && !/longer than secondary school/.test(worth));
+
+// works-v7: restructure (Emmanuel, t54u: "Yes, build the fixes into the preview", 19 Nov 2026).
+const allText = text.map((p) => readFileSync(p, 'utf8')).join('\n');
+ok('copy: no "(CV; confirmed)" or "?path=" hint in public text', !/\(CV; confirmed\)|confirmed by Emmanuel|Share a choice with|\?path=…/.test(allText));
+ok('copy: ?path= intents still wired (links + script)', ['build', 'products', 'hire', 'collaborate'].every((k) => home.includes(`href="/?path=${k}#for-${k}"`)) && /get\(['"]path['"]\)/.test(inline));
+ok('proof bench: exactly one on the homepage, inside the Living System', (home.match(/id="proof-bench"/g) || []).length === 1 && !/ACME|GLOBEX/.test(home.replace(/<article id="proof-bench"[\s\S]*?<\/article>/, '')));
+const lists = [...home.matchAll(/<ol class="evidence">[\s\S]*?<\/ol>|<p class="era-links">[\s\S]*?<\/p>|<ol class="work-index">[\s\S]*?<\/ol>|<ol class="pieces-index">[\s\S]*?<\/ol>/g)].map((m) => m[0]).join('\n');
+const proj = [...lists.matchAll(/href="(\/work\/[a-z-]+\/|\/products\/#[a-z-]+)"/g)].map((m) => m[1].replace(/^\/work\/|\/$|^\/products\/#/g, '').replace(/^anotiai-pii-masker$/, 'pii-masker'));
+const dupes = proj.filter((x, i) => proj.indexOf(x) !== i);
+ok('homepage lists: no project listed twice', proj.length >= 8 && dupes.length === 0, dupes.join(' ') || `${proj.length} projects`);
+ok('no project lost: every case file has a page and is on the work index', atelier.caseFiles.every((c) => existsSync(file(`/work/${c.slug}/`)) && readFileSync(file('/work/'), 'utf8').includes(`/work/${c.slug}/`)));
+ok('living system: rejection branch hidden in Pass (CSS), Pass is the default', /\.living \.ls-edge\.ls-reject\{display:none\}/.test(home) && /<section id="living"[^>]*data-case="a"/.test(home));
+ok('living system: vertical mobile diagram with a loop-back branch', /class="living-svg living-svg-v"/.test(living) && /ls-edge ls-reject" d="M270 288 H332 V76 H276"/.test(living));
+ok('first screen: small wordmark, Living System directly after the hero', !/class="hero-title"/.test(home) && /class="hero-brand">The Works</.test(home) && /<\/section>\s*<section id="living"/.test(home));
+ok('journey: one navigation device (no zigzag map), caption names Commons and the institutions', !/class="journey-map"/.test(journey) && /taken from Wikimedia Commons/.test(journey) && /Library of Congress/.test(journey) && (journey.match(/via Wikimedia Commons/g) || []).length === 5);
 
 const md5 = createHash('md5').update(readFileSync('public/cv.pdf')).digest('hex');
 const md5d = createHash('md5').update(readFileSync(join(DIST, 'cv.pdf'))).digest('hex');

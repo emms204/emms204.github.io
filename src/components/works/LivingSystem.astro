@@ -1,9 +1,12 @@
 ---
-// Living System (works-v4): a short conceptual intro to the Proof Bench.
+// Living System (works-v4, v7): the homepage's first-screen diagram. The Proof Bench is its
+// "step through it" expansion (one set of synthetic examples on the page, not two).
+// Desktop/tablet: horizontal SVG. <=640px: a vertical SVG with the rejection branch looping back.
 // Same synthetic Example A / Example B as works.bench; checks computed here at build time.
 // JS off: the drawing shows Example A and the step list states both outcomes.
 // JS on: two buttons switch the result; the trace redraws only when a visitor switches (causal motion).
 import { works } from '../../content/profile';
+import ProofBench from './ProofBench.astro';
 const L = works.living; const b = works.bench;
 type Rec = { amount: number; ref: string; date: string };
 const money = (c: number) => '$' + (c / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -23,6 +26,8 @@ const [A, B] = b.cases.map(run);
 const R = (c: typeof A) => (c.ok ? L.pass : L.reject);
 const say = Object.fromEntries([A, B].map((c) => [c.key, `${c.label}, ${c.tag}: ${R(c).verdict}${c.why ? ' The ' + c.why + '.' : ''}`]));
 const X = [20, 270, 520, 770];
+const Y = [44, 150, 256, 362]; // vertical layout (mobile)
+const sub_ = (c: typeof A, i: number) => (i === 0 ? c.input : i === 1 ? 'proposes: match' : i === 2 ? c.verify : c.ok ? 'a person signs' : 'never reached');
 ---
 <section id="living" class="living wrap" aria-labelledby="living-h" data-case={A.key} data-say={JSON.stringify(say)}>
   <div class="living-head">
@@ -35,7 +40,7 @@ const X = [20, 270, 520, 770];
   </div>
 
   <figure class="living-fig">
-    <svg class="living-svg" viewBox="0 0 1000 200" aria-hidden="true" focusable="false">
+    <svg class="living-svg living-svg-h" viewBox="0 0 1000 200" aria-hidden="true" focusable="false">
       <g class="ls-edges">
         <path class="ls-edge" d="M230 75 H270" /><path class="ls-edge ls-model" d="M480 75 H520" /><path class="ls-edge ls-pass" d="M730 75 H770" />
         <path class="ls-edge ls-reject" d="M625 110 V150" />
@@ -50,15 +55,34 @@ const X = [20, 270, 520, 770];
           <rect x={X[i]} y="40" width="210" height="70" rx="8" />
           <text class="ls-n" x={X[i] + 14} y="68"><tspan class="ls-fig">{String(i + 1).padStart(2, '0')}</tspan> {s.name}</text>
           {[A, B].map((c) => (
-            <text class="ls-sub" data-for={c.key} x={X[i] + 14} y="94">{
-              i === 0 ? c.input : i === 1 ? 'proposes: match' : i === 2 ? c.verify : c.ok ? 'a person signs' : 'never reached'
-            }</text>
+            <text class="ls-sub" data-for={c.key} x={X[i] + 14} y="94">{sub_(c, i)}</text>
           ))}
         </g>
       ))}
       <g class="ls-seal" data-for={A.key}><circle cx="944" cy="75" r="25" /><text x="944" y="79" text-anchor="middle">SIGNED</text></g>
       <g class="ls-stop" data-for={B.key}><rect x="540" y="150" width="170" height="34" rx="6" /><text x="625" y="172" text-anchor="middle">REJECTED · RETURNED</text></g>
       <text class="ls-legend" x="20" y="24">dashed: the model proposed · solid: code checked · seal: a person signed</text>
+    </svg>
+    <svg class="living-svg living-svg-v" viewBox="0 0 360 500" aria-hidden="true" focusable="false">
+      <text class="ls-legend" x="20" y="22">dashed: model proposed · solid: code checked</text>
+      <g class="ls-edges">
+        <path class="ls-edge" d="M145 108 V150" /><path class="ls-edge ls-model" d="M145 214 V256" /><path class="ls-edge ls-pass" d="M145 320 V362" />
+        <path class="ls-edge ls-reject" d="M270 288 H332 V76 H276" /><path class="ls-edge ls-reject ls-arrow" d="M284 70 L276 76 L284 82" />
+      </g>
+      {[[A, ['M145 108 V150', 'M145 214 V256', 'M145 320 V362']], [B, ['M145 108 V150', 'M145 214 V256', 'M270 288 H332 V76 H276']]].map(([c, segs]) => (
+        <g class:list={['ls-trace', { 'ls-trace-bad': !(c as typeof A).ok }]} data-for={(c as typeof A).key}>
+          {(segs as string[]).map((d, i) => <path d={d} style={`--i:${i}`} />)}
+        </g>
+      ))}
+      {L.steps.map((s, i) => (
+        <g class={`ls-node ls-${s.key}`}>
+          <rect x="20" y={Y[i]} width="250" height="64" rx="8" />
+          <text class="ls-n" x="34" y={Y[i] + 28}><tspan class="ls-fig">{String(i + 1).padStart(2, '0')}</tspan> {s.name}</text>
+          {[A, B].map((c) => <text class="ls-sub" data-for={c.key} x="34" y={Y[i] + 50}>{sub_(c, i)}</text>)}
+        </g>
+      ))}
+      <g class="ls-seal" data-for={A.key}><circle cx="312" cy="394" r="25" /><text x="312" y="398" text-anchor="middle">SIGNED</text></g>
+      <g class="ls-stop" data-for={B.key}><text x="350" y="182" text-anchor="middle" transform="rotate(-90 350 182)">REJECTED · RETURNED</text></g>
     </svg>
     <figcaption>
       <ol class="ls-steps">
@@ -77,10 +101,14 @@ const X = [20, 270, 520, 770];
     </figcaption>
   </figure>
   <p class="sr-only" aria-live="polite" data-ls-live></p>
-  <p class="living-more"><a class="btn-line" href={L.more.href}>{L.more.label}</a></p>
+  <details class="living-step fold">
+    <summary class="fold-sum living-step-sum"><span class="fold-area">{L.step}</span><span class="fold-name">{L.stepNote}</span><span class="fold-hint" aria-hidden="true"></span></summary>
+    <ProofBench />
+  </details>
 </section>
 <script is:inline>
-(()=>{const F=document.getElementById('living');if(!F)return;const C=F.querySelector('[data-ls-controls]'),L=F.querySelector('[data-ls-live]'),V=JSON.parse(F.dataset.say);C.hidden=false;F.dataset.js='';
-C.addEventListener('click',e=>{const b=e.target.closest('[data-ls-case]');if(!b)return;const k=b.dataset.lsCase;F.dataset.case=k;C.querySelectorAll('[data-ls-case]').forEach(x=>x.setAttribute('aria-pressed',x===b));
-F.classList.remove('run');void F.offsetWidth;F.classList.add('run');L.textContent=V[k]})})();
+(()=>{const F=document.getElementById('living');if(!F)return;const C=F.querySelector('[data-ls-controls]'),L=F.querySelector('[data-ls-live]'),V=JSON.parse(F.dataset.say),P=document.getElementById('proof-bench');C.hidden=false;F.dataset.js='';
+const set=(k,quiet)=>{F.dataset.case=k;C.querySelectorAll('[data-ls-case]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.lsCase===k));F.classList.remove('run');void F.offsetWidth;F.classList.add('run');if(!quiet)L.textContent=V[k]};
+C.addEventListener('click',e=>{const b=e.target.closest('[data-ls-case]');if(!b)return;set(b.dataset.lsCase);P&&P.dispatchEvent(new CustomEvent('ls-case',{detail:b.dataset.lsCase}))});
+F.addEventListener('bench-case',e=>set(e.detail,1))})();
 </script>

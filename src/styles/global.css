@@ -47,7 +47,7 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-i
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
 @utility wrap { margin-inline: auto; width: 100%; max-width: 72rem; padding-inline: 1.25rem; @media (width >= 40rem) { padding-inline: 2rem; } }
-@utility kicker { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--pencil); }
+@utility kicker { font-family: var(--font-sans); font-size: .875rem; font-weight: 600; letter-spacing: .01em; color: var(--pencil); } /* v7: sentence case, UI font (was tracked mono caps) */
 @utility margin-note { font-family: var(--font-serif); font-style: italic; color: var(--pencil); }
 @utility rule { border-top: 1px solid var(--rule); }
 
@@ -673,3 +673,78 @@ html:has(#living.run[data-case="b"]) .ga-cool { opacity: calc(var(--bg-a) * .4);
 .shelf-also { margin-top: .5rem; display: flex; flex-wrap: wrap; gap: .5rem; }
 .shelf-also .shelf-spine { border-left-width: 2px; border-left-color: var(--rule); }
 .shelf-note { font-size: .875rem; color: var(--pencil); }
+
+
+/* ── works-v7: restructure ───────────────────────────────────────────── */
+/* Sentence-case labels in the UI font. Mono caps are kept only for the stamp and the SVG verdicts. */
+.placeholder strong, .bench-flag strong, .bench-case-tag, .connector::after, .checks thead th, .checks td[data-l]::before,
+.fold-area, .audit-h strong, .audit dt, .lens-map thead th, .offer-example dt, .ls-out-k {
+  font-family: var(--font-sans); text-transform: none; letter-spacing: .01em; font-size: .8125rem; }
+.bench-flag strong, .ls-out-k, .fold-area, .audit-h strong { font-weight: 700; }
+@media (width >= 48rem) { .ls-step-h { font-family: var(--font-serif); font-size: 1.05rem; letter-spacing: 0; text-transform: none; color: var(--ink); } }
+
+/* First screen: name, statement, CTAs and the Living System diagram together. */
+.hero-v7 { padding-top: 1.5rem; padding-bottom: 0; display: grid; gap: 1rem 3rem; align-items: end; }
+@media (width >= 56rem) { .hero-v7 { grid-template-columns: 6fr 5fr; } }
+.hero-brand { font-family: var(--font-serif); font-size: 1rem; font-weight: 500; color: var(--graphite); }
+.hero-h1 { font-family: var(--font-serif); font-weight: 500; font-size: clamp(2.4rem, 5.2vw, 4rem); line-height: 1; letter-spacing: -.02em; margin-top: .25rem; }
+.hero-v7 .hero-statement { margin-top: .5rem; font-size: clamp(1.5rem, 3vw, 2.25rem); }
+.hero-v7 .hero-offer { font-size: 1.0625rem; color: var(--graphite); }
+.hero-v7 .hero-lines { margin-top: .5rem; display: grid; gap: .1rem; font-size: 1rem; }
+.hero-v7 .hero-lines li { border: 0; padding: 0; display: block; }
+.hero-v7 .hero-lines li::before { content: ""; display: inline-block; width: .55rem; height: 2px; margin: 0 .6rem .3rem 0; background: var(--seal); vertical-align: middle; }
+.hero-v7 .hero-ctas { margin-top: .9rem; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.25rem; }
+.hero-side { border-left: 2px solid var(--seal); padding-left: 1.25rem; }
+.living { padding-block: 1rem 1rem; }
+.living-head { padding-top: .9rem; }
+.living-fig { margin-top: .5rem; }
+
+/* Living System: horizontal above 640px, vertical at 640px and below. */
+.living-svg-h { display: none; }
+.living-svg-v { display: block; width: 100%; max-width: 26rem; height: auto; margin-inline: auto; }
+@media (width > 40rem) { .living-svg-h { display: block; } .living-svg-v { display: none; } }
+.living-svg-v .ls-n { font-size: 20px; }
+.living-svg-v .ls-stop text { font-size: 10px; }
+.living-svg .ls-arrow { fill: none; }
+/* The rejection branch (stub on desktop, loop on mobile) only exists in the Rejected state. */
+.living .ls-edge.ls-reject { display: none; }
+.living[data-case="b"] .ls-edge.ls-reject { display: inline; }
+.living[data-case="b"] .ls-edge.ls-pass { opacity: .35; }
+
+/* Proof Bench as the diagram's step-through expansion. */
+.living-step { margin-top: 1rem; border-top-width: 1px; }
+.living-step > .fold-sum .fold-area { grid-column: 1 / span 2; color: var(--ink); font-size: 1rem; }
+.living-step > .fold-sum .fold-name { grid-column: 1 / span 2; font-size: 1rem; font-family: var(--font-sans); color: var(--graphite); }
+.living-step > .bench { padding: .5rem 0 2rem; }
+.living .bench[data-js] .bench-own-cases { display: none; }
+.living .bench-controls { justify-content: flex-start; }
+
+/* Journey: one navigation device. The era cards carry the timeline (dots on a dotted rule) on desktop. */
+@media (width >= 64rem) {
+  .journey-eras { position: relative; padding-top: 1.5rem; }
+  .journey-eras::before { content: ""; position: absolute; left: 0; right: 0; top: .45rem; border-top: 2px dotted var(--rule); }
+  .era { position: relative; border-top: 0; }
+  .era::before { content: ""; position: absolute; top: -1.45rem; left: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); border: 2px solid var(--ink); box-shadow: inset 0 0 0 3px var(--paper), inset 0 0 0 7px var(--ledger); }
+  .era.dim::before { opacity: .35; }
+}
+
+/* About: short paragraph, quote, compact skills. */
+.skills-compact { margin-top: .75rem; display: grid; gap: .6rem; font-size: .9375rem; }
+.skills-compact dt { font-weight: 600; color: var(--ink); }
+.skills-compact dd { color: var(--graphite); }
+
+/* v7 mobile first screen: the Living System sits right after the headline; offer + CTAs follow it.
+   DOM order stays hero -> living (screen readers hear who/what/CTA first). */
+@media (width < 40rem) {
+  .first-screen { display: flex; flex-direction: column; }
+  .first-screen > .hero-v7 { display: contents; }
+  .hero-v7 .hero-main { order: 1; margin-inline: auto; width: 100%; padding: 1.25rem 1.25rem 0; }
+  .first-screen > .living { order: 2; }
+  .hero-v7 .hero-side { order: 3; margin: 0 1.25rem 1rem; }
+}
+@media (width < 40rem) {
+  .living-controls { display: grid; grid-template-columns: 1fr 1fr; }
+  .living-controls[hidden] { display: none; }
+  .living-controls .bench-case-btn { min-width: 0; padding-inline: .6rem; }
+  .living-controls .bench-case-tag { font-size: .75rem; }
+}

@@ -32,14 +32,13 @@ const announce = Object.fromEntries(cases.map((c) => [c.key, b.steps.map((_, i) 
 <article id="proof-bench" class="bench piece" aria-labelledby="bench-h" data-case="a" data-step="1"
   data-say={JSON.stringify(announce)} data-next={b.next} data-restart={JSON.stringify(Object.fromEntries(cases.map((c) => [c.key, b.restart(other(c.key).label)])))}>
   <div class="bench-head">
-    <p class="kicker">Engineering · {b.kicker}</p>
-    <h3 id="bench-h" class="piece-title">{b.title}</h3>
+    <h3 id="bench-h" class="piece-title">{b.kicker}: {b.title}</h3>
     <p class="bench-lede">{b.lede}</p>
     <p class="bench-flag"><strong>Illustration</strong> {b.disclaimer}</p>
   </div>
 
   <div class="bench-controls" hidden>
-    <div class="bench-cases" role="group" aria-label="Choose an example">
+    <div class="bench-cases bench-own-cases" role="group" aria-label="Choose an example">
       {cases.map((c) => <button type="button" class="bench-case-btn" data-go-case={c.key} aria-pressed={c.key === 'a' ? 'true' : 'false'}>{c.label}<span class="bench-case-tag">{c.tag}</span></button>)}
     </div>
     <ol class="bench-progress" aria-label="Steps">
@@ -129,7 +128,7 @@ const announce = Object.fromEntries(cases.map((c) => [c.key, b.steps.map((_, i) 
 <script is:inline>
 (()=>{const B=document.getElementById('proof-bench');if(!B)return;const S=JSON.parse(B.dataset.say),R=JSON.parse(B.dataset.restart),L=B.querySelector('[data-live]'),
 P=B.querySelector('[data-dir="-1"]'),N=B.querySelector('[data-dir="1"]');B.dataset.js='';B.querySelectorAll('.bench-controls,.bench-nav,[data-approve-btn]').forEach(e=>e.hidden=false);
-let c='a',s=1;const set=(nc,ns,quiet)=>{c=nc;s=ns;B.dataset.case=c;B.dataset.step=s;
+let c='a',s=1;const LS=document.getElementById('living');const set=(nc,ns,quiet)=>{if(nc!==c&&LS)LS.dispatchEvent(new CustomEvent('bench-case',{detail:nc}));c=nc;s=ns;B.dataset.case=c;B.dataset.step=s;
 B.querySelectorAll('[data-go-case]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.goCase===c));
 B.querySelectorAll('[data-p]').forEach(x=>{x.dataset.p==s?x.setAttribute('aria-current','step'):x.removeAttribute('aria-current')});
 P.setAttribute('aria-disabled',s===1);N.textContent=s===4?R[c]+' →':B.dataset.next+' →';if(!quiet)L.textContent=S[c][s-1]};
@@ -137,5 +136,5 @@ B.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
 if(t.dataset.goCase){set(t.dataset.goCase,1);return}
 if(t.dataset.dir){const d=+t.dataset.dir;if(d<0&&s>1)set(c,s-1);else if(d>0)s<4?set(c,s+1):set(c==='a'?'b':'a',1);return}
 if('approveBtn' in t.dataset){const a=t.closest('[data-approve]');a.dataset.done='';t.hidden=true;const m=a.querySelector('.approve-done-t');m.textContent=' '+a.dataset.doneText;const au=a.querySelector('[data-audit]');if(au){au.querySelector('[data-audit-time]').textContent=new Date().toISOString().replace('T',' ').slice(0,19)+' UTC';au.hidden=false}L.textContent=a.dataset.doneText;N.focus()}});
-set('a',1,true)})();
+B.addEventListener('ls-case',e=>{c=e.detail;set(e.detail,1,true)});set('a',1,true)})();
 </script>

@@ -1,6 +1,6 @@
 # Image credits
 
-The five photos in the engineering journey (`src/assets/journey/`) are **reference images** of the kind of material each era worked with. They are **not** output from Emmanuel's projects. All are from Wikimedia Commons under licences that allow reuse; Astro converts them to 320×200 AVIF/WebP at build time.
+The five photos in the engineering journey (`src/assets/journey/`) are **reference images** of the kind of material each era worked with. They are **not** output from Emmanuel's projects. All five files are hosted on and taken from Wikimedia Commons under licences that allow reuse. Three are Commons copies of originals held elsewhere (Euclid page: Library of Congress; newspapers: University of North Texas Libraries; ledger: Chapel Hill Historical Society), which the on-site caption names; Astro converts them to 320×200 AVIF/WebP at build time.
 
 | File | Used for | Title | Author / source | Licence | Source URL |
 |---|---|---|---|---|---|

@@ -1,46 +1,42 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import IntentChooser from '../components/works/IntentChooser.astro';
-import ProofBench from '../components/works/ProofBench.astro';
 import PrivacyLens from '../components/works/PrivacyLens.astro';
 import StoryEngine from '../components/works/StoryEngine.astro';
 import LivingSystem from '../components/works/LivingSystem.astro';
 import Journey from '../components/works/Journey.astro';
-import WorkIndex from '../components/works/WorkIndex.astro';
 import LettersCard from '../components/works/LettersCard.astro';
-import { profile, atelier, works } from '../content/profile';
+import { profile, works } from '../content/profile';
 import { CONTACT_EMAIL, WHATSAPP_URL } from '../config';
 const h = works.hero;
-const featured = atelier.caseFiles.slice(0, 5);
 ---
 <Layout personLd>
-  <section id="home" class="hero wrap" aria-labelledby="hero-h">
-    <p class="hero-name">{h.name}</p>
-    <h1 id="hero-h" class="hero-title"><span class="sr-only">{h.name}: </span>{h.title}</h1>
-    <div class="hero-grid">
-      <div>
-        <p class="hero-statement">{h.statement}</p>
-        <p class="hero-offer">{h.offer}</p>
-        <p class="hero-ctas"><a class="btn-seal" href={h.cta.href}>{h.cta.label}</a><a class="btn-line" href={h.cta2.href}>{h.cta2.label}</a></p>
-      </div>
-      <aside class="hero-note" aria-label="What I make">
-        <ul class="hero-lines">{h.lines.map((l, i) => <li><span class="fig">{String(i + 1).padStart(2, '0')}</span>{l}</li>)}</ul>
-        <p class="hero-support">{h.support}</p>
-        <p class="mt-3 flex flex-wrap gap-x-6"><a class="btn-line" href={h.jump.href}>{h.jump.label}</a><a class="btn-line" href="/cv.pdf">CV (PDF)</a></p>
-      </aside>
+  <div class="first-screen">
+  <section id="home" class="hero hero-v7 wrap" aria-labelledby="hero-h">
+    <div class="hero-main">
+      <p class="hero-brand">{h.title}</p>
+      <h1 id="hero-h" class="hero-h1">{h.name}</h1>
+      <p class="hero-statement">{h.statement}</p>
+    </div>
+    <div class="hero-side">
+      <p class="hero-offer">{h.offer}</p>
+      <ul class="hero-lines" aria-label="What I make">{h.lines.map((l) => <li>{l}</li>)}</ul>
+      <p class="hero-ctas"><a class="btn-seal" href={h.cta.href}>{h.cta.label}</a><a class="btn-line" href={h.cta2.href}>{h.cta2.label}</a><a class="btn-line" href="/cv.pdf">CV (PDF)</a></p>
     </div>
   </section>
 
   <LivingSystem />
+  </div>
 
   <IntentChooser />
 
   <section id="bench" class="pieces" aria-labelledby="pieces-h">
+    <span id="projects"></span><span id="portfolio-overview"></span><span id="work"></span>
     <div class="wrap"><h2 id="pieces-h" class="display-2">{works.pieces.title}</h2>
       <ol class="pieces-index">{works.pieces.items.map((p, i) => <li><a href={p.href}><span class="fig">{String(i + 1).padStart(2, '0')}</span> {p.label}</a></li>)}</ol>
     </div>
     <div class="pieces-stack" data-folds>
-      {[ProofBench, PrivacyLens, StoryEngine].map((Piece, i) => (
+      {[PrivacyLens, StoryEngine].map((Piece, i) => (
         <details class="fold" open={i === 0}>
           <summary class="fold-sum"><span class="fig">{String(i + 1).padStart(2, '0')}</span><span class="fold-area">{works.pieces.items[i].label}</span><span class="fold-name">{works.pieces.names[i]}</span><span class="fold-hint" aria-hidden="true"></span></summary>
           <Piece />
@@ -49,42 +45,30 @@ const featured = atelier.caseFiles.slice(0, 5);
     </div>
   </section>
 
-  <section id="work" class="wrap section" aria-labelledby="work-h">
-    <span id="projects"></span><span id="portfolio-overview"></span>
-    <div class="section-head">
-      <h2 id="work-h" class="display-2">{works.selected.title}</h2>
-    </div>
-    <WorkIndex items={featured} />
-    <p class="mt-6 flex flex-wrap gap-x-6"><a class="btn-line" href="/work/">{works.selected.all}</a><a class="btn-line" href="/products/">Products</a><a class="btn-line" href="/archive/">{works.selected.archive}</a></p>
-  </section>
-
   <Journey />
 
   <LettersCard />
 
   <section id="about" class="wrap section" aria-labelledby="about-h">
-    <span id="experience"></span>
     <h2 id="about-h" class="display-2">{works.record.title}</h2>
     <div class="about-grid">
       <div>
-        {profile.about.paragraphs.map((p) => <p class="mt-3 first:mt-0">{p}</p>)}
+        <p>{profile.about.paragraphs[0]}</p>
         <figure class="about-quote">
           <blockquote><p>Man is the only animal that refuses to be what he is.</p></blockquote>
           <figcaption>From my letter <a href="/letters/sorrow-sorrow-prayers/">Sorrow, sorrow, prayers</a></figcaption>
         </figure>
         <p class="mt-4">Liverpool supporter.</p>
         <p class="mt-1"><a class="btn-line" href="/chess/">One bullet chess game, annotated</a></p>
-        <ol class="record">
-          {profile.experience.items.map((e) => (
-            <li><p class="kicker">{e.period}</p><h3 class="text-xl">{e.role} · {e.org}</h3><p class="mt-1">{e.summary}</p></li>
-          ))}
-        </ol>
         <p class="mt-6"><a class="btn-seal" href="/cv.pdf">{works.record.cv}</a></p>
       </div>
       <div id="skills">
         <h3 class="kicker">Tools of the trade</h3>
-        {profile.skills.groups.map((g) => (<div class="mt-4"><h4 class="font-semibold">{g.group}</h4><p class="mt-1 text-sm">{g.items.join(' · ')}</p></div>))}
-        <p class="mt-6 text-sm">{profile.about.facts.find((f) => f.label === 'Education')?.value}</p>
+        <dl class="skills-compact">
+          {profile.skills.groups.map((g) => (<div><dt>{g.group}</dt><dd>{g.items.join(' · ')}</dd></div>))}
+          <div><dt>Education</dt><dd>{profile.about.facts.find((f) => f.label === 'Education')?.value}</dd></div>
+        </dl>
+        <p class="mt-4 text-sm">The full record, role by role, is in <a href="#journey">the engineering journey</a> above and in the <a href="/cv.pdf">CV</a>.</p>
       </div>
     </div>
   </section>
