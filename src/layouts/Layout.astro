@@ -45,6 +45,8 @@ const person = {
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0E1014" media="(prefers-color-scheme: dark)" />
+    <!-- works-v11: apply a stored theme choice before the stylesheet paints (no flash). __th is reused by the top-bar toggle. -->
+    <script is:inline>(()=>{const h=document.documentElement;h.dataset.js='';const A=window.__th=t=>{h.dataset.theme=t;document.querySelectorAll('meta[name=theme-color]').forEach(m=>m.content=t=='dark'?'#0E1014':'#FAFAF7');document.querySelector('meta[name=color-scheme]').content=t};let t;try{t=localStorage.theme}catch(e){}/^(light|dark)$/.test(t)&&A(t)})()</script>
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

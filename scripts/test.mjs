@@ -236,5 +236,16 @@ const chessP = read('/chess/');
 ok('chess: solid circle for the move played (no-JS board), dashed circle for 7.Bd6 alternative on d6', /id="cb-main"[\s\S]*?<g data-cb-mk><circle cx="5.5" cy="3.5" r=".44" class="cb-mk"/.test(chessP) && /<circle cx="3.5" cy="2.5" r=".44" class="cb-mk cb-mk-alt"><\/circle><circle cx="4.5" cy="3.5" r=".44" class="cb-mk"/.test(chessP) && /"alts":\{"12":\["d6"\]\}/.test(chessP));
 ok('no ellipses / thought balloons / Index map', !/<ellipse/.test(text.map((p) => readFileSync(p, 'utf8')).join('')) && !/ix-map|data-ix-map/.test(read('/index/')));
 
+// ---- works-v11: light/dark toggle ----
+const pages = text.filter((p) => p.endsWith('.html'));
+const noToggle = pages.filter((p) => !/<button type="button" class="tb-theme" data-theme-toggle aria-label="Switch theme">/.test(readFileSync(p, 'utf8')));
+ok('theme toggle: a labelled sun/moon button in the top bar on every page', noToggle.length === 0 && pages.length > 20, noToggle.join(' ') || `${pages.length} pages`);
+const headScript = home.indexOf('localStorage.theme'), firstStyle = home.indexOf('<style');
+ok('theme toggle: no flash (stored theme applied by an inline <head> script before the stylesheet)', headScript > 0 && headScript < firstStyle && headScript < home.indexOf('</head>') && /h\.dataset\.theme=t/.test(home.slice(0, firstStyle)));
+ok('theme toggle: dark tokens via device setting (unless forced light) and via forced dark; forced light pins color-scheme',
+  /@media \(prefers-color-scheme:dark\)\{:root:not\(\[data-theme=light\]\)\{--paper:#0e1014/i.test(css) && /:root\[data-theme=dark\]\{--paper:#0e1014/i.test(css) && /:root\[data-theme=light\]\{color-scheme:light\}/.test(css)
+  && !/@media \(prefers-color-scheme:dark\)\{(:root|\.cb-l|\[data-bg\])\{/.test(css));
+ok('theme toggle: hidden/inert without JS (visibility until the head script marks JS on)', decl('.tb-theme', 'visibility') === 'hidden' && /\[data-js\] \.tb-theme\{visibility:visible\}/.test(css));
+
 console.log(failed ? `\n${failed} check(s) failed` : '\nall checks passed');
 process.exit(failed ? 1 : 0);

@@ -23,13 +23,22 @@
   --r-built: 0; --r-choice: 999px; --r-dot: 50%;
   color-scheme: light dark;
 }
+/* works-v11 theme toggle: dark tokens apply from the device setting unless the visitor forced light
+   (html[data-theme=light]), and always when they forced dark (html[data-theme=dark], set in <head> before paint). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme=light]) {
     --paper: #0E1014; --paper-2: #171A20; --ink: #ECEAE6; --graphite: #C9C6BF; --pencil: #A3A09A;
     --seal: #FF5A6E; --seal-ink: #FF7A8A; --on-seal: #0E1014; --ledger: #5FC2A4; --rule: #2C303A;
     --dot: rgb(255 255 255 / .07);
   }
 }
+:root[data-theme=dark] {
+    --paper: #0E1014; --paper-2: #171A20; --ink: #ECEAE6; --graphite: #C9C6BF; --pencil: #A3A09A;
+    --seal: #FF5A6E; --seal-ink: #FF7A8A; --on-seal: #0E1014; --ledger: #5FC2A4; --rule: #2C303A;
+    --dot: rgb(255 255 255 / .07);
+}
+:root[data-theme=light] { color-scheme: light; }
+:root[data-theme=dark] { color-scheme: dark; }
 
 @view-transition { navigation: auto; }
 @media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
@@ -563,9 +572,11 @@ button[disabled] { opacity: .7; cursor: progress; }
 /* With a backdrop on, the seal red deepens a touch so small red labels keep 4.5:1 over tinted paper. */
 [data-bg] { --seal-ink: #A50D26; --pencil: #595955; } /* text-safe red and grey over dots + the Rejected tint (worst case measured, works-v9) */
 @media (prefers-color-scheme: dark) {
-  :root { --bg-cool: #0D4034; --bg-hot: #6A2416; --bg-warm: #45360F; --bg-blue: #1D2F52; --bg-a: .9; --bg-b: .8; --bg-c: .1; }
-  [data-bg] { --seal-ink: #FF7A8A; --pencil: #A3A09A; }
+  :root:not([data-theme=light]) { --bg-cool: #0D4034; --bg-hot: #6A2416; --bg-warm: #45360F; --bg-blue: #1D2F52; --bg-a: .9; --bg-b: .8; --bg-c: .1; }
+  [data-bg]:not([data-theme=light]) { --seal-ink: #FF7A8A; --pencil: #A3A09A; }
 }
+:root[data-theme=dark] { --bg-cool: #0D4034; --bg-hot: #6A2416; --bg-warm: #45360F; --bg-blue: #1D2F52; --bg-a: .9; --bg-b: .8; --bg-c: .1; }
+[data-bg][data-theme=dark] { --seal-ink: #FF7A8A; --pencil: #A3A09A; }
 .bgfx { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; contain: strict; }
 .bgfx > div { display: none; position: absolute; inset: 0; }
 [data-bg="a"] .bg-a, [data-bg="b"] .bg-b, [data-bg="c"] .bg-c { display: block; }
@@ -595,7 +606,8 @@ html:has(#living.run[data-case="b"]) .ga-hot { opacity: calc(var(--bg-a) * .85);
 /* The image is requested only after the page has loaded (class set by a one-line script; <noscript> fallback), so it never delays LCP. */
 .bc-img { inset: 0; background: none center / cover no-repeat; opacity: 0; transition: opacity .8s ease; }
 .bg-ready .bc-img { background-image: var(--bg-img-l); opacity: var(--bg-c); }
-@media (prefers-color-scheme: dark) { .bg-ready .bc-img { background-image: var(--bg-img-d); } }
+@media (prefers-color-scheme: dark) { .bg-ready:not([data-theme=light]) .bc-img { background-image: var(--bg-img-d); } }
+.bg-ready[data-theme=dark] .bc-img { background-image: var(--bg-img-d); }
 .bc-veil { inset: 0; background: radial-gradient(ellipse 46rem 70% at 50% 45%, var(--paper) 30%, color-mix(in srgb, var(--paper) 55%, transparent) 70%, transparent); }
 @media (width < 40rem) { .bc-img { background-size: auto 100%; background-position: 30% center; } .bc-veil { background: color-mix(in srgb, var(--paper) 35%, transparent); } }
 
@@ -635,7 +647,8 @@ html:has(#living.run[data-case="b"]) .ga-hot { opacity: calc(var(--bg-a) * .85);
 /* works-v9: quiet neutral squares; red only for the move highlight and the attack line. */
 .cb-l { fill: #ECEBE5; } .cb-d { fill: #B5B3AB; }
 .cb-hl { fill: #C8102E; opacity: .24; }
-@media (prefers-color-scheme: dark) { .cb-l { fill: #CFCDC6; } .cb-d { fill: #9A978F; } .cb-hl { fill: #FF5A6E; opacity: .32; } }
+@media (prefers-color-scheme: dark) { :root:not([data-theme=light]) .cb-l { fill: #CFCDC6; } :root:not([data-theme=light]) .cb-d { fill: #9A978F; } :root:not([data-theme=light]) .cb-hl { fill: #FF5A6E; opacity: .32; } }
+:root[data-theme=dark] .cb-l { fill: #CFCDC6; } :root[data-theme=dark] .cb-d { fill: #9A978F; } :root[data-theme=dark] .cb-hl { fill: #FF5A6E; opacity: .32; }
 .cb-w, .cb-b { font-size: .82px; }
 .cb-w { fill: #FFFFFF; stroke: #121212; stroke-width: .035px; paint-order: stroke; }
 .cb-b { fill: #121212; stroke: #FFFFFF; stroke-width: .012px; }
@@ -978,3 +991,12 @@ html { scroll-padding-top: 72px; }
 .intent-options .intent-label { font-size: 1.25rem; }
 /* First screen columns 24:18 of the 1008px content (+48 gap): the offer column starts on a grid line at >=72rem. */
 @media (width >= 56rem) { .first-screen { grid-template-columns: minmax(0, 24fr) minmax(0, 18fr); } }
+
+/* ===== works-v11: theme toggle (sun/moon). Hidden until the head script marks JS on (no-JS: system preference only). ===== */
+.tb-theme { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: var(--r-dot); background: none; color: var(--graphite); cursor: pointer; visibility: hidden; }
+[data-js] .tb-theme { visibility: visible; }
+.tb-theme:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 7%, transparent); }
+.tb-theme svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.tb-theme .i-sun { display: none; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme=light]) .tb-theme .i-sun { display: block; } :root:not([data-theme=light]) .tb-theme .i-moon { display: none; } }
+:root[data-theme=dark] .tb-theme .i-sun { display: block; } :root[data-theme=dark] .tb-theme .i-moon { display: none; }
