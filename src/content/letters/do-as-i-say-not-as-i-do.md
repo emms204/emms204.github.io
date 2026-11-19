@@ -1,12 +1,9 @@
 ---
 title: 'Do as I say, not as I do'
-hook: 'When does the more we pursue come to an end?'
+hook: 'If there is always something better, when is anything ever good enough?'
 order: 1
 signoff: 'Yours in contradiction'
-draft: true
 ---
-
-<!-- DRAFT: only the opening of this letter reached the build agent (the rest was cut off in transit, mid-sentence). Paste the full original text, apply the approved edits, then set draft: false. The text below has the approved edits applied. -->
 
 Good Day, The Honorable Panel of Judges, Worthy Opponents, Accurate Timekeeper, and my fellow debaters.
 
@@ -29,6 +26,26 @@ More is not necessarily better; there's no guarantee that you who chose what is 
 
 The truth? We are all someone else's less, struggling to be more. If we bank on never settling for less and everyone else in the world decides to do the same, then we might never get partners, friends, jobs, clients... We seeking better are also being judged by somebody else's standard of better. Then again, I ask you, what is more, and what is less?
 
-At this point, you might say, "It's a numbers game." The more jobs you work, the easier you identify what jobs are more and what jobs are less; the more partners you get in a lifetime, the easier you identify who's the right partner and who's not; the more locations you visit, the easier you are able to identify the right environment. Well, you are not wrong; you are truly not wrong, which now brings me to the second argument, "It's a numbers game": the contradiction of turning experience into arithmetic. There is substantial truth in this: the more you do something, the better you become at it, a fundamental truth, but in this fundamental truth, there are certain conditions. If you keep doing the same things, you will keep getting the same result; no matter how
+At this point, you might say, "It's a numbers game." The more jobs you work, the easier you identify what jobs are more and what jobs are less; the more partners you get in a lifetime, the easier you identify who's the right partner and who's not; the more locations you visit, the easier you are able to identify the right environment. Well, you are not wrong; you are truly not wrong, which now brings me to the second argument, "It's a numbers game": the contradiction of turning experience into arithmetic. There is substantial truth in this: the more you do something, the better you become at it, a fundamental truth, but in this fundamental truth, there are certain conditions. If you keep doing the same things, you will keep getting the same result; no matter how many times you repeat it, you won't get better; you will just remain stuck at the same output. For example, going to the gym but still eating junk food and not improving your form, doing 5 jobs just for the money and never trying to upgrade yourself, dating multiple people and never creating time to work on yourself. As Einstein would say, "Insanity is doing the same thing over and over and expecting different results." Repetition is not the same as improvement. The problem when everything is being treated as just one out of many, just a number in a multitude of numbers, is that it tends not to have any value to you, turning everything into a numbers game, making it lose its value to you, and you never really experience that experience. When an experience becomes primarily a means of increasing a number, the number can begin to displace the experience itself.
 
-[TEXT MISSING FROM HERE: about 14,400 characters, including the rest of this letter, were not received.]
+I need to ask you:
+
+If there is always something better, when is anything ever good enough? And if everything becomes a numbers game, at what point do the things we are counting lose the meaning that made us pursue them in the first place?
+
+Numbers are often an incomplete representation of what matters.\
+Money provides opportunities, security, and freedom, but money does not automatically determine whether a life is meaningful.\
+Meeting people creates opportunities for relationships, but meeting people is not equivalent to knowing them.\
+The tragedy of endless ambition is not necessarily that we fail to obtain what we desire, but that our desires can grow faster than our ability to appreciate what we obtain.\
+The tragedy of quantifying life is not that numbers cannot tell us anything, but that we may eventually forget how to recognize the things they cannot tell us.
+
+Again, I am here to tell you to do as I say, not as I do. You may see me working myself to the bone and ask me why I'm working so hard and why I am not choosing to settle for less, or you see me moving on from people too easily and you ask me why I am not trying to create irreplaceable relationships. Well, the truth is:
+
+I am a walking contradiction.\
+I set standards, and yet I break them all the time.\
+I have no belief, but I believe.
+
+I pass the microphone over to you, my opponent and co-debater. What do you say about the motions proposed? The theme for the coming week is Do as I say, not as I do.
+
+Have a great new week, my friend.
+
+Yours in contradiction,

@@ -21,7 +21,9 @@ export function readingMinutes(md = ''): number {
 
 /** First paragraph as an excerpt, cut on a word boundary. */
 export function excerpt(md = '', max = 260): string {
-  const p = md.replace(/<!--[\s\S]*?-->/g, '').trim().split(/\n\s*\n/)[0].replace(/[*_]/g, '').replace(/\s+/g, ' ').trim();
+  const paras = md.replace(/<!--[\s\S]*?-->/g, '').trim().split(/\n\s*\n/).map((x) => x.replace(/[*_\\]/g, '').replace(/\s+/g, ' ').trim());
+  let p = '';
+  for (const x of paras) { if (/^[-<>]/.test(x)) break; p = p ? `${p} ${x}` : x; if (p.length >= 160) break; }
   if (p.length <= max) return p;
   return p.slice(0, p.lastIndexOf(' ', max)).replace(/[,;:]$/, '') + '…';
 }

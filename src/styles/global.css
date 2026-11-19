@@ -596,7 +596,8 @@ html:has(#living.run[data-case="b"]) .ga-cool { opacity: calc(var(--bg-a) * .4);
 @media (width < 40rem) { .bc-img { background-size: auto 100%; background-position: 30% center; } .bc-veil { background: color-mix(in srgb, var(--paper) 35%, transparent); } }
 
 /* ── works-v6: Letters ─────────────────────────────────────────────── */
-.letters-list { margin-top: 2.5rem; display: grid; gap: 0; border-top: 1px solid var(--ink); }
+.letters-list { margin-top: 2.5rem; display: grid; gap: 0; }
+.letter-item:first-child { border-top: 1px solid var(--ink); }
 .letter-item { border-bottom: 1px solid var(--rule); padding-block: 1.5rem; }
 .letter-item h2 a, .letters-card h2 a { text-decoration: none; }
 .letter-item h2 a:hover, .letters-card h2 a:hover { text-decoration: underline; text-underline-offset: .15em; }
@@ -607,7 +608,7 @@ html:has(#living.run[data-case="b"]) .ga-cool { opacity: calc(var(--bg-a) * .4);
 .letter-body { margin-top: 2rem; font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.75; max-width: 38rem; }
 .letter-body p { margin-top: 1.15em; }
 .letter-body p:first-child { margin-top: 0; }
-.letter-body p:first-child::first-letter { font-size: 3.2em; float: left; line-height: .9; padding: .06em .08em 0 0; font-weight: 500; }
+.letter-body > p:first-child::first-letter { font-size: 3.2em; float: left; line-height: .9; padding: .06em .08em 0 0; font-weight: 500; }
 .letter-body ul { margin-top: 1em; padding-left: 1.25em; list-style: disc; }
 .letter-body li { margin-top: .35em; }
 .letter-body blockquote { margin-top: 1.2em; padding-left: 1rem; border-left: 2px solid var(--seal); font-style: italic; color: var(--graphite); }

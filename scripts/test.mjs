@@ -13,7 +13,7 @@ const ROUTES = [
   '/commission/', '/shelf/', '/press/', '/sign/',
   '/work/reconciliation/', '/work/merchant-onboarding/', '/work/voteriq-pipeline/', '/work/fraud-compliance-reinsurance/',
   '/work/grunsco-automate/', '/work/devgenie/', '/work/scriptgen/', '/work/enza-chat/',
-  '/letters/', '/letters/sorrow-sorrow-prayers/', '/chess/',
+  '/letters/', '/letters/do-as-i-say-not-as-i-do/', '/letters/worth-the-wait/', '/letters/sorrow-sorrow-prayers/', '/chess/',
   '/404.html', '/sitemap.xml', '/cv.pdf', '/og.png',
 ];
 // Names that must never appear in the demos (homepage pieces + contact form).
@@ -91,7 +91,7 @@ const letterDirs = existsSync(join(DIST, 'letters')) ? readdirSync(join(DIST, 'l
 const lettersIdx = readFileSync(file('/letters/'), 'utf8');
 const sitemap = readFileSync(file('/sitemap.xml'), 'utf8');
 ok('letters: index lists every built letter, with hook and reading time', letterDirs.length > 0 && letterDirs.every((d) => lettersIdx.includes(`href="/letters/${d}/"`)) && /min read/.test(lettersIdx) && /class="letter-hook"/.test(lettersIdx), letterDirs.join(' '));
-ok('letters: drafts never reach the build', !text.some((p) => /TEXT MISSING|goose chase|DRAFT: only/.test(readFileSync(p, 'utf8'))));
+ok('letters: drafts never reach the build', !text.some((p) => /TEXT MISSING|DRAFT: only/.test(readFileSync(p, 'utf8'))));
 ok('letters: sitemap has /letters/, every letter and /chess/', ['/letters/', ...letterDirs.map((d) => `/letters/${d}/`), '/chess/'].every((r) => sitemap.includes(`<loc>https://emms204.github.io${r}</loc>`)));
 const sorrow = readFileSync(file('/letters/sorrow-sorrow-prayers/'), 'utf8');
 ok('letters: Sorrow, sorrow, prayers has its title, canonical, Article JSON-LD and the line kept as written', /<h1 id="h"[^>]*>Sorrow, sorrow, prayers<\/h1>/.test(sorrow) && /rel="canonical" href="https:\/\/emms204\.github\.io\/letters\/sorrow-sorrow-prayers\/"/.test(sorrow) && /"@type":"Article"/.test(sorrow) && /Man is the only animal that refuses to be what he is\./.test(sorrow) && /Dylan Thomas/.test(sorrow));
@@ -108,6 +108,13 @@ ok('chess: framed as bullet, links the Lichess game', /Bullet chess/.test(chess)
 ok('chess: works without JS (static SVG board, full move list, 3 notes, controls hidden)', /<svg class="cb cb-lg"[^>]*role="img"/.test(chess) && (chess.match(/class="mv( mv-key)?" data-ply=/g) || []).length === 35 && (chess.match(/<li id="m\d+">/g) || []).length === 3 && /data-chess-ctl hidden/.test(chess));
 const cjs = [...chess.matchAll(/<script(?![^>]*\bsrc=)(?![^>]*application\/(ld\+)?json)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[2]).join('\n');
 ok('chess: small separate script (<= 2 KB gz), keyboard arrows', gzipSync(cjs).length <= 2048 && /ArrowLeft/.test(cjs) && !/<script[^>]*\bsrc=/.test(chess), `${gzipSync(cjs).length} B gz`);
+
+// works-v6 round 2: full texts of the two remaining letters, approved edits (t52u, 19 Nov 2026).
+const doas = readFileSync(file('/letters/do-as-i-say-not-as-i-do/'), 'utf8'), worth = readFileSync(file('/letters/worth-the-wait/'), 'utf8');
+ok('letters: three published, Do as I say leads the index and the homepage card', letterDirs.length === 3 && lettersIdx.indexOf('/letters/do-as-i-say-not-as-i-do/') < lettersIdx.indexOf('/letters/worth-the-wait/') && lettersIdx.indexOf('/letters/worth-the-wait/') < lettersIdx.indexOf('/letters/sorrow-sorrow-prayers/') && /<h2 id="letters-h"[^>]*><a href="\/letters\/do-as-i-say-not-as-i-do\/">/.test(home));
+ok('letters: approved edits applied (no tipsy, no swear, softened line, typos fixed)', !/tipsy|ass off|shuffling|regrest|withing|elsem|oncemore|Well imagined|what will do/i.test(doas + worth) && /working myself to the bone/.test(doas) && /moving on from people too easily/.test(doas) && /Imagine if he absconded/.test(worth) && /what we will do/.test(worth));
+ok('letters: Re:Zero trimmed and credited; Habakkuk and salary comparisons kept', /Re:Zero − Starting Life in Another World/.test(worth) && !/if your fingers still move/.test(worth) && /Habakkuk 2:1/.test(worth) && /Habakkuk 2:3/.test(worth) && /₦150k and a ₦1\.5m job/.test(doas));
+ok('letters: voice and sign-offs kept', /Mannnn, breathe/.test(worth) && /Na so your papa do you\?/.test(worth) && /Yours, in waiting/.test(worth) && /Yours in contradiction,/.test(doas) && /Have a great new week, my friend\./.test(doas) && /Have a great week, my friend\./.test(worth));
 
 const md5 = createHash('md5').update(readFileSync('public/cv.pdf')).digest('hex');
 const md5d = createHash('md5').update(readFileSync(join(DIST, 'cv.pdf'))).digest('hex');
