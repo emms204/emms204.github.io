@@ -189,6 +189,17 @@ for (const r of htmlPages) {
 }
 ok('no broken internal links or anchors (all pages)', broken.length === 0, [...new Set(broken)].slice(0, 8).join(' | '));
 
+// works-v9: theme (Emmanuel, t57u/t58u): dot grid on engineering pages, plain paper on thinking pages, dark Index overlay.
+const surf = (r) => (read(r).match(/<body [^>]*data-surface="([a-z]+)"/) || [])[1];
+const gridPages = htmlPages.filter((r) => ['build', 'built', 'about', 'contact'].includes(qOf(r)));
+const plainPages = htmlPages.filter((r) => qOf(r) === 'think');
+ok(`theme: surface follows the question (grid ${gridPages.length}, plain ${plainPages.length})`, gridPages.every((r) => surf(r) === 'grid') && plainPages.every((r) => surf(r) === 'plain') && ['/', '/solutions/', '/products/', '/work/', '/work/reconciliation/', '/archive/', '/contact/'].every((r) => surf(r) === 'grid') && ['/letters/', '/letters/worth-the-wait/', '/chess/', '/journal/'].every((r) => surf(r) === 'plain'));
+const dotRule = (home.match(/body\[data-surface=grid\]\{[^}]*\}/) || [''])[0];
+ok('theme: dot grid is pure CSS (radial-gradient, no url(), no animation)', /radial-gradient\(circle, ?var\(--dot\) 1px/.test(dotRule) && !/url\(|animation/.test(dotRule) && /--dot:#0000000f/i.test(home) && /--dot:#ffffff12/i.test(home));
+ok('theme: palette tokens (light paper #FAFAF7, ink #121212, red #C8102E; dark paper #0E1014, red #FF5A6E / #FF7A8A)', /--paper:#fafaf7/i.test(home) && /--ink:#121212/i.test(home) && /--seal:#c8102e/i.test(home) && /--paper:#0e1014/i.test(home) && /--seal:#ff5a6e/i.test(home) && /--seal-ink:#ff7a8a/i.test(home));
+ok('theme: Index overlay uses a dark surface in both themes', /\.ix-dialog\{[^}]*--paper:#0b0d11[^}]*color-scheme:dark/i.test(home));
+ok('theme: no paper grain, Rejected warm tint kept', !/feTurbulence/.test(home) && /html:has\(#living\.run\[data-case=b\]\) \.ga-hot\{opacity/.test(home));
+
 const md5 = createHash('md5').update(readFileSync('public/cv.pdf')).digest('hex');
 const md5d = createHash('md5').update(readFileSync(join(DIST, 'cv.pdf'))).digest('hex');
 ok('cv.pdf md5 (public + dist)', md5 === CV_MD5 && md5d === CV_MD5, md5);

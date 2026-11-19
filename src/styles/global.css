@@ -13,14 +13,17 @@
 }
 
 :root {
-  --paper: #F3EEE4; --paper-2: #FBF8F2; --ink: #14171F; --graphite: #3A3A3F; --pencil: #5E5C57;
-  --seal: #C8102E; --seal-ink: #C8102E; --on-seal: #FFFFFF; /* Liverpool red, accent only (Emmanuel, 19 Nov 2026) */ --ledger: #1B6250; --rule: #D9D1C2;
+  /* works-v9 palette (Emmanuel, t57u/t58u): clean warm white, near-black ink, Liverpool red for decisions only. */
+  --paper: #FAFAF7; --paper-2: #FFFFFF; --ink: #121212; --graphite: #3B3B3B; --pencil: #595955;
+  --seal: #C8102E; --seal-ink: #A50D26; --on-seal: #FFFFFF; /* Liverpool red fills; deeper red for small text (AA over dots + Rejected tint) */ --ledger: #17614E; --rule: #DDDCD6;
+  --dot: rgb(0 0 0 / .06);
   color-scheme: light dark;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #14171F; --paper-2: #1C2029; --ink: #EDE7DC; --graphite: #CFC8BC; --pencil: #A9A398;
-    --seal: #FF5A6E; --seal-ink: #FF5A6E; --on-seal: #14171F; --ledger: #5FC2A4; --rule: #343946;
+    --paper: #0E1014; --paper-2: #171A20; --ink: #ECEAE6; --graphite: #C9C6BF; --pencil: #A3A09A;
+    --seal: #FF5A6E; --seal-ink: #FF7A8A; --on-seal: #0E1014; --ledger: #5FC2A4; --rule: #2C303A;
+    --dot: rgb(255 255 255 / .07);
   }
 }
 
@@ -42,9 +45,7 @@
   ::selection { background: var(--seal); color: var(--on-seal); }
 }
 
-/* Paper grain: a tiny SVG noise filter, never a photo */
-body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1; opacity: .05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+/* works-v9: paper grain removed (clean paper + dot grid). */
 
 @utility wrap { margin-inline: auto; width: 100%; max-width: 72rem; padding-inline: 1.25rem; @media (width >= 40rem) { padding-inline: 2rem; } }
 @utility kicker { font-family: var(--font-sans); font-size: .875rem; font-weight: 600; letter-spacing: .01em; color: var(--pencil); } /* v7: sentence case, UI font (was tracked mono caps) */
@@ -556,10 +557,10 @@ button[disabled] { opacity: .7; cursor: progress; }
   --bg-cool: #9FD3C1; --bg-hot: #F2B49C; --bg-warm: #F1D79A; --bg-blue: #BCCBEA; --bg-a: .75; --bg-b: .55; --bg-c: .11;
 }
 /* With a backdrop on, the seal red deepens a touch so small red labels keep 4.5:1 over tinted paper. */
-[data-bg] { --seal-ink: #A50D26; --pencil: #53514C; } /* text-safe red over the colour field, worst case incl. Rejected */
+[data-bg] { --seal-ink: #A50D26; --pencil: #595955; } /* text-safe red and grey over dots + the Rejected tint (worst case measured, works-v9) */
 @media (prefers-color-scheme: dark) {
   :root { --bg-cool: #0D4034; --bg-hot: #6A2416; --bg-warm: #45360F; --bg-blue: #1D2F52; --bg-a: .9; --bg-b: .8; --bg-c: .1; }
-  [data-bg] { --seal-ink: #FF7A8A; --pencil: #A9A398; }
+  [data-bg] { --seal-ink: #FF7A8A; --pencil: #A3A09A; }
 }
 .bgfx { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; contain: strict; }
 .bgfx > div { display: none; position: absolute; inset: 0; }
@@ -570,10 +571,9 @@ button[disabled] { opacity: .7; cursor: progress; }
    shows a Rejected result, and cools back on Pass: a short cross-fade, instant under reduced motion. */
 .ga-field { position: absolute; inset: -8%; opacity: .85; }
 .ga-field i { inset: 0; will-change: auto; transition: opacity .6s ease; }
-.ga-cool { background: radial-gradient(55% 45% at 12% 88%, var(--bg-cool), transparent 70%), radial-gradient(45% 40% at 92% 18%, var(--bg-blue), transparent 70%); opacity: var(--bg-a); }
+.ga-cool { display: none; } /* works-v9: no resting colour field; the paper and dot grid carry the page */
 .ga-hot { background: radial-gradient(60% 50% at 85% 12%, var(--bg-hot), transparent 70%), radial-gradient(40% 35% at 20% 70%, var(--bg-warm), transparent 70%); opacity: 0; }
 html:has(#living.run[data-case="b"]) .ga-hot { opacity: calc(var(--bg-a) * .85); }
-html:has(#living.run[data-case="b"]) .ga-cool { opacity: calc(var(--bg-a) * .4); }
 
 /* B: soft mesh gradient, slow drift; grain comes from the existing paper-grain layer above it. */
 .bg-b i { width: 75vmax; height: 75vmax; border-radius: 50%; opacity: var(--bg-b); }
@@ -836,3 +836,12 @@ html:has(.ix-dialog[open]) { overflow: hidden; }
   ::view-transition-group(ix-head) { animation-duration: .35s; animation-timing-function: cubic-bezier(.2, .7, .2, 1); }
 }
 @media (width < 48rem) { .ix-top .ix-sub { display: none; } }
+
+/* ===== works-v9: surfaces follow the nav mapping (body data-surface from the page's question) ===== */
+/* Engineering pages sit on a faint static dot grid: pure CSS, no image, no script, never moves. */
+body[data-surface="grid"] { background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.25px); background-size: 22px 22px; background-position: 11px 11px; }
+/* Thinking pages: plain paper and slightly wider reading margins (the question line keeps its site-wide position). */
+@media (width >= 40rem) { body[data-surface="plain"] main .wrap:not(.q-wrap) { max-width: 66rem; padding-inline: clamp(2rem, 6vw, 5rem); } }
+/* Index overlay: a dark surface in both themes (the contents of the site). Text tokens re-tuned for AA on it. */
+.ix-dialog { --paper: #0B0D11; --paper-2: #161920; --ink: #ECEAE6; --graphite: #C9C6BF; --pencil: #A3A09A;
+  --seal: #FF5A6E; --seal-ink: #FF7A8A; --on-seal: #0B0D11; --ledger: #5FC2A4; --rule: #2E323C; color-scheme: dark; }

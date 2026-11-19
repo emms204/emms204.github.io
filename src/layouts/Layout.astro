@@ -41,8 +41,8 @@ const person = {
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="preload" href="/fonts/fraunces-500.woff2" as="font" type="font/woff2" crossorigin />
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#F3EEE4" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#14171F" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0E1014" media="(prefers-color-scheme: dark)" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -64,7 +64,7 @@ const person = {
     <script is:inline>addEventListener('pagereveal',e=>{let f;try{f=sessionStorage.ixvt;sessionStorage.removeItem('ixvt')}catch(_){}const h=f&&e.viewTransition&&document.querySelector('main h1');if(h){h.style.viewTransitionName='ix-head';e.viewTransition.finished.finally(()=>h.style.viewTransitionName='')}})</script>
     {personLd && <script type="application/ld+json" set:html={JSON.stringify(person)} />}
   </head>
-  <body data-q={q ?? undefined}>
+  <body data-q={q ?? undefined} data-surface={q && q !== 'think' ? 'grid' : 'plain'}>
     <Backdrop />
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:px-4 focus:py-2" style="background:var(--paper-2)">Skip to content</a>
     <TopBar q={q} path={path} />
