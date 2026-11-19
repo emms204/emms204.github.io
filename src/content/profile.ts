@@ -699,6 +699,7 @@ export const worksNav: Link[] = [
   { label: 'Work', href: '/work/' },
   { label: 'Products', href: '/products/' },
   { label: 'Journal', href: '/journal/' },
+  { label: 'Letters', href: '/letters/' },
   { label: 'About', href: '/#about' },
   { label: 'Contact', href: '/contact/' },
   { label: 'CV', href: '/cv.pdf' },

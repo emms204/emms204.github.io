@@ -12,6 +12,6 @@ const cur = (href: string) => {
     <span style="font-family:var(--font-serif);font-size:1.25rem;font-weight:500">{profile.person.name}</span>
   </a>
   <nav aria-label="Main" class="site-nav -mx-2 flex">
-    {worksNav.map((n, i) => <a href={n.href} aria-current={cur(n.href)} class:list={[i === 5 && 'nav-split']}>{n.label}</a>)}
+    {worksNav.map((n) => <a href={n.href} aria-current={cur(n.href)} class:list={[n.label === 'About' && 'nav-split']}>{n.label}</a>)}
   </nav>
 </header>

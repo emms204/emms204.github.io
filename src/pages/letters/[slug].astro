@@ -1,0 +1,32 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { render } from 'astro:content';
+import { getLetters, readingMinutes, type Letter } from '../../lib/letters';
+import { profile } from '../../content/profile';
+export async function getStaticPaths() {
+  const letters = await getLetters();
+  return letters.map((letter, i) => ({ params: { slug: letter.id }, props: { letter, prev: letters[i - 1], next: letters[i + 1] } }));
+}
+interface Props { letter: Letter; prev?: Letter; next?: Letter }
+const { letter, prev, next } = Astro.props;
+const { Content } = await render(letter);
+const mins = readingMinutes(letter.body);
+const ld = { '@context': 'https://schema.org', '@type': 'Article', headline: letter.data.title, description: letter.data.hook, author: { '@type': 'Person', name: profile.person.name, url: profile.meta.siteUrl + '/' }, url: `${profile.meta.siteUrl}/letters/${letter.id}/`, inLanguage: 'en' };
+---
+<Layout title={`${letter.data.title} — Letters — Emmanuel Osanebi`} description={`${letter.data.hook} A letter by Emmanuel Osanebi.`}>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <article class="wrap letter" aria-labelledby="h">
+    <header class="letter-head">
+      <p class="kicker"><a href="/letters/">Letters</a> · {mins} min read</p>
+      <h1 id="h" class="display-1">{letter.data.title}</h1>
+      <p class="letter-hook lede">{letter.data.hook}</p>
+    </header>
+    <div class="letter-body"><Content /></div>
+    <p class="letter-note">Written as a letter to a friend. Published with light edits; the voice is unchanged.</p>
+  </article>
+  <nav class="wrap letter-nav" aria-label="More letters">
+    {prev ? <a class="btn-line" href={`/letters/${prev.id}/`} rel="prev">← {prev.data.title}</a> : <span></span>}
+    <a class="btn-line" href="/letters/">All letters</a>
+    {next ? <a class="btn-line" href={`/letters/${next.id}/`} rel="next">{next.data.title} →</a> : <span></span>}
+  </nav>
+</Layout>

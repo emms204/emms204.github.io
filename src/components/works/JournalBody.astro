@@ -1,5 +1,7 @@
 ---
 import { works, atelier } from '../../content/profile';
+import { getLetters, readingMinutes } from '../../lib/letters';
+const letters = await getLetters();
 const j = works.journal; const s = atelier.press.series; const pr = atelier.press;
 ---
 <section class="wrap pt-10" aria-labelledby="h">
@@ -7,6 +9,22 @@ const j = works.journal; const s = atelier.press.series; const pr = atelier.pres
   <h1 id="h" class="display-1">{j.title}</h1>
   <p class="lede">{j.intro}</p>
 </section>
+{letters.length > 0 && (
+  <article class="wrap series" aria-labelledby="letters-h">
+    <p class="kicker">On this site</p>
+    <h2 id="letters-h" class="display-3 mt-2"><a href="/letters/">Letters</a></h2>
+    <p class="mt-2">Essays written as letters to a friend.</p>
+    <ol class="series-parts">
+      {letters.map((l) => (
+        <li>
+          <p class="kicker">{readingMinutes(l.body)} min read</p>
+          <h3 class="mt-1 text-2xl"><a href={`/letters/${l.id}/`}>{l.data.title}</a></h3>
+          <p class="mt-1" style="color:var(--graphite)">{l.data.hook}</p>
+        </li>
+      ))}
+    </ol>
+  </article>
+)}
 <article class="wrap series" aria-labelledby="series-h">
   <p class="kicker">{s.where}</p>
   <h2 id="series-h" class="display-3 mt-2">{s.title}</h2>

@@ -7,6 +7,7 @@ import StoryEngine from '../components/works/StoryEngine.astro';
 import LivingSystem from '../components/works/LivingSystem.astro';
 import Journey from '../components/works/Journey.astro';
 import WorkIndex from '../components/works/WorkIndex.astro';
+import LettersCard from '../components/works/LettersCard.astro';
 import { profile, atelier, works } from '../content/profile';
 import { CONTACT_EMAIL, WHATSAPP_URL } from '../config';
 const h = works.hero;
@@ -59,12 +60,20 @@ const featured = atelier.caseFiles.slice(0, 5);
 
   <Journey />
 
+  <LettersCard />
+
   <section id="about" class="wrap section" aria-labelledby="about-h">
     <span id="experience"></span>
     <h2 id="about-h" class="display-2">{works.record.title}</h2>
     <div class="about-grid">
       <div>
         {profile.about.paragraphs.map((p) => <p class="mt-3 first:mt-0">{p}</p>)}
+        <figure class="about-quote">
+          <blockquote><p>Man is the only animal that refuses to be what he is.</p></blockquote>
+          <figcaption>From my letter <a href="/letters/sorrow-sorrow-prayers/">Sorrow, sorrow, prayers</a></figcaption>
+        </figure>
+        <p class="mt-4">Liverpool supporter.</p>
+        <p class="mt-1"><a class="btn-line" href="/chess/">One bullet chess game, annotated</a></p>
         <ol class="record">
           {profile.experience.items.map((e) => (
             <li><p class="kicker">{e.period}</p><h3 class="text-xl">{e.role} · {e.org}</h3><p class="mt-1">{e.summary}</p></li>

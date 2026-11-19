@@ -1,0 +1,22 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getLetters, readingMinutes } from '../../lib/letters';
+const letters = await getLetters();
+---
+<Layout title="Letters — Emmanuel Osanebi" description="Letters to a friend about wanting more, waiting, and what makes a person. Essays by Emmanuel Osanebi.">
+  <section class="wrap pt-10" aria-labelledby="h">
+    <p class="kicker">Letters</p>
+    <h1 id="h" class="display-1">Letters</h1>
+    <p class="lede">I write these as letters to a friend: a question I can't put down, argued from both sides, and a sign-off in character. They're published here with light edits.</p>
+  </section>
+  <ol class="wrap letters-list" aria-label="Letters">
+    {letters.map((l, i) => (
+      <li class="letter-item">
+        <p class="kicker"><span class="fig">{String(i + 1).padStart(2, '0')}</span> · {readingMinutes(l.body)} min read</p>
+        <h2 class="display-3 mt-1"><a href={`/letters/${l.id}/`}>{l.data.title}</a></h2>
+        <p class="letter-hook">{l.data.hook}</p>
+      </li>
+    ))}
+  </ol>
+  <p class="wrap mt-10"><a class="btn-line" href="/journal/">Technical writing in the Journal</a></p>
+</Layout>

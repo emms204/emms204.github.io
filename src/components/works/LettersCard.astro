@@ -1,0 +1,16 @@
+---
+import { getLetters, readingMinutes, excerpt } from '../../lib/letters';
+const letters = await getLetters();
+const lead = letters[0];
+---
+{lead && (
+  <section id="letters" class="wrap section" aria-labelledby="letters-h">
+    <div class="letters-card">
+      <p class="kicker">Letters · {letters.length === 1 ? 'one letter' : `${letters.length} letters`}</p>
+      <h2 id="letters-h" class="display-3 mt-2"><a href={`/letters/${lead.id}/`}>{lead.data.title}</a></h2>
+      <p class="letter-hook mt-2">{lead.data.hook}</p>
+      <p class="letters-excerpt">{excerpt(lead.body)}</p>
+      <p class="mt-4 flex flex-wrap gap-x-6"><a class="btn-line" href={`/letters/${lead.id}/`}>Read the letter<span class="sr-only">: {lead.data.title}</span>&nbsp;({readingMinutes(lead.body)} min)</a><a class="btn-line" href="/letters/">All letters</a></p>
+    </div>
+  </section>
+)}

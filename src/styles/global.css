@@ -594,3 +594,58 @@ html:has(#living.run[data-case="b"]) .ga-cool { opacity: calc(var(--bg-a) * .4);
 @media (prefers-color-scheme: dark) { .bg-ready .bc-img { background-image: var(--bg-img-d); } }
 .bc-veil { inset: 0; background: radial-gradient(ellipse 46rem 70% at 50% 45%, var(--paper) 30%, color-mix(in srgb, var(--paper) 55%, transparent) 70%, transparent); }
 @media (width < 40rem) { .bc-img { background-size: auto 100%; background-position: 30% center; } .bc-veil { background: color-mix(in srgb, var(--paper) 35%, transparent); } }
+
+/* ── works-v6: Letters ─────────────────────────────────────────────── */
+.letters-list { margin-top: 2.5rem; display: grid; gap: 0; border-top: 1px solid var(--ink); }
+.letter-item { border-bottom: 1px solid var(--rule); padding-block: 1.5rem; }
+.letter-item h2 a, .letters-card h2 a { text-decoration: none; }
+.letter-item h2 a:hover, .letters-card h2 a:hover { text-decoration: underline; text-underline-offset: .15em; }
+.letter-hook { font-family: var(--font-serif); font-style: italic; font-size: 1.1875rem; color: var(--graphite); margin-top: .35rem; }
+.letter { max-width: 46rem; padding-top: 2.5rem; }
+.letter-head { border-bottom: 1px solid var(--ink); padding-bottom: 1.5rem; }
+.letter-head .display-1 { font-size: clamp(2.4rem, 7vw, 4.5rem); }
+.letter-body { margin-top: 2rem; font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.75; max-width: 38rem; }
+.letter-body p { margin-top: 1.15em; }
+.letter-body p:first-child { margin-top: 0; }
+.letter-body p:first-child::first-letter { font-size: 3.2em; float: left; line-height: .9; padding: .06em .08em 0 0; font-weight: 500; }
+.letter-body ul { margin-top: 1em; padding-left: 1.25em; list-style: disc; }
+.letter-body li { margin-top: .35em; }
+.letter-body blockquote { margin-top: 1.2em; padding-left: 1rem; border-left: 2px solid var(--seal); font-style: italic; color: var(--graphite); }
+.letter-body em { font-style: italic; }
+.letter-note { margin-top: 2.5rem; font-size: .9375rem; color: var(--pencil); border-top: 1px solid var(--rule); padding-top: .75rem; max-width: 38rem; }
+.letter-nav { margin-top: 2rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1.5rem; max-width: 46rem; }
+.letters-card { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); padding-block: 1.75rem; max-width: 46rem; }
+.letters-excerpt { margin-top: 1rem; font-family: var(--font-serif); font-size: 1.125rem; line-height: 1.7; max-width: 40rem; }
+.about-quote { margin-top: 1.75rem; border-left: 2px solid var(--seal); padding-left: 1rem; }
+.about-quote blockquote p { font-family: var(--font-serif); font-style: italic; font-size: 1.375rem; line-height: 1.35; }
+.about-quote figcaption { margin-top: .4rem; font-size: .9375rem; color: var(--pencil); }
+
+/* ── works-v6: chess ───────────────────────────────────────────────── */
+.chess-facts { margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: .5rem 2rem; }
+.chess-facts li { display: flex; flex-direction: column; }
+.chess { margin-top: 2rem; display: grid; gap: 2rem; }
+@media (min-width: 900px) { .chess { grid-template-columns: minmax(0, 30rem) minmax(0, 1fr); align-items: start; } .chess-stage { position: sticky; top: 1rem; } }
+.cb { display: block; width: 100%; height: auto; aspect-ratio: 1; border: 1px solid var(--ink); font-family: "DejaVu Sans", "Segoe UI Symbol", "Noto Sans Symbols 2", "Apple Symbols", sans-serif; }
+.cb-sm { max-width: 13rem; margin-top: .75rem; }
+.cb-l { fill: #EFE3C8; } .cb-d { fill: #B48C5A; }
+.cb-hl { fill: #F4D35E; opacity: .6; }
+.cb-w, .cb-b { font-size: .82px; }
+.cb-w { fill: #FFFFFF; stroke: #14171F; stroke-width: .035px; paint-order: stroke; }
+.cb-b { fill: #14171F; stroke: #FFFFFF; stroke-width: .012px; }
+.cb-co text { font-size: .2px; font-weight: 700; fill: #2A2418; font-family: var(--font-mono); }
+.cb-line { stroke: #B8361D; stroke-width: .09px; stroke-linecap: round; opacity: .85; }
+.chess-now { margin-top: .6rem; font-family: var(--font-mono); font-size: .9375rem; }
+.chess-ctl { margin-top: .5rem; display: flex; gap: .5rem; }
+.chess-ctl button { min-width: 44px; min-height: 44px; font-size: 1.35rem !important; line-height: 1; border: 1px solid var(--ink); border-radius: 6px; background: var(--paper-2); color: var(--ink); font-size: 1rem; }
+.chess-ctl button:hover { background: var(--paper); }
+.chess-help { margin-top: .5rem; font-size: .875rem; color: var(--pencil); }
+.chess-notes { margin-top: 1rem; display: grid; gap: 1.5rem; }
+.chess-notes li { border-top: 1px solid var(--rule); padding-top: .75rem; }
+.chess-moves { margin-top: .5rem; list-style: decimal; padding-left: 2.2rem; columns: 2 11rem; font-family: var(--font-mono); font-size: .9375rem; }
+.chess-moves li { break-inside: avoid; }
+.chess-moves .mv { display: inline-block; min-width: 4.5rem; padding: .1rem .3rem; border-radius: 4px; background: none; border: 0; color: inherit; font: inherit; text-align: left; }
+.chess-moves button.mv { min-height: 32px; cursor: pointer; }
+.chess-moves button.mv:hover { text-decoration: underline; }
+.chess-moves .mv-key { font-weight: 700; }
+.chess-moves .mv[aria-current=step] { background: var(--ink); color: var(--paper); }
+.kicker.mv-name { text-transform: none; letter-spacing: .04em; }

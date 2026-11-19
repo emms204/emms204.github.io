@@ -13,6 +13,7 @@ const ROUTES = [
   '/commission/', '/shelf/', '/press/', '/sign/',
   '/work/reconciliation/', '/work/merchant-onboarding/', '/work/voteriq-pipeline/', '/work/fraud-compliance-reinsurance/',
   '/work/grunsco-automate/', '/work/devgenie/', '/work/scriptgen/', '/work/enza-chat/',
+  '/letters/', '/letters/sorrow-sorrow-prayers/', '/chess/',
   '/404.html', '/sitemap.xml', '/cv.pdf', '/og.png',
 ];
 // Names that must never appear in the demos (homepage pieces + contact form).
@@ -84,6 +85,29 @@ ok('backdrop: production default is option A (Emmanuel, 19 Nov 2026)', process.e
 ok('backdrop A: no scroll-driven intensity, caption or meter (Emmanuel, 19 Nov 2026)', !/ga-cap|ga-meter|vanishing|exploding/i.test(home) && !/addEventListener\(['"]scroll['"]/.test(inline) && !/ga-field/.test(inline));
 ok('backdrop A: Rejected reaction is CSS-only and present', /#living\.run\[data-case="?b"?\]\) \.ga-hot/.test(home));
 ok('backdrop: decorative only (aria-hidden), no canvas/WebGL', (!pick || /<div class="bgfx" aria-hidden="true"/.test(home)) && !/getContext\(|three(\.module)?\.js|WebGL/i.test(home));
+
+// works-v6: Letters, About additions, one annotated chess game (Emmanuel, t50u–t52u, 19 Nov 2026).
+const letterDirs = existsSync(join(DIST, 'letters')) ? readdirSync(join(DIST, 'letters')).filter((d) => statSync(join(DIST, 'letters', d)).isDirectory()) : [];
+const lettersIdx = readFileSync(file('/letters/'), 'utf8');
+const sitemap = readFileSync(file('/sitemap.xml'), 'utf8');
+ok('letters: index lists every built letter, with hook and reading time', letterDirs.length > 0 && letterDirs.every((d) => lettersIdx.includes(`href="/letters/${d}/"`)) && /min read/.test(lettersIdx) && /class="letter-hook"/.test(lettersIdx), letterDirs.join(' '));
+ok('letters: drafts never reach the build', !text.some((p) => /TEXT MISSING|goose chase|DRAFT: only/.test(readFileSync(p, 'utf8'))));
+ok('letters: sitemap has /letters/, every letter and /chess/', ['/letters/', ...letterDirs.map((d) => `/letters/${d}/`), '/chess/'].every((r) => sitemap.includes(`<loc>https://emms204.github.io${r}</loc>`)));
+const sorrow = readFileSync(file('/letters/sorrow-sorrow-prayers/'), 'utf8');
+ok('letters: Sorrow, sorrow, prayers has its title, canonical, Article JSON-LD and the line kept as written', /<h1 id="h"[^>]*>Sorrow, sorrow, prayers<\/h1>/.test(sorrow) && /rel="canonical" href="https:\/\/emms204\.github\.io\/letters\/sorrow-sorrow-prayers\/"/.test(sorrow) && /"@type":"Article"/.test(sorrow) && /Man is the only animal that refuses to be what he is\./.test(sorrow) && /Dylan Thomas/.test(sorrow));
+ok('letters: no email headers or addresses in any letter', letterDirs.every((d) => { const h = readFileSync(file(`/letters/${d}/`), 'utf8').match(/<div class="letter-body">[\s\S]*?<\/div>/)[0]; return !/@|favour|\bto me\b|\(\d+ hours ago\)/i.test(h); }));
+ok('letters: linked from nav and Journal', /<nav aria-label="Main"[\s\S]*?href="\/letters\/"/.test(home) && readFileSync(file('/journal/'), 'utf8').includes('href="/letters/"'));
+ok('letters: one homepage excerpt card', (home.match(/class="letters-card"/g) || []).length === 1 && /<section id="letters"/.test(home));
+const about = sec('about');
+ok('about: pull quote, "Liverpool supporter." and chess link; no club imagery', /<blockquote><p>Man is the only animal that refuses to be what he is\.<\/p><\/blockquote>/.test(about) && /<p class="mt-4">Liverpool supporter\.<\/p>/.test(about) && /href="\/chess\/"/.test(about) && !/crest|jersey|anfield|You'll Never Walk Alone/i.test(text.map((p) => readFileSync(p, 'utf8')).join('')));
+ok('chess: not on the homepage beyond the About link', !/data-chess|class="cb/.test(home));
+const chess = readFileSync(file('/chess/'), 'utf8');
+const cdata = JSON.parse(readFileSync('src/data/chess-MGXNlk6v.json', 'utf8'));
+ok('chess: PGN facts (White, 60+0 bullet, 2142 v 2249, London System, 18 moves, 1-0)', cdata.white === 'RealEmms' && cdata.timeControl === '60+0' && cdata.whiteElo === 2142 && cdata.blackElo === 2249 && cdata.opening === 'London System' && cdata.plies.length === 35 && cdata.result === '1-0' && cdata.plies[32].san === 'Nxf5' && cdata.plies[34].san === 'Bxc7');
+ok('chess: framed as bullet, links the Lichess game', /Bullet chess/.test(chess) && chess.includes('href="https://lichess.org/game/MGXNlk6v"'));
+ok('chess: works without JS (static SVG board, full move list, 3 notes, controls hidden)', /<svg class="cb cb-lg"[^>]*role="img"/.test(chess) && (chess.match(/class="mv( mv-key)?" data-ply=/g) || []).length === 35 && (chess.match(/<li id="m\d+">/g) || []).length === 3 && /data-chess-ctl hidden/.test(chess));
+const cjs = [...chess.matchAll(/<script(?![^>]*\bsrc=)(?![^>]*application\/(ld\+)?json)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[2]).join('\n');
+ok('chess: small separate script (<= 2 KB gz), keyboard arrows', gzipSync(cjs).length <= 2048 && /ArrowLeft/.test(cjs) && !/<script[^>]*\bsrc=/.test(chess), `${gzipSync(cjs).length} B gz`);
 
 const md5 = createHash('md5').update(readFileSync('public/cv.pdf')).digest('hex');
 const md5d = createHash('md5').update(readFileSync(join(DIST, 'cv.pdf'))).digest('hex');
