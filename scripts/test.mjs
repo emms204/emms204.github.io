@@ -141,7 +141,7 @@ const dupes = proj.filter((x, i) => proj.indexOf(x) !== i);
 ok('homepage lists: no project listed twice', proj.length >= 8 && dupes.length === 0, dupes.join(' ') || `${proj.length} projects`);
 ok('no project lost: every case file has a page and is on the work index', atelier.caseFiles.every((c) => existsSync(file(`/work/${c.slug}/`)) && readFileSync(file('/work/'), 'utf8').includes(`/work/${c.slug}/`)));
 ok('living system: rejection branch hidden in Pass (CSS), Pass is the default', /\.living \.ls-edge\.ls-reject\{display:none\}/.test(home) && /<section id="living"[^>]*data-case="a"/.test(home));
-ok('living system: vertical mobile diagram with a loop-back branch', /class="living-svg living-svg-v"/.test(living) && /ls-edge ls-reject" d="M270 288 H332 V76 H276"/.test(living));
+ok('living system: vertical mobile diagram with a loop-back branch', /class="living-svg living-svg-v"/.test(living) && /ls-edge ls-reject" d="M240 324 H300 V84 H248"/.test(living));
 ok('first screen: front door (no question line), small "The Works" label, DOM order name -> diagram -> offer/CTAs', !/class="hero-title"/.test(home) && !/class="q-line"/.test(home) && /<main id="main" tabindex="-1">\s*(<!--[\s\S]*?-->\s*)?<div class="first-screen hero-v7 wrap">\s*<section id="home" class="hero-main"[^>]*>\s*<p class="hero-brand">The Works<\/p>/.test(home) && /<\/section>\s*<section id="living"[\s\S]*?<\/section>\s*(<script[\s\S]*?<\/script>\s*)*<div class="hero-side">/.test(home) && !/tabindex="[1-9]/.test(home));
 ok('hero: one primary CTA plus CV (no duplicate "Start an inquiry")', /<p class="hero-ctas"><a class="btn-seal" href="\/solutions\/">See what I can build for you<\/a><a class="btn-line" href="\/cv\.pdf">CV \(PDF\)<\/a><\/p>/.test(home) && !/Start an inquiry/.test(home));
 ok('journey: one navigation device (no zigzag map), caption names Commons and the institutions', !/class="journey-map"/.test(journey) && /taken from Wikimedia Commons/.test(journey) && /Library of Congress/.test(journey) && (journey.match(/via Wikimedia Commons/g) || []).length === 5);
@@ -208,6 +208,33 @@ ok('theme: no paper grain, Rejected warm tint kept', !/feTurbulence/.test(home) 
 const md5 = createHash('md5').update(readFileSync('public/cv.pdf')).digest('hex');
 const md5d = createHash('md5').update(readFileSync(join(DIST, 'cv.pdf'))).digest('hex');
 ok('cv.pdf md5 (public + dist)', md5 === CV_MD5 && md5d === CV_MD5, md5);
+
+// ---- works-v10: 24px grid, shape grammar, border order ----
+const css = [...home.matchAll(/<style>([\s\S]*?)<\/style>/g)].map((m) => m[1]).join('');
+// last declaration wins: collect every rule whose selector list contains `sel` exactly
+const decl = (sel, prop) => { let v; for (const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) { if (m[1].split(',').map((x) => x.trim()).includes(sel)) { const d = m[2].match(new RegExp('(?:^|;)' + prop + ':([^;]+)')); if (d) v = d[1].trim(); } } return v; };
+ok('grid: dot pitch is 24px (token --grid:24px drives background-size)', /--grid:24px/.test(css) && decl('body[data-surface=grid]', 'background-size') === 'var(--grid) var(--grid)' && !/background-size:22px/.test(css));
+ok('grid: spacing tokens 12/24/48/96/144', /--s-xs:12px/.test(css) && /--s-1:24px/.test(css) && /--s-2:48px/.test(css) && /--s-3:96px/.test(css) && /--s-4:144px/.test(css));
+const radii = [...new Set([...css.matchAll(/border-radius:([^;}]+)/g)].map((m) => m[1].trim()))];
+ok('shapes: no generic shared radius (only built 0 / choice pill / dot circle tokens)', radii.every((r) => ['0', 'var(--r-built)', 'var(--r-choice)', 'var(--r-dot)'].includes(r)) && !/--radius/.test(css) && /--r-built:0/.test(css) && /--r-choice:999px/.test(css), radii.join(' '));
+const pills = ['.bench-case-btn', '.chooser label', '.inq-radio', '.intent-options a', '.chess-moves .mv'];
+ok('shapes: choice controls are pills (Pass/Rejected, filters, chooser, intents, form intents, move list)', pills.every((p) => decl(p, 'border-radius') === 'var(--r-choice)'), pills.map((p) => p + '=' + decl(p, 'border-radius')).join(' '));
+ok('shapes: built things are sharp (cards, buttons, chips, case header)', ['.card', '.btn-seal', '.chip', '.next-q-card', '.ix-card'].every((p) => decl(p, 'border-radius') === 'var(--r-built)') && /border:2px solid var\(--ink\)/.test(decl('.case-head', 'border') ? 'border:' + decl('.case-head', 'border') : ''));
+ok('shapes: draft / proposal elements are dashed (Interpret node, proposal panel, illustration flags, alternative chess move)',
+  /stroke-dasharray/.test(css.match(/\.living-svg \.ls-interpret \.ls-shape\{[^}]*\}/)?.[0] ?? '') && /dashed/.test(decl('.propose', 'border') ?? '') && /dashed/.test(decl('.bench-flag', 'border') ?? '') && /dashed/.test(decl('.placeholder', 'border') ?? '') && !!decl('.cb-mk-alt', 'stroke-dasharray'));
+ok('shapes: Decide is a circle in both diagrams; Input/Interpret/Verify are sharp rectangles (no rx)', (living.match(/<g class="ls-node ls-decide">[\s\S]*?<circle class="ls-shape"/g) || []).length === 2 && !/<rect class="ls-shape"[^>]*rx=/.test(living) && (living.match(/<rect class="ls-shape"/g) || []).length === 6);
+ok('shapes: the stamp is a circle', decl('.stamp', 'border-radius') === 'var(--r-dot)');
+ok('border order: Living System frame is the 2px main object; node strokes 1px', decl('.living-fig', 'border') === '2px solid var(--ink)' && decl('.living-svg .ls-shape', 'stroke-width') === '1px');
+ok('thinking text: no boxes on shelf spines, letter quotes or the About quote', /^(none|0 0)$/.test(decl('.shelf-spine', 'background') ?? '') && decl('.letter-body blockquote', 'border-left') === '0' && decl('.about-quote', 'border-left') === '0');
+const recon = read('/work/reconciliation/'), vote = read('/work/voteriq-pipeline/');
+const sealedCases = atelier.caseFiles.filter((c) => ['reconciliation', 'grunsco-automate'].includes(c.slug)); // sealLabel 'Approved by a person' / 'Approved in Slack' in profile.ts
+ok('grid break: the red seal overlaps the case header only where a person approved; others get a neutral "Case file" mark',
+  /class="case-head has-seal"[\s\S]*?class="case-mark case-seal"/.test(recon) && /class="case-head has-tag"[\s\S]*?class="case-mark case-tag" aria-hidden="true">Case file</.test(vote)
+  && atelier.caseFiles.every((c) => /class="case-mark case-seal"/.test(read(`/work/${c.slug}/`)) === sealedCases.includes(c)), sealedCases.map((c) => c.slug).join(' '));
+ok('grid break: step numbers hang off Proof Bench panels (data-n, hidden from AT)', (home.match(/class="bench-step" data-step="\d" data-n="0\d"/g) || []).length === 8 && /content:attr\(data-n\)\s*\/\s*""/.test(css));
+const chessP = read('/chess/');
+ok('chess: solid circle for the move played (no-JS board), dashed circle for 7.Bd6 alternative on d6', /id="cb-main"[\s\S]*?<g data-cb-mk><circle cx="5.5" cy="3.5" r=".44" class="cb-mk"/.test(chessP) && /<circle cx="3.5" cy="2.5" r=".44" class="cb-mk cb-mk-alt"><\/circle><circle cx="4.5" cy="3.5" r=".44" class="cb-mk"/.test(chessP) && /"alts":\{"12":\["d6"\]\}/.test(chessP));
+ok('no ellipses / thought balloons / Index map', !/<ellipse/.test(text.map((p) => readFileSync(p, 'utf8')).join('')) && !/ix-map|data-ix-map/.test(read('/index/')));
 
 console.log(failed ? `\n${failed} check(s) failed` : '\nall checks passed');
 process.exit(failed ? 1 : 0);

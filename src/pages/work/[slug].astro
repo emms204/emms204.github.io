@@ -8,13 +8,20 @@ import { atelier, type CaseFile } from '../../content/profile';
 export function getStaticPaths() { return atelier.caseFiles.map((c) => ({ params: { slug: c.slug }, props: { c } })); }
 const { c } = Astro.props as { c: CaseFile };
 const w = atelier.work;
+// Only seals that record a person approving (e.g. 'Approved by a person', 'Approved in Slack') go on the header corner.
+const humanSeal = c.sealed && /approved/i.test(c.sealLabel ?? '');
 ---
 <Layout title={`${c.title} — case file — Emmanuel Osanebi`} description={c.summary}>
   <article class="atelier">
     <header class="wrap pt-10 pb-4">
-      <p class="kicker"><a href="/work/">Work</a> · {c.context}{c.period && ` · ${c.period}`}</p>
-      <h1 class="mt-3 max-w-4xl text-4xl sm:text-5xl">{c.title}</h1>
-      <p class="mt-4 max-w-2xl text-lg" style="color:var(--graphite)">{c.summary}</p>
+      <!-- works-v10: the case header is the main object (2px ink, sharp). The red seal overlaps its corner only
+           where the case file records a real human approval; otherwise a neutral "Case file" mark. -->
+      <div class:list={['case-head', humanSeal ? 'has-seal' : 'has-tag']}>
+        <p class="kicker"><a href="/work/">Work</a> · {c.context}{c.period && ` · ${c.period}`}</p>
+        <h1 class="mt-3 max-w-4xl text-4xl sm:text-5xl">{c.title}</h1>
+        <p class="mt-4 max-w-2xl text-lg" style="color:var(--graphite)">{c.summary}</p>
+        {humanSeal ? <div class="case-mark case-seal"><Seal label={c.sealLabel} size={88} /></div> : <span class="case-mark case-tag" aria-hidden="true">Case file</span>}
+      </div>
     </header>
     <div class="wrap grid gap-10 md:grid-cols-[7fr_3fr]">
       <div>
@@ -31,12 +38,12 @@ const w = atelier.work;
           <p class="kicker">How it ran · III</p><h2 id="s3" class="mt-1 text-2xl">Sign</h2>
           <div class="mt-3 flex flex-wrap items-start justify-between gap-6">
             <ul class="grid list-disc gap-2 pl-5">{c.sign.map((x) => <li>{x}</li>)}</ul>
-            {c.sealed && <Seal label={c.sealLabel} size={84} />}
+            {c.sealed && !humanSeal && <Seal label={c.sealLabel} size={84} />}
           </div>
           {c.figures.length > 0 && (
             <dl class="mt-6 grid gap-4 sm:grid-cols-2">
               {c.figures.map((f) => (
-                <div class="card p-4"><dt class="sr-only">{f.label}</dt><dd><span class="fig text-3xl">{f.value}</span><span class="block">{f.label}</span><span class="kicker mt-1 block">Source: {f.source}</span></dd></div>
+                <div class="card p-6"><dt class="sr-only">{f.label}</dt><dd><span class="fig text-3xl">{f.value}</span><span class="block">{f.label}</span><span class="kicker mt-1 block">Source: {f.source}</span></dd></div>
               ))}
             </dl>
           )}

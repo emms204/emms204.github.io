@@ -10,9 +10,9 @@ const P = game.plies;
 const moveNo = (i: number) => `${Math.floor(i / 2) + 1}${i % 2 ? '…' : '.'}`;
 const name = (i: number) => `${moveNo(i)} ${P[i].san}`;
 const clock = (s: number | null) => (s == null ? '' : `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`);
-// Annotations keyed by ply index (0-based). Plain language; engine figures rounded.
-const notes: Record<number, { title: string; text: string; line?: [string, string] }> = {
-  12: { title: 'A chance I passed up', text: 'Black’s 6…e6 left the d6 square weak. Stockfish’s first choice here was 7.Bd6, attacking the rook on f8. I played 7.e5 instead, which takes space and still left White about two pawns better by the engine’s count.' },
+// Annotations keyed by ply index (0-based). Plain language; engine figures approximate.
+const notes: Record<number, { title: string; text: string; line?: [string, string]; alt?: string[] }> = {
+  12: { title: 'A chance I passed up', text: 'Black’s 6…e6 left the d6 square weak. Stockfish’s first choice here was 7.Bd6, attacking the rook on f8. I played 7.e5 instead, which takes space and still left White about two pawns better by the engine’s count.', alt: ['d6'] },
   16: { title: 'The slip', text: '9.exd6 kept the pressure. 9.h3 is a safe-looking pause, and it gave much of the edge back: by the engine’s count, from about two pawns to under one. Bullet rewards quick, safe moves; this one was too quiet.' },
   32: { title: 'The shot', text: '15…f6 was the losing move. After 16.exf6 the e5 pawn was gone from the long diagonal, and only my knight on d6 stood between the bishop on h2 and the queen on c7. 17.Nxf5 takes a knight and steps off that diagonal at the same time, a discovered attack. Black recaptured, 18.Bxc7 won the queen, and Black resigned.', line: ['h2', 'c7'] },
 };
@@ -20,7 +20,7 @@ const KEY = 32;
 const keys = Object.keys(notes).map(Number);
 const date = new Date(game.date.replace(/\./g, '-') + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 const mins = Math.round(+game.timeControl.split('+')[0] / 60);
-const data = { start: game.start, plies: P.map((p, i) => ({ f: p.fen, a: p.from, b: p.to, n: name(i), c: clock(p.clk), w: i % 2 === 0 })), key: KEY, lines: Object.fromEntries(keys.filter((k) => notes[k].line).map((k) => [k, notes[k].line])) };
+const data = { start: game.start, plies: P.map((p, i) => ({ f: p.fen, a: p.from, b: p.to, n: name(i), c: clock(p.clk), w: i % 2 === 0 })), key: KEY, lines: Object.fromEntries(keys.filter((k) => notes[k].line).map((k) => [k, notes[k].line])), alts: Object.fromEntries(keys.filter((k) => notes[k].alt).map((k) => [k, notes[k].alt])) };
 const rows = Array.from({ length: Math.ceil(P.length / 2) }, (_, r) => [2 * r, 2 * r + 1].filter((i) => i < P.length));
 ---
 <Layout title="One bullet game, annotated — Emmanuel Osanebi" description={`A ${mins}-minute bullet game on Lichess: London System, 18 moves, won with a discovered attack on the queen. Three moments, explained in plain language.`}>
@@ -39,8 +39,9 @@ const rows = Array.from({ length: Math.ceil(P.length / 2) }, (_, r) => [2 * r, 2
   <section class="wrap chess" aria-labelledby="board-h" data-chess>
     <h2 id="board-h" class="sr-only">Board</h2>
     <div class="chess-stage">
-      <Board fen={P[KEY].fen} from={P[KEY].from} to={P[KEY].to} line={notes[KEY].line} label={`Board after ${name(KEY)}`} id="cb-main" />
+      <Board fen={P[KEY].fen} from={P[KEY].from} to={P[KEY].to} line={notes[KEY].line} played={P[KEY].to} alt={notes[KEY].alt} label={`Board after ${name(KEY)}`} id="cb-main" />
       <p class="chess-now" data-chess-now aria-live="polite">After {name(KEY)} · White’s clock {clock(P[KEY].clk)}</p>
+      <p class="chess-key"><span class="ck ck-solid" aria-hidden="true"></span> the move played <span class="ck ck-alt" aria-hidden="true"></span> an alternative from the notes</p>
       <div class="chess-ctl" data-chess-ctl hidden>
         <button type="button" data-go="start" aria-label="Start position">«</button>
         <button type="button" data-go="prev" aria-label="Previous move">‹</button>
@@ -57,7 +58,7 @@ const rows = Array.from({ length: Math.ceil(P.length / 2) }, (_, r) => [2 * r, 2
             <p class="kicker mv-name">{name(k)}</p>
             <h3 class="text-xl">{notes[k].title}</h3>
             <p class="mt-1">{notes[k].text}</p>
-            {k !== KEY && <Board fen={P[k].fen} from={P[k].from} to={P[k].to} label={`Board after ${name(k)}`} size="sm" />}
+            {k !== KEY && <Board fen={P[k].fen} from={P[k].from} to={P[k].to} played={P[k].to} alt={notes[k].alt} label={`Board after ${name(k)}${notes[k].alt ? '. Solid circle: the move played; dashed circle: ' + notes[k].alt!.map((a) => 'the ' + a + ' square').join(', ') + ', the alternative discussed' : ''}`} size="sm" />}
           </li>
         ))}
       </ol>
@@ -74,12 +75,12 @@ const rows = Array.from({ length: Math.ceil(P.length / 2) }, (_, r) => [2 * r, 2
   <script type="application/json" id="chess-data" set:html={JSON.stringify(data)} />
   <script is:inline>
 (()=>{const r=document.querySelector('[data-chess]');const D=JSON.parse(document.getElementById('chess-data').textContent);const s=document.getElementById('cb-main');if(!r||!s)return;
-const G={k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'},NS='http://www.w3.org/2000/svg',pc=s.querySelector('[data-cb-pcs]'),hl=s.querySelector('[data-cb-hl]'),ln=s.querySelector('[data-cb-ln]'),now=r.querySelector('[data-chess-now]');
+const G={k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'},NS='http://www.w3.org/2000/svg',pc=s.querySelector('[data-cb-pcs]'),hl=s.querySelector('[data-cb-hl]'),ln=s.querySelector('[data-cb-ln]'),mk=s.querySelector('[data-cb-mk]'),now=r.querySelector('[data-chess-now]');
 const el=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e};let i=D.key;
 const xy=q=>[q.charCodeAt(0)-97,8-+q[1]];
-function draw(){const p=i<0?null:D.plies[i];const f=p?p.f:D.start;pc.replaceChildren();hl.replaceChildren();ln.replaceChildren();
+function draw(){const p=i<0?null:D.plies[i];const f=p?p.f:D.start;pc.replaceChildren();hl.replaceChildren();ln.replaceChildren();mk.replaceChildren();
 f.split('/').forEach((row,y)=>{let x=0;for(const c of row){if(/\d/.test(c))x+=+c;else{const t=el('text',{x:x+.5,y:y+.8,'text-anchor':'middle',class:c===c.toUpperCase()?'cb-w':'cb-b'});t.textContent=G[c.toLowerCase()]+'\uFE0E';pc.append(t);x++}}});
-if(p){for(const q of[p.a,p.b]){const[x,y]=xy(q);hl.append(el('rect',{x,y,width:1,height:1,class:'cb-hl'}))}const L=D.lines[i];if(L){const[a,b]=L.map(xy);ln.append(el('line',{x1:a[0]+.5,y1:a[1]+.5,x2:b[0]+.5,y2:b[1]+.5,class:'cb-line'}))}}
+if(p){for(const q of[p.a,p.b]){const[x,y]=xy(q);hl.append(el('rect',{x,y,width:1,height:1,class:'cb-hl'}))}for(const q of D.alts[i]||[]){const[x,y]=xy(q);mk.append(el('circle',{cx:x+.5,cy:y+.5,r:.44,class:'cb-mk cb-mk-alt'}))}{const[x,y]=xy(p.b);mk.append(el('circle',{cx:x+.5,cy:y+.5,r:.44,class:'cb-mk'}))}const L=D.lines[i];if(L){const[a,b]=L.map(xy);ln.append(el('line',{x1:a[0]+.5,y1:a[1]+.5,x2:b[0]+.5,y2:b[1]+.5,class:'cb-line'}))}}
 const lab=p?'After '+p.n+(p.c?' · '+(p.w?'White':'Black')+'’s clock '+p.c:''):'Start position';s.setAttribute('aria-label','Board: '+lab.replace(' · ',', '));now.textContent=lab;
 r.querySelectorAll('[data-ply]').forEach(b=>b.setAttribute('aria-current',+b.dataset.ply===i?'step':'false'))}
 const go=n=>{i=Math.max(-1,Math.min(D.plies.length-1,n));draw()};

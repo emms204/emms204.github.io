@@ -68,7 +68,7 @@ const person = {
   </head>
   <body data-q={q ?? undefined} data-front={front ? '' : undefined} data-surface={front || (q && q !== 'think') ? 'grid' : 'plain'}>
     <Backdrop />
-    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:px-4 focus:py-2" style="background:var(--paper-2)">Skip to content</a>
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:px-4 focus:py-2" style="background:var(--paper-2)">Skip to content</a>
     <TopBar q={q} path={path} />
     <main id="main" tabindex="-1">
       {q && <QuestionLine q={q} />}

@@ -50,7 +50,7 @@ const announce = Object.fromEntries(cases.map((c) => [c.key, b.steps.map((_, i) 
     <div class="bench-case" data-case={c.key}>
       <h4 class="bench-case-h">{c.label}: <span>{c.tag}</span></h4>
       <ol class="bench-steps">
-        <li class="bench-step" data-step="1">
+        <li class="bench-step" data-step="1" data-n="01">
           <h5 class="bench-step-h"><span class="kicker">Step 1 of 4</span> {b.steps[0]}</h5>
           <p class="bench-line">{b.stepLines[0]}</p>
           <div class="slips">
@@ -65,7 +65,7 @@ const announce = Object.fromEntries(cases.map((c) => [c.key, b.steps.map((_, i) 
             ))}
           </div>
         </li>
-        <li class="bench-step" data-step="2">
+        <li class="bench-step" data-step="2" data-n="02">
           <h5 class="bench-step-h"><span class="kicker">Step 2 of 4</span> {b.steps[1]}</h5>
           <p class="bench-line">{b.stepLines[1]}</p>
           <div class="propose">
@@ -75,7 +75,7 @@ const announce = Object.fromEntries(cases.map((c) => [c.key, b.steps.map((_, i) 
             <p class="margin-note">A proposal, not a decision. The model never posts anything.</p>
           </div>
         </li>
-        <li class="bench-step" data-step="3">
+        <li class="bench-step" data-step="3" data-n="03">
           <h5 class="bench-step-h"><span class="kicker">Step 3 of 4</span> {b.steps[2]}</h5>
           <p class="bench-line">{b.stepLines[2]}</p>
           <table class="checks">
@@ -92,7 +92,7 @@ const announce = Object.fromEntries(cases.map((c) => [c.key, b.steps.map((_, i) 
           </table>
           <p class:list={['verdict', c.v.ok ? 'is-ok' : 'is-bad']}>{c.v.ok ? 'Verified: all three checks pass.' : 'Caught: the model said match, the check says no. ' + c.v.fail}</p>
         </li>
-        <li class="bench-step" data-step="4">
+        <li class="bench-step" data-step="4" data-n="04">
           <h5 class="bench-step-h"><span class="kicker">Step 4 of 4</span> {b.steps[3]}</h5>
           <p class="bench-line">{b.stepLines[3]}</p>
           {c.v.ok ? (

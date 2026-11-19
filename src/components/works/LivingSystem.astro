@@ -25,8 +25,8 @@ const run = (c: (typeof b.cases)[number]) => {
 const [A, B] = b.cases.map(run);
 const R = (c: typeof A) => (c.ok ? L.pass : L.reject);
 const say = Object.fromEntries([A, B].map((c) => [c.key, `${c.label}, ${c.tag}: ${R(c).verdict}${c.why ? ' The ' + c.why + '.' : ''}`]));
-const X = [20, 270, 520, 770];
-const Y = [44, 150, 256, 362]; // vertical layout (mobile)
+const HX = [0, 264, 528]; // desktop: 216-wide boxes, 48 gaps (24px grid)
+const VY = [48, 168, 288]; // mobile vertical layout
 const sub_ = (c: typeof A, i: number) => (i === 0 ? c.input : i === 1 ? 'proposes: match' : i === 2 ? c.verify : c.ok ? 'a person signs' : 'never reached');
 ---
 <section id="living" class="living wrap" aria-labelledby="living-h" data-case={A.key} data-say={JSON.stringify(say)}>
@@ -40,49 +40,66 @@ const sub_ = (c: typeof A, i: number) => (i === 0 ? c.input : i === 1 ? 'propose
   </div>
 
   <figure class="living-fig">
-    <svg class="living-svg living-svg-h" viewBox="0 0 1000 200" aria-hidden="true" focusable="false">
+    <!-- works-v10 shape grammar: solid sharp rectangles = built/checked (Input, Verify); dashed = the model's
+         proposal (Interpret); a circle = the decision a person makes (Decide), with the seal overlapping its rim.
+         Step numbers hang outside each shape's top-left. Desktop coordinates sit on a 24px grid (1:1 at >=72rem). -->
+    <svg class="living-svg living-svg-h" viewBox="0 0 1008 216" aria-hidden="true" focusable="false">
+      <text class="ls-legend" x="0" y="24">dashed: the model proposed · solid: code checked · circle: a person decides</text>
       <g class="ls-edges">
-        <path class="ls-edge" d="M230 75 H270" /><path class="ls-edge ls-model" d="M480 75 H520" /><path class="ls-edge ls-pass" d="M730 75 H770" />
-        <path class="ls-edge ls-reject" d="M625 110 V150" />
+        <path class="ls-edge" d="M216 108 H264" /><path class="ls-edge ls-model" d="M480 108 H528" /><path class="ls-edge ls-pass" d="M744 108 H792" />
+        <path class="ls-edge ls-reject" d="M636 144 V168" />
       </g>
-      {[[A, ['M230 75 H270', 'M480 75 H520', 'M730 75 H770']], [B, ['M230 75 H270', 'M480 75 H520', 'M625 110 V150']]].map(([c, segs]) => (
+      {[[A, ['M216 108 H264', 'M480 108 H528', 'M744 108 H792']], [B, ['M216 108 H264', 'M480 108 H528', 'M636 144 V168']]].map(([c, segs]) => (
         <g class:list={['ls-trace', { 'ls-trace-bad': !(c as typeof A).ok }]} data-for={(c as typeof A).key}>
           {(segs as string[]).map((d, i) => <path d={d} style={`--i:${i}`} />)}
         </g>
       ))}
-      {L.steps.map((s, i) => (
+      {L.steps.map((s, i) => i < 3 ? (
         <g class={`ls-node ls-${s.key}`}>
-          <rect x={X[i]} y="40" width="210" height="70" rx="8" />
-          <text class="ls-n" x={X[i] + 14} y="68"><tspan class="ls-fig">{String(i + 1).padStart(2, '0')}</tspan> {s.name}</text>
-          {[A, B].map((c) => (
-            <text class="ls-sub" data-for={c.key} x={X[i] + 14} y="94">{sub_(c, i)}</text>
-          ))}
+          <text class="ls-fig ls-hang" x={HX[i]} y="62">{String(i + 1).padStart(2, '0')}</text>
+          <rect class="ls-shape" x={HX[i]} y="72" width="216" height="72" />
+          <text class="ls-n" x={HX[i] + 12} y="102">{s.name}</text>
+          {[A, B].map((c) => <text class="ls-sub" data-for={c.key} x={HX[i] + 12} y="128">{sub_(c, i)}</text>)}
+        </g>
+      ) : (
+        <g class={`ls-node ls-${s.key}`}>
+          <text class="ls-fig ls-hang" x="792" y="38">{String(i + 1).padStart(2, '0')}</text>
+          <circle class="ls-shape" cx="876" cy="108" r="84" />
+          <text class="ls-n" x="876" y="104" text-anchor="middle">{s.name}</text>
+          {[A, B].map((c) => <text class="ls-sub" data-for={c.key} x="876" y="130" text-anchor="middle">{sub_(c, i)}</text>)}
         </g>
       ))}
-      <g class="ls-seal" data-for={A.key}><circle cx="944" cy="75" r="25" /><text x="944" y="79" text-anchor="middle">SIGNED</text></g>
-      <g class="ls-stop" data-for={B.key}><rect x="540" y="150" width="170" height="34" rx="6" /><text x="625" y="172" text-anchor="middle">REJECTED · RETURNED</text></g>
-      <text class="ls-legend" x="20" y="24">dashed: the model proposed · solid: code checked · seal: a person signed</text>
+      <g class="ls-seal" data-for={A.key}><circle cx="948" cy="48" r="24" /><text x="948" y="51" text-anchor="middle">SIGNED</text></g>
+      <g class="ls-stop" data-for={B.key}><rect x="552" y="168" width="168" height="36" /><text x="636" y="191" text-anchor="middle">REJECTED · RETURNED</text></g>
     </svg>
-    <svg class="living-svg living-svg-v" viewBox="0 0 360 500" aria-hidden="true" focusable="false">
-      <text class="ls-legend" x="20" y="22">dashed: model proposed · solid: code checked</text>
+    <svg class="living-svg living-svg-v" viewBox="0 0 336 560" aria-hidden="true" focusable="false">
+      <text class="ls-legend" x="0" y="16">dashed: model proposed · solid: code checked</text>
       <g class="ls-edges">
-        <path class="ls-edge" d="M145 108 V150" /><path class="ls-edge ls-model" d="M145 214 V256" /><path class="ls-edge ls-pass" d="M145 320 V362" />
-        <path class="ls-edge ls-reject" d="M270 288 H332 V76 H276" /><path class="ls-edge ls-reject ls-arrow" d="M284 70 L276 76 L284 82" />
+        <path class="ls-edge" d="M120 120 V168" /><path class="ls-edge ls-model" d="M120 240 V288" /><path class="ls-edge ls-pass" d="M120 360 V408" />
+        <path class="ls-edge ls-reject" d="M240 324 H300 V84 H248" /><path class="ls-edge ls-reject ls-arrow" d="M256 78 L248 84 L256 90" />
       </g>
-      {[[A, ['M145 108 V150', 'M145 214 V256', 'M145 320 V362']], [B, ['M145 108 V150', 'M145 214 V256', 'M270 288 H332 V76 H276']]].map(([c, segs]) => (
+      {[[A, ['M120 120 V168', 'M120 240 V288', 'M120 360 V408']], [B, ['M120 120 V168', 'M120 240 V288', 'M240 324 H300 V84 H248']]].map(([c, segs]) => (
         <g class:list={['ls-trace', { 'ls-trace-bad': !(c as typeof A).ok }]} data-for={(c as typeof A).key}>
           {(segs as string[]).map((d, i) => <path d={d} style={`--i:${i}`} />)}
         </g>
       ))}
-      {L.steps.map((s, i) => (
+      {L.steps.map((s, i) => i < 3 ? (
         <g class={`ls-node ls-${s.key}`}>
-          <rect x="20" y={Y[i]} width="250" height="64" rx="8" />
-          <text class="ls-n" x="34" y={Y[i] + 28}><tspan class="ls-fig">{String(i + 1).padStart(2, '0')}</tspan> {s.name}</text>
-          {[A, B].map((c) => <text class="ls-sub" data-for={c.key} x="34" y={Y[i] + 50}>{sub_(c, i)}</text>)}
+          <text class="ls-fig ls-hang" x="0" y={VY[i] - 8}>{String(i + 1).padStart(2, '0')}</text>
+          <rect class="ls-shape" x="0" y={VY[i]} width="240" height="72" />
+          <text class="ls-n" x="12" y={VY[i] + 30}>{s.name}</text>
+          {[A, B].map((c) => <text class="ls-sub" data-for={c.key} x="12" y={VY[i] + 55}>{sub_(c, i)}</text>)}
+        </g>
+      ) : (
+        <g class={`ls-node ls-${s.key}`}>
+          <text class="ls-fig ls-hang" x="24" y="424">{String(i + 1).padStart(2, '0')}</text>
+          <circle class="ls-shape" cx="120" cy="480" r="72" />
+          <text class="ls-n" x="120" y="476" text-anchor="middle">{s.name}</text>
+          {[A, B].map((c) => <text class="ls-sub" data-for={c.key} x="120" y="502" text-anchor="middle">{sub_(c, i)}</text>)}
         </g>
       ))}
-      <g class="ls-seal" data-for={A.key}><circle cx="312" cy="394" r="25" /><text x="312" y="398" text-anchor="middle">SIGNED</text></g>
-      <g class="ls-stop" data-for={B.key}><text x="350" y="182" text-anchor="middle" transform="rotate(-90 350 182)">REJECTED · RETURNED</text></g>
+      <g class="ls-seal" data-for={A.key}><circle cx="186" cy="424" r="24" /><text x="186" y="427" text-anchor="middle">SIGNED</text></g>
+      <g class="ls-stop" data-for={B.key}><text x="324" y="204" text-anchor="middle" transform="rotate(-90 324 204)">REJECTED · RETURNED</text></g>
     </svg>
     <figcaption>
       <ol class="ls-steps">

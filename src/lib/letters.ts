@@ -14,7 +14,7 @@ export function wordCount(md = ''): number {
   return plain(md).split(/\s+/).filter(Boolean).length;
 }
 
-/** Reading time at 220 words per minute, rounded up, minimum 1. */
+/** Reading time at 220 words per minute, to the next whole minute, minimum 1. */
 export function readingMinutes(md = ''): number {
   return Math.max(1, Math.ceil(wordCount(md) / 220));
 }
