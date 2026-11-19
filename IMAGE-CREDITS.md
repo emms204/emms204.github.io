@@ -11,3 +11,11 @@ The five photos in the engineering journey (`src/assets/journey/`) are **referen
 | `accountability.jpg` | Accountability (2026–now) | Patterson's General Store Ledger (page 406) | Patterson's General Store, Chapel Hill Historical Society (via DPLA) | Public domain | https://commons.wikimedia.org/wiki/File:Patterson%27s_General_Store_Ledger_-_DPLA_-_0079e562a497df98da2b2bf6a5740d22_(page_406).jpg |
 
 Each era card on the homepage also carries its own credit line (title, author, licence, link).
+
+## Backdrop option C (works-v5 preview)
+
+| File | Used for | Title | Author / source | Licence | Source URL |
+|---|---|---|---|---|---|
+| `src/assets/bg/neurons-light.png`, `neurons-dark.png` | Backdrop option C (faint line art behind the page) | Line drawing of the retina (Wellcome Images L0040596) | Santiago Ramón y Cajal (plate); Wellcome Collection | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) | https://commons.wikimedia.org/wiki/File:Line_drawing_of_the_retina_Wellcome_L0040596.jpg |
+
+Changes made: cropped to the lower half of the plate (figures 4–6, page labels removed), converted to transparent line art in the site's ink colours (one light, one dark variant), and shown at about 10% opacity. It is a reference image of a historical neuroscience drawing, not output from Emmanuel's projects.

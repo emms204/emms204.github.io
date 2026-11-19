@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 
-const DIST = 'dist';
+const DIST = process.env.DIST || 'dist';
 const CV_MD5 = '54995be92e7ef1c98f45591cbd303f68';
 const ROUTES = [
   '/', '/solutions/', '/products/', '/journal/', '/contact/', '/work/', '/margins/', '/archive/',
@@ -75,6 +75,12 @@ ok('hero: old third line removed', !/Stories worth telling/.test(sec('home')));
 const inline = [...home.matchAll(/<script(?![^>]*\bsrc=)(?![^>]*application\/ld\+json)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1]).join('\n');
 const gz = gzipSync(inline).length;
 ok('homepage JS <= 4 KB gzipped (inline, no external bundles)', gz <= 4096 && !/<script[^>]*\bsrc=/.test(home), `${gz} B gz`);
+
+// works-v5: backdrop options. Production builds never ship the ?bg= review switch.
+const pick = (home.match(/<html[^>]*data-bg="([abc])"/) || [])[1] || '';
+ok('backdrop: no ?bg= preview switch in production build', !text.some((p) => readFileSync(p, 'utf8').includes("get('bg')")));
+ok('backdrop: markup matches the build pick', pick ? (home.includes(`class="bg-${pick}"`) && ['a', 'b', 'c'].filter((k) => k !== pick).every((k) => !home.includes(`class="bg-${k}"`))) : !home.includes('class="bgfx"'), pick || 'none');
+ok('backdrop: decorative only (aria-hidden), no canvas/WebGL', (!pick || /<div class="bgfx" aria-hidden="true"/.test(home)) && !/getContext\(|three(\.module)?\.js|WebGL/i.test(home));
 
 const md5 = createHash('md5').update(readFileSync('public/cv.pdf')).digest('hex');
 const md5d = createHash('md5').update(readFileSync(join(DIST, 'cv.pdf'))).digest('hex');

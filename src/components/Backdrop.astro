@@ -1,0 +1,42 @@
+---
+// Site backdrop options (works-v5 preview). Decorative only: aria-hidden, fixed, behind content,
+// opacity/transform only, static under prefers-reduced-motion, no WebGL.
+//   A  gradient field that vanishes and explodes with scroll (and warms when the Living System rejects)
+//   B  slow mesh gradient with grain
+//   C  Cajal's retina plate as faint line art (CC BY 4.0, Wellcome Collection; see IMAGE-CREDITS.md)
+// Build switches: PUBLIC_BG=a|b|c bakes one option in (production; no switch code shipped).
+// PUBLIC_BG_PREVIEW=1 ships all three plus a ?bg=a|b|c switch for review only.
+import { getImage } from 'astro:assets';
+import light from '../assets/bg/neurons-light.png';
+import dark from '../assets/bg/neurons-dark.png';
+const PICK = (import.meta.env.PUBLIC_BG ?? '') as string;
+const PREVIEW = import.meta.env.PUBLIC_BG_PREVIEW === '1';
+const has = (k: string) => PREVIEW || PICK === k;
+const set = async (src: ImageMetadata) => {
+  const [a, w] = await Promise.all([getImage({ src, format: 'avif', width: 1400, quality: 50 }), getImage({ src, format: 'webp', width: 1400, quality: 60 })]);
+  return `image-set(url("${a.src}") type("image/avif"), url("${w.src}") type("image/webp"))`;
+};
+const imgVars = has('c') ? `--bg-img-l:${await set(light)};--bg-img-d:${await set(dark)}` : '';
+---
+{(PREVIEW || PICK) && (
+  <div class="bgfx" aria-hidden="true" style={imgVars || undefined}>
+    {has('a') && <div class="bg-a"><div class="ga-field"><i class="ga-cool"></i><i class="ga-hot"></i></div><p class="ga-cap"><span>gradients: vanishing ↔ exploding</span><b class="ga-meter"><i></i></b></p></div>}
+    {has('b') && <div class="bg-b"><i></i><i></i><i></i><i></i></div>}
+    {has('c') && <div class="bg-c"><i class="bc-img"></i><i class="bc-veil"></i></div>}
+  </div>
+)}
+{PREVIEW && <script is:inline>
+(()=>{const q=new URLSearchParams(location.search).get('bg'),s=sessionStorage;q!==null&&s.setItem('bg',q);const b=q??s.getItem('bg');/^[abc]$/.test(b||'')&&(document.documentElement.dataset.bg=b)})();
+</script>}
+{has('a') && <script is:inline>
+(()=>{const r=document.documentElement,f=document.querySelector('.ga-field'),m=document.querySelector('.ga-meter i');if(!f||matchMedia('(prefers-reduced-motion: reduce)').matches)return;let t=0;
+const u=()=>{t=0;if(r.dataset.bg!=='a')return;const h=r.scrollHeight-innerHeight,p=h>0?scrollY/h:0,g=.3+.35*(1-Math.cos(9.42*p));f.style.opacity=g;f.style.transform='scale('+(.94+.12*g)+')';m.style.transform='scaleY('+g+')'};
+addEventListener('scroll',()=>{t||document.hidden||(t=requestAnimationFrame(u))},{passive:true});addEventListener('load',()=>requestAnimationFrame(u))})();
+</script>}
+{has('c') && <script is:inline>
+addEventListener('load',()=>requestAnimationFrame(()=>document.documentElement.classList.add('bg-ready')));
+</script>}
+{has('c') && <noscript><style>.bc-img { background-image: var(--bg-img-l); opacity: var(--bg-c); } @media (prefers-color-scheme: dark) { .bc-img { background-image: var(--bg-img-d); } }</style></noscript>}
+{has('b') && <script is:inline>
+document.addEventListener('visibilitychange',()=>document.documentElement.classList.toggle('bg-paused',document.hidden));
+</script>}

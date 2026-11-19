@@ -550,3 +550,51 @@ button[disabled] { opacity: .7; cursor: progress; }
 .era-links { margin-top: .6rem; display: flex; flex-wrap: wrap; gap: .25rem 1rem; }
 .era-credit { margin-top: .6rem; font-size: .75rem; color: var(--graphite); }
 .journey-note { margin-top: 1.5rem; max-width: 48rem; font-size: .875rem; color: var(--graphite); }
+
+/* ---------- Backdrop options (works-v5 preview). Decorative, behind everything, opacity/transform only. ---------- */
+:root {
+  --bg-cool: #9FD3C1; --bg-hot: #F2B49C; --bg-warm: #F1D79A; --bg-blue: #BCCBEA; --bg-a: .75; --bg-b: .55; --bg-c: .11;
+}
+/* With a backdrop on, the seal red deepens a touch so small red labels keep 4.5:1 over tinted paper. */
+[data-bg] { --seal: #A02D17; --pencil: #53514C; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg-cool: #0D4034; --bg-hot: #6A2416; --bg-warm: #45360F; --bg-blue: #1D2F52; --bg-a: .9; --bg-b: .8; --bg-c: .1; }
+  [data-bg] { --seal: #FF8065; --pencil: #A9A398; }
+}
+.bgfx { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; contain: strict; }
+.bgfx > div { display: none; position: absolute; inset: 0; }
+[data-bg="a"] .bg-a, [data-bg="b"] .bg-b, [data-bg="c"] .bg-c { display: block; }
+.bgfx i { position: absolute; display: block; will-change: transform; }
+
+/* A: vanishing / exploding gradient. JS maps scroll to the field's opacity and scale (two rises along the page). */
+.ga-field { position: absolute; inset: -8%; opacity: .45; will-change: opacity, transform; }
+.ga-field i { inset: 0; }
+.ga-cool { background: radial-gradient(55% 45% at 12% 88%, var(--bg-cool), transparent 70%), radial-gradient(45% 40% at 92% 18%, var(--bg-blue), transparent 70%); opacity: var(--bg-a); }
+.ga-hot { background: radial-gradient(60% 50% at 85% 12%, var(--bg-hot), transparent 70%), radial-gradient(40% 35% at 20% 70%, var(--bg-warm), transparent 70%); opacity: 0; transition: opacity .6s ease; }
+html:has(#living.run[data-case="b"]) .ga-hot { opacity: calc(var(--bg-a) * .85); }
+html:has(#living.run[data-case="b"]) .ga-cool { opacity: calc(var(--bg-a) * .4); }
+.ga-cap { display: none; position: absolute; right: .75rem; bottom: 1.25rem; writing-mode: vertical-rl; font: .6875rem/1 var(--font-mono); letter-spacing: .12em; color: var(--pencil);
+  background: var(--paper-2); border: 1px solid var(--rule); border-radius: 999px; padding: .6rem .3rem; align-items: center; gap: .5rem; }
+@media (width >= 84rem) { .ga-cap { display: flex; } }
+.ga-meter { display: block; width: 3px; height: 2.5rem; background: var(--rule); border-radius: 2px; overflow: hidden; position: relative; }
+.ga-meter i { inset: 0; background: var(--seal); transform-origin: bottom; transform: scaleY(.45); }
+
+/* B: soft mesh gradient, slow drift; grain comes from the existing paper-grain layer above it. */
+.bg-b i { width: 75vmax; height: 75vmax; border-radius: 50%; opacity: var(--bg-b); }
+.bg-b i:nth-child(1) { left: -25vmax; top: -30vmax; background: radial-gradient(closest-side, var(--bg-hot), transparent); animation: bg-drift-1 46s ease-in-out infinite alternate; }
+.bg-b i:nth-child(2) { right: -30vmax; top: -10vmax; background: radial-gradient(closest-side, var(--bg-blue), transparent); animation: bg-drift-2 58s ease-in-out infinite alternate; }
+.bg-b i:nth-child(3) { left: -15vmax; bottom: -40vmax; background: radial-gradient(closest-side, var(--bg-cool), transparent); animation: bg-drift-3 52s ease-in-out infinite alternate; }
+.bg-b i:nth-child(4) { right: -20vmax; bottom: -35vmax; background: radial-gradient(closest-side, var(--bg-warm), transparent); animation: bg-drift-1 64s ease-in-out infinite alternate-reverse; }
+@keyframes bg-drift-1 { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(18vmax, 12vmax, 0) scale(1.15); } }
+@keyframes bg-drift-2 { from { transform: translate3d(0, 0, 0) scale(1.1); } to { transform: translate3d(-16vmax, 20vmax, 0) scale(.95); } }
+@keyframes bg-drift-3 { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(22vmax, -14vmax, 0) scale(1.12); } }
+[data-bg="b"] body::before { opacity: .08; }
+.bg-paused .bgfx i { animation-play-state: paused; }
+
+/* C: Cajal's retina plate as faint line art, kept off the reading column by a paper veil. */
+/* The image is requested only after the page has loaded (class set by a one-line script; <noscript> fallback), so it never delays LCP. */
+.bc-img { inset: 0; background: none center / cover no-repeat; opacity: 0; transition: opacity .8s ease; }
+.bg-ready .bc-img { background-image: var(--bg-img-l); opacity: var(--bg-c); }
+@media (prefers-color-scheme: dark) { .bg-ready .bc-img { background-image: var(--bg-img-d); } }
+.bc-veil { inset: 0; background: radial-gradient(ellipse 46rem 70% at 50% 45%, var(--paper) 30%, color-mix(in srgb, var(--paper) 55%, transparent) 70%, transparent); }
+@media (width < 40rem) { .bc-img { background-size: auto 100%; background-position: 30% center; } .bc-veil { background: color-mix(in srgb, var(--paper) 35%, transparent); } }
